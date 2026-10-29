@@ -57,6 +57,7 @@ import static android.content.Intent.EXTRA_TEXT;
 import static android.view.View.GONE;
 import static android.widget.Toast.LENGTH_SHORT;
 import static arun.com.chromer.shared.Constants.ACTION_CLOSE_WEBHEAD_BY_URL;
+import static arun.com.chromer.shared.Constants.ACTION_HIDE_WEBHEAD_OVERLAY;
 import static arun.com.chromer.shared.Constants.ACTION_EVENT_WEBHEAD_DELETED;
 import static arun.com.chromer.shared.Constants.ACTION_EVENT_WEBSITE_UPDATED;
 import static arun.com.chromer.shared.Constants.EXTRA_KEY_WEBSITE;
@@ -117,9 +118,7 @@ public class WebHeadContextActivity extends BaseActivity implements WebsiteAdapt
     public void onWebSiteItemClicked(@NonNull Website website) {
         finish();
         tabsManager.openUrl(this, website, true, true, false, false, false);
-        if (Preferences.get(this).webHeadsCloseOnOpen()) {
-            broadcastDeleteWebHead(website);
-        }
+        // Navigating to a website never counts as explicitly closing its bubble.
     }
 
     private void broadcastDeleteWebHead(@NonNull Website website) {
@@ -147,6 +146,13 @@ public class WebHeadContextActivity extends BaseActivity implements WebsiteAdapt
     @Override
     public void onWebSiteLongClicked(@NonNull Website website) {
         copyToClipboard(website.safeLabel(), website.preferredUrl());
+    }
+
+    @OnClick(R.id.hide_web_head_overlay)
+    public void onHideOverlayClick() {
+        LocalBroadcastManager.getInstance(this)
+                .sendBroadcast(new Intent(ACTION_HIDE_WEBHEAD_OVERLAY));
+        finish();
     }
 
     @OnClick(R.id.copy_all)
