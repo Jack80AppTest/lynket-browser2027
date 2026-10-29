@@ -25,7 +25,7 @@ jobs:
           java-version: '17'
 
       - name: Initialize Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
 
       - name: Install legacy Android SDK platforms
         run: |
@@ -37,7 +37,7 @@ jobs:
           distribution: temurin
           java-version: '8'
 
-      - name: Build original Lynket as separate debug app
+      - name: Build Lynket 2027 as separate debug app
         working-directory: android-app
         env:
           ORG_GRADLE_PROJECT_PLAY_LICENSE_KEY: diagnostic-only
