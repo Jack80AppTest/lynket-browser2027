@@ -100,5 +100,18 @@
                 android:textColor="@color/accent"
                 android:textSize="14sp" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/hide_web_head_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:text="@string/saved_bubbles_hide_overlay"
+            android:textColor="@color/accent"
+            android:textAllCaps="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>
