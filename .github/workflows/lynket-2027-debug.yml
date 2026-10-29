@@ -47,6 +47,11 @@ jobs:
           java -version
           ./gradlew --no-daemon :app:assembleDebug --stacktrace
 
+      - name: Test persistent bubble storage
+        working-directory: android-app
+        run: |
+          ./gradlew --no-daemon :app:testDebugUnitTest --tests arun.com.chromer.bubbles.webheads.BubbleSessionStoreTest
+
       - name: Verify APK package and signature
         working-directory: android-app
         run: |
