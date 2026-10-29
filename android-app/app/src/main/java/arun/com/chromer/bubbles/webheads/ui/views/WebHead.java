@@ -171,7 +171,8 @@ public class WebHead extends BaseWebHead implements SpringListener {
                     break;
             }
         } catch (NullPointerException e) {
-            destroySelf(true);
+            // A rendering/touch failure is not an explicit user deletion.
+            destroySelf(false);
         }
         return true;
     }
@@ -703,29 +704,10 @@ public class WebHead extends BaseWebHead implements SpringListener {
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent event) {
+            // A tap opens the page, but must never remove or hide a saved bubble.
+            // Lynket's historical "close on open" animation is intentionally bypassed.
             wasClicked = true;
-            if (Preferences.get(getContext()).webHeadsCloseOnOpen() && contentRoot != null) {
-                if (windowParams.x < dispWidth / 2) {
-                    contentRoot.setPivotX(0);
-                } else {
-                    contentRoot.setPivotX(contentRoot.getWidth());
-                }
-                contentRoot.setPivotY((float) (contentRoot.getHeight() * 0.75));
-                contentRoot.animate()
-                        .scaleX(0.0f)
-                        .scaleY(0.0f)
-                        .alpha(0.5f)
-                        .withLayer()
-                        .setDuration(125)
-                        .setInterpolator(FAST_OUT_SLOW_IN_INTERPOLATOR)
-                        .withEndAction(this::sendCallback)
-                        .start();
-                // Store the touch down point if its master
-                if (master) {
-                    masterDownX = windowParams.x;
-                    masterDownY = windowParams.y;
-                }
-            } else sendCallback();
+            sendCallback();
             return true;
         }
 
