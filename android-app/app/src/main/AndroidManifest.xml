@@ -34,6 +34,7 @@
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <uses-sdk tools:overrideLibrary="in.arunkumarsampath.transitionx" />
 
@@ -102,6 +103,15 @@
             </intent-filter>
         </service>
 
+        <receiver
+            android:name=".bubbles.webheads.BubbleBootReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
         <receiver android:name=".browsing.customtabs.callbacks.ShareBroadcastReceiver" />
         <receiver android:name=".browsing.customtabs.callbacks.CopyToClipboardReceiver" />
         <receiver android:name=".browsing.customtabs.callbacks.FavShareBroadcastReceiver" />
