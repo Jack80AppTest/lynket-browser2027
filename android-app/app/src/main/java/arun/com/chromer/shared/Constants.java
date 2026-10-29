@@ -63,6 +63,7 @@ public class Constants {
     public static final String ACTION_STOP_WEBHEAD_SERVICE = "close_service";
     public static final String ACTION_REBIND_WEBHEAD_TAB_CONNECTION = "rebind_event";
     public static final String ACTION_CLOSE_WEBHEAD_BY_URL = "ACTION_CLOSE_WEBHEAD_BY_URL";
+    public static final String ACTION_HIDE_WEBHEAD_OVERLAY = "ACTION_HIDE_WEBHEAD_OVERLAY";
     public static final String ACTION_MINIMIZE = "ACTION_MINIMIZE";
     public static final String ACTION_EVENT_WEBSITE_UPDATED = "ACTION_EVENT_WEBSITE_UPDATED";
     public static final String ACTION_EVENT_WEBHEAD_DELETED = "ACTION_EVENT_WEBHEAD_DELETED";
