@@ -50,7 +50,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "arun.com.chromer"
+        applicationId "com.jk8026.lynket2027"
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 56
@@ -72,7 +72,7 @@ android {
             shrinkResources true
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            resValue "string", "app_name", "Lynket"
+            resValue "string", "app_name", "Lynket 2027 (Test)"
 
             lintOptions {
                 disable 'MissingTranslation'
@@ -87,7 +87,7 @@ android {
 
             applicationIdSuffix '.debug'
             versionNameSuffix '- dev'
-            resValue "string", "app_name", "Lynket-dev"
+            resValue "string", "app_name", "Lynket 2027 (Test)"
 
             ext.enableCrashlytics = false
         }
