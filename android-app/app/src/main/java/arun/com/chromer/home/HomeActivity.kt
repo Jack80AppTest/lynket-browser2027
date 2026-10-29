@@ -33,6 +33,7 @@ import arun.com.chromer.di.activity.ActivityComponent
 import arun.com.chromer.extenstions.gone
 import arun.com.chromer.extenstions.show
 import arun.com.chromer.extenstions.watch
+import arun.com.chromer.bubbles.webheads.BubbleSessionRestorer
 import arun.com.chromer.home.bottomsheet.HomeBottomSheet
 import arun.com.chromer.home.epoxycontroller.HomeFeedController
 import arun.com.chromer.intro.ChromerIntroActivity
@@ -119,6 +120,9 @@ class HomeActivity : BaseActivity(), Snackable, UsesViewModel {
 
     override fun onStart() {
         super.onStart()
+        // Explicit foreground launch always unhides any saved session.
+        BubbleSessionRestorer.restore(this)
+        homeFeedController.requestModelBuild()
         tabsLifecycleObserver.activeTabs().subscribe { tabs ->
             homeFeedController.tabs = tabs
         }
