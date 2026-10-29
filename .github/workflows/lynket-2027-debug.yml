@@ -47,10 +47,18 @@ jobs:
           java -version
           ./gradlew --no-daemon :app:assembleDebug --stacktrace
 
+      - name: Verify APK package and signature
+        working-directory: android-app
+        run: |
+          APK="app/build/outputs/apk/debug/app-debug.apk"
+          test -s "$APK"
+          "$ANDROID_HOME/build-tools/29.0.3/aapt" dump badging "$APK" | grep '^package:'
+          "$ANDROID_HOME/build-tools/29.0.3/apksigner" verify --verbose --print-certs "$APK"
+
       - name: Upload diagnostic APK if compilation succeeds
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: Lynket-2027-debug-unsigned-for-release
+          name: Lynket-2027-v2.1.4-debug-temporary-signature
           path: android-app/app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
