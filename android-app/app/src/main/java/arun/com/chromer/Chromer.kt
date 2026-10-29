@@ -29,11 +29,8 @@ import arun.com.chromer.di.app.AppModule
 import arun.com.chromer.di.app.DaggerAppComponent
 import arun.com.chromer.util.ServiceManager
 import com.airbnb.epoxy.EpoxyController
-import com.crashlytics.android.Crashlytics
-import com.crashlytics.android.core.CrashlyticsCore
 import com.mikepenz.materialdrawer.util.DrawerImageLoader
 import com.uber.rxdogtag.RxDogTag
-import io.fabric.sdk.android.Fabric
 import io.paperdb.Paper
 import timber.log.Timber
 
@@ -65,7 +62,7 @@ open class Chromer : Application() {
                     .penaltyLog()
                     .build());*/
         } else {
-            Timber.plant(CrashlyticsTree())
+            Timber.plant(LogcatTree())
         }
         ServiceManager.takeCareOfServices(applicationContext)
 
@@ -83,26 +80,20 @@ open class Chromer : Application() {
                 .withHandleAllUris(true)
     }
 
-    protected open fun initFabric() {
-        val core = CrashlyticsCore.Builder()
-                .disabled(BuildConfig.DEBUG)
-                .build()
-        val crashlytics = Crashlytics.Builder().core(core).build()
-        Fabric.with(this, crashlytics)
-    }
+    // Legacy Fabric/Crashlytics is unavailable; keep the hook for existing test overrides.
+    protected open fun initFabric() { }
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
         MultiDex.install(this)
     }
 
-    private class CrashlyticsTree : Timber.Tree() {
+    private class LogcatTree : Timber.Tree() {
 
         override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
-            if (priority == Log.VERBOSE || priority == Log.DEBUG || priority == Log.INFO) {
-                return
+            if (priority >= Log.WARN) {
+                Log.println(priority, tag ?: "Lynket2027", message)
             }
-            Crashlytics.logException(t)
         }
     }
 
