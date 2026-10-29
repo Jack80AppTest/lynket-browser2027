@@ -36,6 +36,22 @@ a {
 <body>
 <strong>You can view this again in the About screen.</strong>
 <br></br>
+<strong>2.1.6 — Lynket 2027</strong>
+<ul>
+    <li><b>NEW: </b> Hide and Restore buttons side by side on the Saved bubbles card, directly below Recents.</li>
+    <li><b>IMPROVED: </b> Hide the overlay without closing saved tabs, then restore them manually without leaving the home screen.</li>
+    <li><b>UNCHANGED: </b> Automatic recovery when Lynket starts or a new link is shared.</li>
+</ul>
+<strong>2.1.5 — Lynket 2027 (first validated stable version)</strong>
+<ul>
+    <li><b>NEW: </b> Automatically save active bubble URLs and preserve their opening order.</li>
+    <li><b>NEW: </b> Automatically restore saved bubbles after relaunch, app process termination or a new shared link.</li>
+    <li><b>NEW: </b> Attempt restoration after a phone restart when Android permits background overlays.</li>
+    <li><b>NEW: </b> Hide overlay command in the WEBSITES menu; URLs stay saved.</li>
+    <li><b>NEW: </b> Saved bubbles card with a tab counter and a Restore button on the home screen.</li>
+    <li><b>FIX: </b> Opening a page no longer silently removes its saved bubble; individual user closes do.</li>
+    <li><b>IMPROVED: </b> Keeps the original Custom Tabs provider selection, browsing and history features.</li>
+</ul>
 <strong>2.1.3</strong>
 <ul>
     <li>Fixed Article view appearing transparent for Amoled black theme</li>

@@ -2,6 +2,7 @@
 <resources>
     <string name="saved_bubbles_title">Saved bubbles</string>
     <string name="saved_bubbles_restore">Restore</string>
+    <string name="saved_bubbles_hide_short">Hide</string>
     <string name="saved_bubbles_hide_overlay">Hide overlay</string>
     <plurals name="saved_bubbles_count">
         <item quantity="one">%d saved tab</item>

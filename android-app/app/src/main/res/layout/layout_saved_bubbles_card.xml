@@ -40,14 +40,34 @@
                 android:text="0"
                 android:textColor="@android:color/darker_gray" />
         </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="8dp"
+        android:weightSum="2">
+        <TextView
+            android:id="@+id/saved_bubbles_hide"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:text="@string/saved_bubbles_hide_short"
+            android:textColor="@color/accent"
+            android:textAllCaps="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Button" />
         <TextView
             android:id="@+id/saved_bubbles_restore"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="48dp"
-            android:minWidth="88dp"
+            android:layout_weight="1"
             android:gravity="center"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
             android:clickable="true"
             android:focusable="true"
             android:background="?attr/selectableItemBackground"
@@ -55,5 +75,6 @@
             android:textColor="@color/accent"
             android:textAllCaps="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Button" />
+    </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
