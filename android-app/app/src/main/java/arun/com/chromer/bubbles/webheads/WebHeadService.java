@@ -88,6 +88,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static android.widget.Toast.LENGTH_SHORT;
 import static androidx.core.app.NotificationCompat.PRIORITY_MIN;
 import static arun.com.chromer.shared.Constants.ACTION_CLOSE_WEBHEAD_BY_URL;
+import static arun.com.chromer.shared.Constants.ACTION_HIDE_WEBHEAD_OVERLAY;
 import static arun.com.chromer.shared.Constants.ACTION_EVENT_WEBHEAD_DELETED;
 import static arun.com.chromer.shared.Constants.ACTION_EVENT_WEBSITE_UPDATED;
 import static arun.com.chromer.shared.Constants.ACTION_OPEN_CONTEXT_ACTIVITY;
@@ -105,6 +106,8 @@ import static arun.com.chromer.shared.Constants.NO_COLOR;
 
 public class WebHeadService extends OverlayService implements WebHeadContract,
         CustomTabManager.ConnectionCallback {
+    private BubbleSessionStore sessionStore;
+
     // Max visible web heads is set 6 for performance reasons.
     public static final int MAX_VISIBLE_WEB_HEADS = 5;
     // Connection manager instance to connect and warm up custom tab providers
@@ -132,6 +135,9 @@ public class WebHeadService extends OverlayService implements WebHeadContract,
                     if (webHeadColor != NO_COLOR) {
                         updateWebHeadColors(webHeadColor);
                     }
+                    break;
+                case ACTION_HIDE_WEBHEAD_OVERLAY:
+                    stopService(); // temporary hide; the SQLite session stays intact
                     break;
                 case ACTION_CLOSE_WEBHEAD_BY_URL:
                     final Website website = intent.getParcelableExtra(EXTRA_KEY_WEBSITE);
@@ -230,6 +236,7 @@ public class WebHeadService extends OverlayService implements WebHeadContract,
                 return;
             }
         }
+        sessionStore = new BubbleSessionStore(this);
         springChain2D = SpringChain2D.create(this);
         Trashy.init(this);
         bindToCustomTabSession();
@@ -246,7 +253,8 @@ public class WebHeadService extends OverlayService implements WebHeadContract,
         Timber.d("Exiting webhead service");
         subs.clear();
         WebHead.clearMasterPosition();
-        removeWebHeads();
+        removeWebHeads(); // dismantles views, NEVER removes the saved session
+        if (sessionStore != null) sessionStore.close();
         if (customTabManager != null) {
             customTabManager.unbindCustomTabsService(this);
         }
@@ -257,9 +265,26 @@ public class WebHeadService extends OverlayService implements WebHeadContract,
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        checkForOverlayPermission();
+        if (!Utils.isOverlayGranted(this)) {
+            checkForOverlayPermission();
+            return START_NOT_STICKY;
+        }
+        restoreSavedWebHeads();
         processIntent(intent);
         return START_STICKY;
+    }
+
+    private void restoreSavedWebHeads() {
+        if (sessionStore == null) return;
+        try {
+            for (BubbleSessionStore.Entry saved : sessionStore.getAll()) {
+                if (!isLinkAlreadyLoaded(saved.url)) {
+                    addWebHead(saved.url, saved.fromAmp, false);
+                }
+            }
+        } catch (RuntimeException error) {
+            Timber.e(error, "Could not restore saved bubbles");
+        }
     }
 
     private void processIntent(@Nullable Intent intent) {
@@ -276,6 +301,15 @@ public class WebHeadService extends OverlayService implements WebHeadContract,
         }
 
         if (!isLinkAlreadyLoaded(urlToLoad)) {
+            // Private pages stay ephemeral until their persistence policy is decided.
+            if (!isIncognito && sessionStore != null) {
+                try {
+                    sessionStore.save(urlToLoad, isFromAmp);
+                } catch (RuntimeException error) {
+                    Timber.e(error, "Could not save new bubble");
+                    Toast.makeText(this, "Could not save this bubble", LENGTH_SHORT).show();
+                }
+            }
             addWebHead(urlToLoad, isFromAmp, isIncognito);
         } else if (!isForMinimized) {
             Toast.makeText(this, R.string.already_loaded, LENGTH_SHORT).show();
@@ -476,9 +510,7 @@ public class WebHeadService extends OverlayService implements WebHeadContract,
 
         // If user prefers to the close the head on opening the link, then call destroySelf()
         // which will take care of closing and detaching the web head
-        if (Preferences.get(this).webHeadsCloseOnOpen()) {
-            webHead.destroySelf(true);
-        }
+        // Opening a page must not silently delete an active saved bubble.
         hideTrashy();
     }
 
@@ -486,6 +518,14 @@ public class WebHeadService extends OverlayService implements WebHeadContract,
     public void onWebHeadDestroyed(@NonNull WebHead webHead, boolean isLastWebHead) {
         webHead.setMaster(false);
         webHeads.remove(webHead.getUrl());
+        // This callback is only for an explicit user close; service cleanup uses false.
+        if (!webHead.isIncognito() && sessionStore != null) {
+            try {
+                sessionStore.remove(webHead.getUrl());
+            } catch (RuntimeException error) {
+                Timber.e(error, "Could not remove explicitly closed bubble");
+            }
+        }
         if (isLastWebHead) {
             Trashy.get(this).destroyAnimator(this::stopService);
         } else {
@@ -520,6 +560,8 @@ public class WebHeadService extends OverlayService implements WebHeadContract,
 
     @Override
     public void closeAll() {
+        // The close-all gesture is an explicit user deletion, unlike HIDE or onDestroy.
+        if (sessionStore != null) sessionStore.clear();
         stopService();
     }
 
@@ -568,6 +610,7 @@ public class WebHeadService extends OverlayService implements WebHeadContract,
         localEvents.addAction(ACTION_WEBHEAD_COLOR_SET);
         localEvents.addAction(ACTION_REBIND_WEBHEAD_TAB_CONNECTION);
         localEvents.addAction(ACTION_CLOSE_WEBHEAD_BY_URL);
+        localEvents.addAction(ACTION_HIDE_WEBHEAD_OVERLAY);
         localEvents.addAction(ACTION_OPEN_CONTEXT_ACTIVITY);
         LocalBroadcastManager.getInstance(this).registerReceiver(localReceiver, localEvents);
 
