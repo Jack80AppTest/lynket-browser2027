@@ -1,0 +1,56 @@
+name: Lynket 2027 - diagnostic APK
+
+on:
+  push:
+    branches:
+      - dev/2.1.4
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-debug:
+    name: Build Android debug APK
+    runs-on: ubuntu-22.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout development branch
+        uses: actions/checkout@v4
+
+      - name: Java 17 for Android SDK tools
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Initialize Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install legacy Android SDK platforms
+        run: |
+          sdkmanager --install "platforms;android-28" "platforms;android-29" "build-tools;29.0.3"
+
+      - name: Java 8 for Gradle 5.6.2 and Android plugin 3.5.2
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '8'
+
+      - name: Build original Lynket as separate debug app
+        working-directory: android-app
+        env:
+          ORG_GRADLE_PROJECT_PLAY_LICENSE_KEY: diagnostic-only
+          ORG_GRADLE_PROJECT_FABRIC_KEY: diagnostic-only
+        run: |
+          chmod +x ./gradlew
+          java -version
+          ./gradlew --no-daemon :app:assembleDebug --stacktrace
+
+      - name: Upload diagnostic APK if compilation succeeds
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Lynket-2027-debug-unsigned-for-release
+          path: android-app/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
