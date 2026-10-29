@@ -3,6 +3,7 @@ package arun.com.chromer.home.epoxycontroller
 import android.app.Application
 import arun.com.chromer.R
 import arun.com.chromer.data.website.model.Website
+import arun.com.chromer.home.epoxycontroller.model.SavedBubblesCardModel
 import arun.com.chromer.home.epoxycontroller.model.CustomTabProviderInfo
 import arun.com.chromer.home.epoxycontroller.model.providerInfo
 import arun.com.chromer.home.epoxycontroller.model.recentsCard
@@ -82,5 +83,8 @@ constructor(
                 }
             }
         }
+
+        // Independent persistent-session card immediately below Recents.
+        add(SavedBubblesCardModel().id("saved-bubbles-card"))
     }
 }
