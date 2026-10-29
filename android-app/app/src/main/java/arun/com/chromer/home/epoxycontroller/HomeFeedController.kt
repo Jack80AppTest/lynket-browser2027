@@ -1,6 +1,7 @@
 package arun.com.chromer.home.epoxycontroller
 
 import android.app.Application
+import arun.com.chromer.bubbles.webheads.BubbleSessionStore
 import arun.com.chromer.R
 import arun.com.chromer.data.website.model.Website
 import arun.com.chromer.home.epoxycontroller.model.SavedBubblesCardModel
@@ -85,6 +86,8 @@ constructor(
         }
 
         // Independent persistent-session card immediately below Recents.
-        add(SavedBubblesCardModel().id("saved-bubbles-card"))
+        val savedBubbleCount = BubbleSessionStore(application).use { it.count() }
+        // Count is part of the model ID so Epoxy always refreshes the card on a count change.
+        add(SavedBubblesCardModel().id("saved-bubbles-card-$savedBubbleCount"))
     }
 }
