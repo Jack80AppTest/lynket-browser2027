@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="saved_bubbles_title">Bulles sauvegardées</string>
+    <string name="saved_bubbles_restore">Restaurer</string>
+    <string name="saved_bubbles_hide_overlay">Masquer la superposition</string>
+    <plurals name="saved_bubbles_count">
+        <item quantity="one">%d onglet conservé</item>
+        <item quantity="other">%d onglets conservés</item>
+    </plurals>
+</resources>
