@@ -1,6 +1,8 @@
 name: Build Workflow
 
-on: [push]
+# The upstream legacy workflow is kept for reference only.
+# Use lynket-2027-debug.yml for this fork's development builds.
+on: workflow_dispatch
 
 jobs:
   build:
