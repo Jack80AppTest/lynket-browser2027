@@ -22,7 +22,7 @@ public class BubbleSessionStoreTest {
 
     @Before
     public void setUp() {
-        context = RuntimeEnvironment.getApplication();
+        context = RuntimeEnvironment.application;
         context.deleteDatabase("lynket_2027_active_bubbles.db");
         store = new BubbleSessionStore(context);
     }
