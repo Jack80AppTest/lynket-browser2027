@@ -1,8 +1,8 @@
 package arun.com.chromer.home.epoxycontroller.model;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import arun.com.chromer.R;
@@ -37,11 +37,29 @@ public class SavedBubblesCardModelTest {
         context.deleteDatabase("lynket_2027_active_bubbles.db");
     }
 
+    private View makeCardViews() {
+        // Robolectric 4.3 cannot reliably inflate the old Material CardView on current
+        // runners, so test actual button bindings using minimal real Android views.
+        LinearLayout card = new LinearLayout(context);
+        TextView hide = new TextView(context);
+        hide.setId(R.id.saved_bubbles_hide);
+        hide.setEnabled(true);
+        card.addView(hide);
+        TextView restore = new TextView(context);
+        restore.setId(R.id.saved_bubbles_restore);
+        restore.setEnabled(true);
+        card.addView(restore);
+        TextView count = new TextView(context);
+        count.setId(R.id.saved_bubbles_count);
+        card.addView(count);
+        return card;
+    }
+
     @Test
     public void hideAndRestoreButtonsArePresentAndEnabledForSavedTabs() {
         store.save("https://example.com/first", false);
         store.save("https://example.com/second", false);
-        View card = LayoutInflater.from(context).inflate(R.layout.layout_saved_bubbles_card, null);
+        View card = makeCardViews();
         new SavedBubblesCardModel().bind(card);
 
         TextView hide = card.findViewById(R.id.saved_bubbles_hide);
@@ -61,7 +79,7 @@ public class SavedBubblesCardModelTest {
 
     @Test
     public void bothActionsDisabledWhenNoSavedTabs() {
-        View card = LayoutInflater.from(context).inflate(R.layout.layout_saved_bubbles_card, null);
+        View card = makeCardViews();
         new SavedBubblesCardModel().bind(card);
         assertFalse(card.findViewById(R.id.saved_bubbles_hide).isEnabled());
         assertFalse(card.findViewById(R.id.saved_bubbles_restore).isEnabled());
