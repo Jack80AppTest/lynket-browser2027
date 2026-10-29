@@ -441,7 +441,7 @@ public class WebHeadService extends OverlayService implements WebHeadContract,
         }
         // Since no callback is received clear the map manually.
         webHeads.clear();
-        springChain2D.clear();
+        if (springChain2D != null) springChain2D.clear();
         Timber.d("WebHeads: %d", webHeads.size());
     }
 
