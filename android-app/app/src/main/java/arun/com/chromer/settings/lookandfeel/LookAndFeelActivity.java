@@ -56,8 +56,12 @@ public class LookAndFeelActivity extends AppCompatActivity implements ColorChoos
     @BindView(R.id.error)
     TextView error;
 
+    private boolean amoledThemeAtCreation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        amoledThemeAtCreation = PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean("amoled_black_theme", false);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_look_and_feel);
         ButterKnife.bind(this);
@@ -130,9 +134,22 @@ public class LookAndFeelActivity extends AppCompatActivity implements ColorChoos
         if (Preferences.WEB_HEAD_ENABLED.equalsIgnoreCase(key)) {
             showHideErrorView();
         } else if ("amoled_black_theme".equals(key)) {
-            // AppCompat recreates visible activities so backgrounds and text update together.
-            AppCompatDelegate.setDefaultNightMode(sharedPreferences.getBoolean(key, false)
+            final boolean amoled = sharedPreferences.getBoolean(key, false);
+            AppCompatDelegate.setDefaultNightMode(amoled
                     ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+            if (amoledThemeAtCreation != amoled) {
+                // Some existing screens do not refresh immediately when AppCompat
+                // switches modes. Recreate the UI explicitly, but only if this
+                // activity was originally built with the other theme.
+                toolbar.post(() -> {
+                    if (!isFinishing() && !isDestroyed()
+                            && amoledThemeAtCreation != PreferenceManager
+                                    .getDefaultSharedPreferences(this)
+                                    .getBoolean("amoled_black_theme", false)) {
+                        recreate();
+                    }
+                });
+            }
         }
     }
 }
