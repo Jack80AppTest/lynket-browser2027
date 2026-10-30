@@ -82,6 +82,7 @@ public class PersonalizationPreferenceFragment extends BasePreferenceFragment im
             }
         }
     };
+    private IconSwitchPreference amoledThemePreference;
     private IconSwitchPreference dynamicColorPreference;
     private IconSwitchPreference coloredToolbarPreference;
     private ColorPreference toolbarColorPreference;
@@ -137,6 +138,7 @@ public class PersonalizationPreferenceFragment extends BasePreferenceFragment im
     }
 
     private void init() {
+        amoledThemePreference = (IconSwitchPreference) findPreference("amoled_black_theme");
         dynamicColorPreference = (IconSwitchPreference) findPreference(DYNAMIC_COLOR);
         coloredToolbarPreference = (IconSwitchPreference) findPreference(TOOLBAR_COLOR_PREF);
         toolbarColorPreference = (ColorPreference) findPreference(TOOLBAR_COLOR);
@@ -152,6 +154,10 @@ public class PersonalizationPreferenceFragment extends BasePreferenceFragment im
                 .icon(CommunityMaterial.Icon.cmd_palette)
                 .color(ContextCompat.getColor(getActivity(), R.color.material_dark_light))
                 .sizeDp(24);
+        amoledThemePreference.setIcon(new IconicsDrawable(getActivity())
+                .icon(CommunityMaterial.Icon.cmd_brightness_2)
+                .color(ContextCompat.getColor(getActivity(), R.color.material_dark_light))
+                .sizeDp(24));
         toolbarColorPreference.setIcon(palette);
         coloredToolbarPreference.setIcon(palette);
         dynamicColorPreference.setIcon(new IconicsDrawable(getActivity())
