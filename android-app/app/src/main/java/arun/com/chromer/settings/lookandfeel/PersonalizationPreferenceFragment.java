@@ -113,6 +113,7 @@ public class PersonalizationPreferenceFragment extends BasePreferenceFragment im
         // setup preferences after creation
         setupToolbarColorPreference();
         setupDynamicToolbar();
+        setupAmoledConfirmation();
     }
 
     @Override
@@ -217,6 +218,26 @@ public class PersonalizationPreferenceFragment extends BasePreferenceFragment im
         if (!isColoredToolbar) {
             dynamicColorPreference.setChecked(false);
         }
+    }
+
+    private void setupAmoledConfirmation() {
+        amoledThemePreference.setOnPreferenceChangeListener((preference, newValue) -> {
+            final boolean enable = (Boolean) newValue;
+            // Do not persist/change the switch until the user confirms.
+            new MaterialDialog.Builder(getActivity())
+                    .title(R.string.amoled_apply_title)
+                    .content(enable ? R.string.amoled_enable_confirmation
+                                    : R.string.amoled_disable_confirmation)
+                    .positiveText(R.string.amoled_apply)
+                    .negativeText(android.R.string.cancel)
+                    .onPositive((dialog, which) -> {
+                        // Persisting the switch notifies LookAndFeelActivity, which uses
+                        // AppCompat's in-place activity recreation (no process restart).
+                        amoledThemePreference.setChecked(enable);
+                    })
+                    .show();
+            return false;
+        });
     }
 
     private void setupDynamicToolbar() {
