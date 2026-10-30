@@ -3,7 +3,7 @@ name: Lynket 2027 - diagnostic APK
 on:
   push:
     branches:
-      - dev/2.1.8
+      - dev/2.1.9
   workflow_dispatch:
 
 permissions:
@@ -64,10 +64,16 @@ jobs:
           "$ANDROID_HOME/build-tools/29.0.3/aapt" dump badging "$APK" | grep '^package:'
           "$ANDROID_HOME/build-tools/29.0.3/apksigner" verify --verbose --print-certs "$APK"
 
-      - name: Upload diagnostic APK if compilation succeeds
+      - name: Name APK after the Lynket version
+        working-directory: android-app
+        run: |
+          mv app/build/outputs/apk/debug/app-debug.apk \
+             app/build/outputs/apk/debug/Lynket_2027_v2.1.9_Debug.apk
+
+      - name: Upload versioned APK directly without ZIP
         if: success()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: Lynket-2027-v2.1.8-debug-temporary-signature
-          path: android-app/app/build/outputs/apk/debug/*.apk
+          path: android-app/app/build/outputs/apk/debug/Lynket_2027_v2.1.9_Debug.apk
+          archive: false
           if-no-files-found: error
