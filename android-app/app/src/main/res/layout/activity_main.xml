@@ -22,7 +22,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary"
+    android:background="@color/colorPrimary"
     tools:context="arun.com.chromer.home.HomeActivity">
 
     <androidx.cardview.widget.CardView
@@ -30,7 +30,7 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="-8dp"
         android:elevation="4dp"
-        app:cardBackgroundColor="#FAFAFA"
+        app:cardBackgroundColor="@color/amoled_home_surface"
         app:cardCornerRadius="10dp"
         app:cardPreventCornerOverlap="true">
 
@@ -90,7 +90,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:padding="12dp"
-                android:tint="@color/primary"
+                android:tint="@color/amoled_toolbar_icon"
                 app:layout_constraintBottom_toTopOf="@+id/homeFeedRecyclerView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
