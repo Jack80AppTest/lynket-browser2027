@@ -43,7 +43,6 @@ import butterknife.ButterKnife;
  * Created by Arunkumar on 19-02-2017.
  */
 class SettingsGroupAdapter extends RecyclerView.Adapter<SettingsGroupAdapter.SettingsItemViewHolder> {
-    private final Context context;
     private final List<String> settingsItems = new ArrayList<>();
     private GroupItemClickListener groupItemClickListener = (position, view) -> {
         // no-op
@@ -51,7 +50,6 @@ class SettingsGroupAdapter extends RecyclerView.Adapter<SettingsGroupAdapter.Set
 
     SettingsGroupAdapter(@NonNull final Context context) {
         setHasStableIds(true);
-        this.context = context.getApplicationContext();
         settingsItems.add(context.getString(R.string.settings_browsing_mode));
         settingsItems.add(context.getString(R.string.settings_look_and_feel));
         settingsItems.add(context.getString(R.string.settings_browsing_options));
@@ -59,7 +57,10 @@ class SettingsGroupAdapter extends RecyclerView.Adapter<SettingsGroupAdapter.Set
 
     @Override
     public SettingsItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new SettingsItemViewHolder(LayoutInflater.from(context).inflate(R.layout.activity_settings_list_item_template, parent, false));
+        // Inflate using the Settings screen's themed context, not the application context:
+        // the latter can follow the phone's night mode even when AMOLED is switched off.
+        return new SettingsItemViewHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.activity_settings_list_item_template, parent, false));
     }
 
     @Override
