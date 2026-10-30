@@ -18,6 +18,21 @@
   -->
 
 <resources>
+    <!-- True black app chrome, light foreground text and dark raised surfaces. -->
+    <color name="colorPrimary">#000000</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorPrimaryDarker">#000000</color>
+    <color name="card_background_light">#000000</color>
+    <color name="amoled_card_surface">#101010</color>
+    <color name="amoled_home_surface">#000000</color>
+    <color name="amoled_toolbar_icon">#F5F5F5</color>
+    <color name="material_dark_color">#F5F5F5</color>
+    <color name="material_dark_light">#BDBDBD</color>
+    <color name="primary_text_color">#F5F5F5</color>
+    <color name="secondary_text_color">#B0B0B0</color>
+    <color name="material_grey_color">#B0B0B0</color>
+    <color name="accent_icon_no_focus">#B0B0B0</color>
+    <color name="home_tabs_icon_color">#8AB4F8</color>
     <color name="article_windowBackground">#303030</color>
     <color name="article_imageBackground">#212121</color>
     <color name="article_primaryText">#FFFFFFFF</color>
