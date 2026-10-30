@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="amoled_black_theme">Thème AMOLED</string>
+    <string name="amoled_black_theme_summary">Interface noir pur, sans changer les pages du navigateur</string>
     <string name="saved_bubbles_title">Bulles sauvegardées</string>
     <string name="saved_bubbles_restore">Restaurer</string>
     <string name="saved_bubbles_hide_short">Masquer</string>
