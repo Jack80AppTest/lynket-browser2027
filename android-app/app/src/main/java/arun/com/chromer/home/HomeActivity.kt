@@ -23,6 +23,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.view.postDelayed
+import androidx.preference.PreferenceManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.SimpleItemAnimator
@@ -68,6 +69,14 @@ class HomeActivity : BaseActivity(), Snackable, UsesViewModel {
     override lateinit var viewModelFactory: ViewModelProvider.Factory
     private val homeActivityViewModel by viewModel<HomeActivityViewModel>()
 
+    // A HomeActivity already in the back stack can keep its old colors after
+    // the user changes the theme in Settings. Remember what it was built with.
+    private var amoledThemeAtCreation = false
+
+    private fun currentAmoledTheme(): Boolean =
+            PreferenceManager.getDefaultSharedPreferences(this)
+                    .getBoolean("amoled_black_theme", false)
+
     override fun inject(activityComponent: ActivityComponent) = activityComponent.inject(this)
 
     override fun getLayoutRes() = R.layout.activity_main
@@ -78,6 +87,7 @@ class HomeActivity : BaseActivity(), Snackable, UsesViewModel {
     lateinit var tabsLifecycleObserver: TabsLifecycleObserver
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        amoledThemeAtCreation = currentAmoledTheme()
         setTheme(R.style.AppTheme_NoActionBar)
         super.onCreate(savedInstanceState)
 
@@ -120,11 +130,23 @@ class HomeActivity : BaseActivity(), Snackable, UsesViewModel {
 
     override fun onStart() {
         super.onStart()
+        // Do not restore the same WebHeads session from an obsolete themed
+        // activity just before Android recreates the home screen.
+        if (amoledThemeAtCreation != currentAmoledTheme()) return
         // Explicit foreground launch always unhides any saved session.
         BubbleSessionRestorer.restore(this)
         homeFeedController.requestModelBuild()
         tabsLifecycleObserver.activeTabs().subscribe { tabs ->
             homeFeedController.tabs = tabs
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (amoledThemeAtCreation != currentAmoledTheme()) {
+            // Refresh the previously opened home screen, without restarting
+            // Lynket or touching the WebHeads service.
+            recreate()
         }
     }
 
