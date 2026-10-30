@@ -36,6 +36,12 @@ a {
 <body>
 <strong>You can view this again in the About screen.</strong>
 <br></br>
+<strong>2.1.7 — Lynket 2027 (AMOLED preview)</strong>
+<ul>
+    <li><b>NEW: </b> Optional AMOLED black theme switch in Look and feel &gt; Personalization.</li>
+    <li><b>NEW: </b> Pure black interface backgrounds with dark cards and light, readable text.</li>
+    <li><b>UNCHANGED: </b> The theme is disabled by default; WebHeads persistence and the Hide/Restore controls remain intact.</li>
+</ul>
 <strong>2.1.6 — Lynket 2027</strong>
 <ul>
     <li><b>NEW: </b> Hide and Restore buttons side by side on the Saved bubbles card, directly below Recents.</li>
