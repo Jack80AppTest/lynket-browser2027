@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="amoled_apply_title">Appliquer le changement de thème ?</string>
+    <string name="amoled_enable_confirmation">Activer le thème noir AMOLED ? L’interface sera actualisée sans fermer vos onglets sauvegardés.</string>
+    <string name="amoled_disable_confirmation">Revenir au thème clair ? L’interface sera actualisée sans fermer vos onglets sauvegardés.</string>
+    <string name="amoled_apply">Appliquer</string>
     <string name="amoled_black_theme">Thème AMOLED</string>
     <string name="amoled_black_theme_summary">Interface noir pur, sans changer les pages du navigateur</string>
     <string name="saved_bubbles_title">Bulles sauvegardées</string>
