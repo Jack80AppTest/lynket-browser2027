@@ -23,6 +23,7 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.preference.PreferenceManager
 import androidx.multidex.MultiDex
 import arun.com.chromer.di.app.AppComponent
 import arun.com.chromer.di.app.AppModule
@@ -47,6 +48,10 @@ open class Chromer : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        // Keep the validated light appearance unless AMOLED is explicitly selected.
+        val amoled = PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean("amoled_black_theme", false)
+        AppCompatDelegate.setDefaultNightMode(if (amoled) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
         initFabric()
         Paper.init(this)
 
