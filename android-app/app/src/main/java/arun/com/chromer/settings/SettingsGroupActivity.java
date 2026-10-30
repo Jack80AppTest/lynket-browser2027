@@ -31,6 +31,7 @@ import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -59,9 +60,16 @@ public class SettingsGroupActivity extends SubActivity implements SettingsGroupA
     ImageView setDefaultImage;
     private SettingsGroupAdapter adapter;
     private BroadcastReceiver closeReceiver;
+    private boolean amoledThemeAtCreation;
+
+    private boolean currentAmoledTheme() {
+        return PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean("amoled_black_theme", false);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        amoledThemeAtCreation = currentAmoledTheme();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         ButterKnife.bind(this);
@@ -102,6 +110,11 @@ public class SettingsGroupActivity extends SubActivity implements SettingsGroupA
     @Override
     protected void onResume() {
         super.onResume();
+        if (amoledThemeAtCreation != currentAmoledTheme()) {
+            // Settings might still be on the back stack with its previous colors.
+            recreate();
+            return;
+        }
         updateDefaultBrowserCard();
     }
 
