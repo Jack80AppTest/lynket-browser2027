@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.net.toUri
+import androidx.preference.PreferenceManager
 import arun.com.chromer.R
 import arun.com.chromer.about.AboutAppActivity
 import arun.com.chromer.intro.ChromerIntroActivity
@@ -35,6 +36,15 @@ class HomeBottomSheet : BottomSheetDialogFragment() {
         private const val ABOUT = 7L
     }
 
+    // AMOLED applies only to this MaterialDrawer; light mode stays unchanged.
+    private fun PrimaryDrawerItem.applyAmoledColors(amoled: Boolean): PrimaryDrawerItem = apply {
+        if (amoled) {
+            withTextColorRes(R.color.material_dark_color)
+            withDescriptionTextColorRes(R.color.material_dark_light)
+            withIconColorRes(R.color.material_dark_light)
+        }
+    }
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -43,8 +53,13 @@ class HomeBottomSheet : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val amoledTheme = PreferenceManager.getDefaultSharedPreferences(requireContext())
+                .getBoolean("amoled_black_theme", false)
         val drawer = DrawerBuilder().run {
             withActivity(requireActivity())
+            if (amoledTheme) {
+                withSliderBackgroundColorRes(R.color.amoled_home_surface)
+            }
             withSavedInstance(savedInstanceState)
             withAccountHeader(
                     AccountHeaderBuilder().run {
@@ -60,41 +75,41 @@ class HomeBottomSheet : BottomSheetDialogFragment() {
                             .withName(getString(R.string.intro))
                             .withIdentifier(INTRO)
                             .withIcon(CommunityMaterial.Icon.cmd_clipboard_text)
-                            .withSelectable(false),
+                            .withSelectable(false).applyAmoledColors(amoledTheme),
                     PrimaryDrawerItem()
                             .withName(getString(R.string.feedback))
                             .withIdentifier(FEEDBACK)
                             .withIcon(CommunityMaterial.Icon.cmd_message_text)
-                            .withSelectable(false),
+                            .withSelectable(false).applyAmoledColors(amoledTheme),
                     PrimaryDrawerItem()
                             .withName(getString(R.string.rate_play_store))
                             .withIdentifier(RATE)
                             .withIcon(CommunityMaterial.Icon.cmd_comment_text)
-                            .withSelectable(false),
+                            .withSelectable(false).applyAmoledColors(amoledTheme),
                     PrimaryDrawerItem()
                             .withName(R.string.join_beta)
                             .withIdentifier(BETA)
                             .withIcon(CommunityMaterial.Icon.cmd_beta)
-                            .withSelectable(false),
+                            .withSelectable(false).applyAmoledColors(amoledTheme),
                     DividerDrawerItem(),
                     PrimaryDrawerItem()
                             .withName(getString(R.string.share))
                             .withIcon(CommunityMaterial.Icon.cmd_share_variant)
                             .withDescription(getString(R.string.help_chromer_grow))
                             .withIdentifier(SHARE)
-                            .withSelectable(false),
+                            .withSelectable(false).applyAmoledColors(amoledTheme),
                     PrimaryDrawerItem()
                             .withName(getString(R.string.support_development))
                             .withDescription(R.string.consider_donation)
                             .withIcon(CommunityMaterial.Icon.cmd_heart)
-                            .withIconColorRes(R.color.accent)
                             .withIdentifier(DONATION)
-                            .withSelectable(false),
+                            .withSelectable(false).applyAmoledColors(amoledTheme)
+                            .withIconColorRes(R.color.accent),
                     PrimaryDrawerItem()
                             .withName(getString(R.string.about))
                             .withIcon(CommunityMaterial.Icon.cmd_information)
                             .withIdentifier(ABOUT)
-                            .withSelectable(false)
+                            .withSelectable(false).applyAmoledColors(amoledTheme)
             )
             withOnDrawerItemClickListener { _, _, drawerItem ->
                 when (drawerItem.identifier) {
