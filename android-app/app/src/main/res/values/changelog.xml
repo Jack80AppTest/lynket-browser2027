@@ -36,11 +36,13 @@ a {
 <body>
 <strong>You can view this again in the About screen.</strong>
 <br></br>
-<strong>2.1.7 — Lynket 2027 (AMOLED preview)</strong>
+<strong>2.1.7 — Lynket 2027 (AMOLED Stable)</strong>
 <ul>
-    <li><b>NEW: </b> Optional AMOLED black theme switch in Look and feel &gt; Personalization.</li>
-    <li><b>NEW: </b> Pure black interface backgrounds with dark cards and light, readable text.</li>
-    <li><b>UNCHANGED: </b> The theme is disabled by default; WebHeads persistence and the Hide/Restore controls remain intact.</li>
+    <li><b>NEW: </b> Optional pure-black AMOLED theme in Look and feel &gt; Personalization, disabled by default.</li>
+    <li><b>NEW: </b> Apply/Cancel confirmation before switching between AMOLED and light themes.</li>
+    <li><b>FIX: </b> Home, Settings and Look and feel update their colors after theme changes without restarting Lynket.</li>
+    <li><b>FIX: </b> Readable text and matching backgrounds in settings, Lynket Options and the Home bottom menu in both themes.</li>
+    <li><b>UNCHANGED: </b> Existing WebHeads sessions, saved tabs, automatic restoration and Hide/Restore controls are preserved.</li>
 </ul>
 <strong>2.1.6 — Lynket 2027</strong>
 <ul>
