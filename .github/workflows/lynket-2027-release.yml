@@ -1,0 +1,108 @@
+name: Lynket 2027 - v2.1.7 Release validation
+
+on:
+  push:
+    branches:
+      - dev/2.1.7-final
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lynket2027-release-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-release:
+    name: Build and verify Lynket 2027 Release
+    runs-on: ubuntu-22.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout final release candidate
+        uses: actions/checkout@v4
+
+      - name: Java 17 for Android SDK tools
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Initialize Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Install legacy Android SDK platforms and build tools
+        run: |
+          sdkmanager --install "platforms;android-28" "platforms;android-29" "build-tools;29.0.3"
+
+      - name: Java 8 for legacy Gradle and Android plugin
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '8'
+
+      - name: Build unmodified Release variant
+        working-directory: android-app
+        env:
+          ORG_GRADLE_PROJECT_PLAY_LICENSE_KEY: ${{ secrets.LYNKET_PLAY_LICENSE_KEY }}
+          ORG_GRADLE_PROJECT_FABRIC_KEY: diagnostic-only
+        run: |
+          chmod +x ./gradlew
+          ./gradlew --no-daemon :app:assembleRelease --stacktrace
+
+      - name: Run existing WebHeads and settings regression tests
+        working-directory: android-app
+        run: |
+          ./gradlew --no-daemon :app:testDebugUnitTest --tests arun.com.chromer.bubbles.webheads.BubbleSessionStoreTest --tests arun.com.chromer.home.epoxycontroller.model.SavedBubblesCardModelTest --tests arun.com.chromer.settings.SettingsGroupAdapterTest
+
+      - name: Verify Release package identity and version
+        working-directory: android-app
+        run: |
+          APK="app/build/outputs/apk/release/app-release-unsigned.apk"
+          test -s "$APK"
+          "$ANDROID_HOME/build-tools/29.0.3/aapt" dump badging "$APK" | grep -F "name='com.jk8026.lynket2027' versionCode='62' versionName='2.1.7'"
+
+      - name: Sign Release only with persistent repository signing secrets
+        id: signing
+        working-directory: android-app
+        env:
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.LYNKET_RELEASE_KEYSTORE_BASE64 }}
+          RELEASE_STORE_PASSWORD: ${{ secrets.LYNKET_RELEASE_STORE_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.LYNKET_RELEASE_KEY_ALIAS }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.LYNKET_RELEASE_KEY_PASSWORD }}
+        run: |
+          if [ -z "$RELEASE_KEYSTORE_BASE64" ] || [ -z "$RELEASE_STORE_PASSWORD" ] || [ -z "$RELEASE_KEY_ALIAS" ] || [ -z "$RELEASE_KEY_PASSWORD" ]; then
+            echo "::notice::Persistent signing secrets not configured: Release compilation validated, but no installable Stable APK published."
+            echo "A signed Stable APK requires all four LYNKET_RELEASE_* repository secrets." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          set -e
+          KEYSTORE="$RUNNER_TEMP/lynket-release.keystore"
+          trap 'rm -f "$KEYSTORE"' EXIT
+          printf '%s' "$RELEASE_KEYSTORE_BASE64" | base64 --decode > "$KEYSTORE"
+          "$ANDROID_HOME/build-tools/29.0.3/zipalign" -f 4 \
+            app/build/outputs/apk/release/app-release-unsigned.apk \
+            app/build/outputs/apk/release/app-release-aligned.apk
+          "$ANDROID_HOME/build-tools/29.0.3/apksigner" sign \
+            --ks "$KEYSTORE" \
+            --ks-key-alias "$RELEASE_KEY_ALIAS" \
+            --ks-pass env:RELEASE_STORE_PASSWORD \
+            --key-pass env:RELEASE_KEY_PASSWORD \
+            --out app/build/outputs/apk/release/Lynket_2027_v2.1.7_Stable.apk \
+            app/build/outputs/apk/release/app-release-aligned.apk
+          "$ANDROID_HOME/build-tools/29.0.3/apksigner" verify --verbose --print-certs \
+            app/build/outputs/apk/release/Lynket_2027_v2.1.7_Stable.apk
+          echo "signed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Upload versioned signed Stable APK (direct download, no ZIP)
+        if: steps.signing.outputs.signed == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          path: android-app/app/build/outputs/apk/release/Lynket_2027_v2.1.7_Stable.apk
+          archive: false
+          if-no-files-found: error
+
+      - name: Keep unsigned Release only for build diagnostics
+        if: steps.signing.outputs.signed != 'true' && success()
+        run: |
+          echo "Release code compiles, but this unsigned output cannot be installed and is not a stable publication." >> "$GITHUB_STEP_SUMMARY"
