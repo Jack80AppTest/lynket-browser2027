@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="amoled_black_theme">AMOLED black theme</string>
+    <string name="amoled_black_theme_summary">Pure black interface; keeps browser pages unchanged</string>
     <string name="saved_bubbles_title">Saved bubbles</string>
     <string name="saved_bubbles_restore">Restore</string>
     <string name="saved_bubbles_hide_short">Hide</string>
