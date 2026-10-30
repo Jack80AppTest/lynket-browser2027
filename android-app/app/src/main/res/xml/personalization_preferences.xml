@@ -23,6 +23,12 @@
     android:key="settings"
     android:title="@string/settings">
     <PreferenceCategory android:title="@string/personalization">
+        <arun.com.chromer.settings.widgets.IconSwitchPreference
+            android:defaultValue="false"
+            android:key="amoled_black_theme"
+            android:title="@string/amoled_black_theme"
+            android:summary="@string/amoled_black_theme_summary" />
+
         <!--suppress AndroidElementNotAllowed -->
         <arun.com.chromer.settings.widgets.IconSwitchPreference
             android:defaultValue="true"
