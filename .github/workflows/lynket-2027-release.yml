@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: lynket2027-release-validation-${{ github.ref }}
@@ -101,6 +101,49 @@ jobs:
           path: android-app/app/build/outputs/apk/release/Lynket_2027_v2.1.7_Stable.apk
           archive: false
           if-no-files-found: error
+
+      - name: Replace v2.1.7 GitHub Release only after durable signing
+        if: github.ref == 'refs/heads/stable/v2.1.7' && steps.signing.outputs.signed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          OLD_TAG_SHA="58fb4b3edc3201a8e78212de0f572b5e78386f45"
+          APK="android-app/app/build/outputs/apk/release/Lynket_2027_v2.1.7_Stable.apk"
+          test -s "$APK"
+          git fetch --tags --force origin
+          CURRENT_TAG_SHA="$(git rev-parse refs/tags/2.1.7)"
+          if [ "$CURRENT_TAG_SHA" != "$OLD_TAG_SHA" ] && [ "$CURRENT_TAG_SHA" != "$GITHUB_SHA" ]; then
+            echo "::error::Release tag unexpectedly changed. Not replacing an unknown release."
+            exit 1
+          fi
+
+          # Upload the validated new asset first, before changing any old reference.
+          gh release upload 2.1.7 "$APK" --clobber
+          git tag -f 2.1.7 "$GITHUB_SHA"
+          git push origin refs/tags/2.1.7 --force-with-lease=refs/tags/2.1.7:"$CURRENT_TAG_SHA"
+
+          cat > "$RUNNER_TEMP/lynket-release-notes.md" <<'RELEASE_NOTES'
+          ## Lynket 2027 v2.1.7 — AMOLED Stable
+
+          Final validated code from the v2.1.9 test builds, published under the correct version 2.1.7 (versionCode 62).
+
+          - Optional pure-black AMOLED theme, disabled by default
+          - Apply/Cancel confirmation when switching themes
+          - Immediate theme refresh in Home, Settings and Look and feel
+          - Readable text and correct backgrounds in Lynket Options and the Home bottom drawer
+          - Existing WebHeads session persistence, automatic recovery and Hide/Restore preserved
+          - Installable Release variant, signed using the repository's persistent release signing key
+
+          The test APKs used a separate debug application ID. They are not upgraded in place by this release.
+          RELEASE_NOTES
+          gh release edit 2.1.7 \
+            --title "Lynket 2027 v2.1.7 — AMOLED Stable" \
+            --notes-file "$RUNNER_TEMP/lynket-release-notes.md" \
+            --latest
+          if gh release view 2.1.7 --json assets --jq '.assets[].name' | grep -Fxq "Lynket_2027_v2.1.7_AMOLED_Rafraichissement.apk"; then
+            gh release delete-asset 2.1.7 "Lynket_2027_v2.1.7_AMOLED_Rafraichissement.apk" --yes
+          fi
 
       - name: Keep unsigned Release only for build diagnostics
         if: steps.signing.outputs.signed != 'true' && success()
