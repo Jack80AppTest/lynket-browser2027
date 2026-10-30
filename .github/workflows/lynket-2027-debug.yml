@@ -3,7 +3,7 @@ name: Lynket 2027 - diagnostic APK
 on:
   push:
     branches:
-      - dev/2.1.7
+      - dev/2.1.8
   workflow_dispatch:
 
 permissions:
@@ -68,6 +68,6 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: Lynket-2027-v2.1.7-debug-temporary-signature
+          name: Lynket-2027-v2.1.8-debug-temporary-signature
           path: android-app/app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
