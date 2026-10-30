@@ -28,6 +28,7 @@ import android.widget.TextView;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -128,6 +129,10 @@ public class LookAndFeelActivity extends AppCompatActivity implements ColorChoos
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (Preferences.WEB_HEAD_ENABLED.equalsIgnoreCase(key)) {
             showHideErrorView();
+        } else if ("amoled_black_theme".equals(key)) {
+            // AppCompat recreates visible activities so backgrounds and text update together.
+            AppCompatDelegate.setDefaultNightMode(sharedPreferences.getBoolean(key, false)
+                    ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
         }
     }
 }
