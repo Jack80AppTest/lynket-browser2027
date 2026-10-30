@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="amoled_apply_title">Apply theme change?</string>
+    <string name="amoled_enable_confirmation">Switch to AMOLED black? The interface will refresh without closing your saved tabs.</string>
+    <string name="amoled_disable_confirmation">Restore the light theme? The interface will refresh without closing your saved tabs.</string>
+    <string name="amoled_apply">Apply</string>
     <string name="amoled_black_theme">AMOLED black theme</string>
     <string name="amoled_black_theme_summary">Pure black interface; keeps browser pages unchanged</string>
     <string name="saved_bubbles_title">Saved bubbles</string>
