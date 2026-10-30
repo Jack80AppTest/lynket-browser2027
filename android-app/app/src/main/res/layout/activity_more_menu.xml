@@ -24,7 +24,7 @@
     android:layout_width="320dp"
     android:layout_height="wrap_content"
     android:minWidth="320dp"
-    app:cardBackgroundColor="@android:color/white"
+    app:cardBackgroundColor="@color/amoled_card_surface"
     app:cardCornerRadius="4dp"
     app:cardElevation="12dp"
     app:cardPreventCornerOverlap="true"
