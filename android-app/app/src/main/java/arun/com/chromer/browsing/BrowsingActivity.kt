@@ -96,6 +96,7 @@ abstract class BrowsingActivity : BaseActivity(), UsesViewModel {
                         website = it.data!!
                         onWebsiteLoaded(website!!)
                     }
+                    else -> Unit // Other load states were intentionally ignored before Kotlin 1.7.
                 }
             }
 
