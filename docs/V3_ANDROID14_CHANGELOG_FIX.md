@@ -21,4 +21,14 @@
 - Tests automatisés et signature assurent la cohérence technique, **pas un affichage réel**. Il faudra tester À propos → Journal des modifications sur Galaxy S23 Ultra, puis autoriser séparément le portage à P15.
 
 ## Résultats GitHub Actions
-À compléter après exécution et vérification de la compilation spécifique à cette correction. Ne pas livrer le précédent APK (run `41206713690`) comme correction.
+**GitHub Actions : `completed / success`, 18 étapes réussies**, run [`41208517887`](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41208517887), job `124558442676`. Code et workflow compilés au commit exact `8deeef8a4ca40017b1da13718b212fe40846e0f7`.
+- Compilation Gradle `:app:assembleDebug` : **réussie**.
+- Contrôles de compatibilité Android 11/12/13/14 : **réussis**.
+- **Audit global Java/Kotlin** : étape « Regression check for changelog HTML and unsafe WebView data loads » **réussie**. Le contrôle analyse récursivement `android-app/app/src/main` et échoue si un appel direct `.loadData(...)` demeure dans le code applicatif. Conclusion vérifiable : **aucun autre appel direct `.loadData` détecté** dans le périmètre de ce scan, et séquence `WebViewClient` avant `loadDataWithBaseURL` validée. La ressource du journal contient toujours son HTML et son `#FF4081`.
+- `BubbleSessionStoreTest`, `SavedBubblesCardModelTest`, `SettingsGroupAdapterTest` : **réussis**, aucune suppression de test.
+- `aapt` / `apksigner` : package `com.jk8026.lynket2027.debug`, versionCode `63`, versionName `3.0.0` avec suffixe Debug `- dev`, targetSdk `34`, signature APK scheme v2 **vérifiés**.
+- **Nouvel APK corrigé direct, sans ZIP** : [Lynket_Custom_2027_v3.0.0_Android14_Developer.apk](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41208517887/artifacts/13045632794), artefact `13045632794`, taille **8 690 722 octets**; `actions/upload-artifact@v7` avec `archive: false`.
+- SHA-256 fourni par **les métadonnées d'artefact GitHub** (non recalculé localement depuis les octets de l'APK) : `4740f33fcb391958d0ab832370917b64a694134630ed3e81fb91d4309bfafc05`. Expiration de l'artefact indiquée par GitHub : **2027-01-29 14:05:35 UTC**.
+- **L'APK antérieur** du run `41206713690` **n'inclut pas ce correctif**. Ne pas utiliser son lien pour tester le journal corrigé.
+- Prochaine étape obligatoire : **test visuel** de À propos → Journal des modifications sur Galaxy S23 Ultra Android 14, ainsi que vérification de la conservation des bulles et des réglages. **P15 ne doit pas être corrigée tant que l'utilisateur n'a pas confirmé le bon résultat**.
+- Mise à jour documentaire après le build seulement, sur cette branche; aucun code recompilé et aucune CI déclenchée par `docs/**` seul.
