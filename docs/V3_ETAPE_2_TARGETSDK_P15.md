@@ -85,3 +85,23 @@ Le rapport est passif, ignoré par la CI via `paths-ignore: docs/**`, et ne doit
 - **Validation physique en attente** sur Galaxy S23 Ultra (paysage/portrait) et Galaxy Tab A11+ Android 16 (paysage/portrait, thèmes clair et AMOLED). La réussite des assertions statiques ne garantit pas que One UI réserve correctement l'espace de sa barre des tâches ni que le clavier reste accessible.
 - P16 reste **gelée sur son commit antérieur** et ses insets existants; après confirmation P15 seulement, analyser le portage en évitant de cumuler les paddings système.
 
+
+
+## P15 — correctif ciblé Introduction + Historique + Onglets (GO utilisateur explicite)
+
+### Constat visuel et périmètre
+L'utilisateur a confirmé que la recherche de l'accueil P15 est maintenant **corrigée sur téléphone et tablette**. Il a ensuite constaté que les boutons de l'**introduction initiale** (Passer/Suivant/Terminer), et les boutons flottants d'**Historique** et d'**Onglets** sont cachés ou chevauchés par la barre des tâches Android 16 sur la tablette. Les captures montrent que les barres inférieures du **navigateur WebView** et du **mode Article** fonctionnent : elles ne sont **pas modifiées**.
+
+### Adaptations limitées P15
+1. Nouvelle classe `TargetedSystemBarInsets.java`, utilisée seulement pour ces **trois activités**. Elle ne s'applique qu'à Android API >= 35, force explicitement un seul contrat d'affichage bord à bord avec `WindowCompat.setDecorFitsSystemWindows(window,false)`, puis ajoute aux paddings d'origine les `WindowInsets.Type.systemBars() | displayCutout()`. Le calcul à partir des valeurs d'origine évite le cumul à chaque rotation, ouverture/fermeture de taskbar ou redimensionnement.
+2. `ChromerIntroActivity.kt` : appliquer cette protection au conteneur racine `android.R.id.content` qui englobe la bibliothèque AppIntro et ses commandes, plutôt qu'aux fragments des diapositives uniquement. **Aucune modification de la bibliothèque, du nombre de diapositives ni de la logique Passer / Suivant / Terminer**.
+3. `HistoryActivity.kt` et `TabsActivity.kt` : appliquer la protection à leur `CoordinatorLayout` qui contient la toolbar, la liste et le FAB, sans changer les dimensions du bouton ni son action.
+4. Étape statique GitHub Actions dédiée : vérifier les trois utilisations explicites, la présence des commandes d'introduction, l'ancrage des FAB, la garde API >= 35, la gestion des barres et découpes, ainsi que **l'absence du nouveau mécanisme dans HomeActivity/WebView/Article**. Tous les contrôles hérités, dont Changelog, recherche, trois tests Robolectric, signature v2, APK direct sans ZIP, restent actifs.
+
+**Branches protégées :** P14, branche Developer 3.0.0 Android 14, P16 et `main` ne sont pas modifiées. `targetSdkVersion 35`, `compileSdk 36`, `minSdk 16`, versionName `2.1.7`, versionCode `62` et package Debug inchangés. Aucun changement à SQLite, WebHeads, restauration, masquage et fermeture des bulles.
+
+### Risques et validation physique
+Le traitement fait passer ces seules trois vues sous un contrat explicite edge-to-edge et applique la zone sûre avant de rendre les commandes accessibles. Il reste à **vérifier physiquement** sur la Galaxy Tab A11+ Android 16 le haut et le bas de chaque écran (portrait, paysage et taskbar), l'usage de Passer/Suivant/Terminer, l'effacement de l'historique, la fermeture d'onglets ainsi que la navigation et le mode Article. Sur Galaxy S23 Ultra Android 14, la garde API protège la disposition précédente. Une compilation CI verte ne suffit pas à valider visuellement.
+
+### CI et artefact de ce correctif
+À compléter après réussite effective du nouveau workflow. Les précédents APK P15 **n'incluent pas ces trois corrections**.

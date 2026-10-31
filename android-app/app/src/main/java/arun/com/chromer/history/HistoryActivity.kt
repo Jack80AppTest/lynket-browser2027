@@ -26,6 +26,7 @@ import arun.com.chromer.di.activity.ActivityComponent
 import arun.com.chromer.shared.FabHandler
 import arun.com.chromer.shared.base.Snackable
 import arun.com.chromer.shared.base.activity.BaseActivity
+import arun.com.chromer.shared.base.activity.TargetedSystemBarInsets
 import butterknife.OnClick
 import com.google.android.material.snackbar.Snackbar
 import arun.com.chromer.databinding.ActivityHistoryBinding
@@ -39,6 +40,9 @@ class HistoryActivity : BaseActivity(), Snackable {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Keep the bottom-right action button above the Android 16 taskbar
+        // while keeping the toolbar below the status bar.
+        TargetedSystemBarInsets.protect(this, binding.coordinatorLayout)
         setSupportActionBar(binding.toolbar)
         if (supportActionBar != null) {
             supportActionBar!!.setDisplayHomeAsUpEnabled(true)

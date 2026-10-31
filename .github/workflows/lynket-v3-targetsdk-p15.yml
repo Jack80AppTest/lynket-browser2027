@@ -255,6 +255,48 @@ jobs:
           print('Home screen search and cards do not overlap; tablet system insets are handled (static regression).')
           PY
 
+      - name: Check intro, history and tabs system-bar controls
+        working-directory: android-app
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+
+          helper = Path('app/src/main/java/arun/com/chromer/shared/base/activity/TargetedSystemBarInsets.java').read_text()
+          assert 'Build.VERSION.SDK_INT < 35' in helper
+          assert 'WindowCompat.setDecorFitsSystemWindows(activity.getWindow(), false)' in helper
+          assert 'WindowInsets.Type.systemBars() | WindowInsets.Type.displayCutout()' in helper
+          assert 'originalBottom + safe.bottom' in helper
+          assert 'originalTop + safe.top' in helper
+          assert 'root.post(root::requestApplyInsets)' in helper
+
+          intro = Path('app/src/main/java/arun/com/chromer/intro/ChromerIntroActivity.kt').read_text()
+          assert 'showSkipButton(true)' in intro and 'isProgressButtonEnabled = true' in intro
+          assert 'findViewById<ViewGroup>(android.R.id.content)' in intro
+          assert 'TargetedSystemBarInsets.protect(this, introContent)' in intro
+
+          ns = '{http://schemas.android.com/apk/res/android}'
+          for name, activity in [
+                  ('history', 'history/HistoryActivity.kt'),
+                  ('tabs', 'tabs/ui/TabsActivity.kt')]:
+              layout = ET.parse('app/src/main/res/layout/activity_' + name + '.xml').getroot()
+              assert layout.attrib.get(ns + 'id') in ('@+id/coordinatorLayout', '@id/coordinatorLayout')
+              fab = layout.find('com.google.android.material.floatingactionbutton.FloatingActionButton')
+              assert fab is not None
+              assert fab.attrib[ns + 'layout_gravity'] == 'bottom|end'
+              activity_source = Path('app/src/main/java/arun/com/chromer/' + activity).read_text()
+              assert 'TargetedSystemBarInsets.protect(this, binding.coordinatorLayout)' in activity_source
+              assert 'setSupportActionBar(binding.toolbar)' in activity_source
+
+          home = Path('app/src/main/java/arun/com/chromer/home/HomeActivity.kt').read_text()
+          assert 'protectHomeContentFromSystemBars()' in home
+          assert 'TargetedSystemBarInsets' not in home
+          webview = Path('app/src/main/java/arun/com/chromer/browsing/webview/WebViewActivity.kt').read_text()
+          article = Path('app/src/main/java/arun/com/chromer/browsing/article/ArticleActivity.kt').read_text()
+          assert 'TargetedSystemBarInsets' not in webview and 'TargetedSystemBarInsets' not in article
+          print('Intro Skip/Next/Done and History/Tabs FAB inset checks passed; home, browser and article untouched.')
+          PY
+
       - name: Test persistent bubble storage
         working-directory: android-app
         run: |
