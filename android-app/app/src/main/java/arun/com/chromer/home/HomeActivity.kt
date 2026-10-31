@@ -20,7 +20,10 @@
 package arun.com.chromer.home
 
 import android.annotation.SuppressLint
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.core.view.postDelayed
 import androidx.preference.PreferenceManager
@@ -81,6 +84,20 @@ class HomeActivity : BaseActivity(), Snackable, UsesViewModel {
     private fun currentAmoledTheme(): Boolean =
             PreferenceManager.getDefaultSharedPreferences(this)
                     .getBoolean("amoled_black_theme", false)
+
+    // Ask only once when the user opens Lynket itself. A denied permission
+    // must never erase saved WebHeads or prevent the foreground service from starting.
+    private fun requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+        if (Preferences.get(this).isFirstRun) return
+        if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) return
+
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val key = "notification_permission_asked_api33"
+        if (prefs.getBoolean(key, false)) return
+        prefs.edit().putBoolean(key, true).apply()
+        requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 133)
+    }
 
     override fun inject(activityComponent: ActivityComponent) = activityComponent.inject(this)
 
@@ -152,7 +169,9 @@ class HomeActivity : BaseActivity(), Snackable, UsesViewModel {
             // Refresh the previously opened home screen, without restarting
             // Lynket or touching the WebHeads service.
             recreate()
+            return
         }
+        requestNotificationPermissionIfNeeded()
     }
 
     private fun setupFeed() {
