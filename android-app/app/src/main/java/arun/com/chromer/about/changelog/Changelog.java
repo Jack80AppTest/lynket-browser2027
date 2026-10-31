@@ -55,7 +55,6 @@ public class Changelog {
             @SuppressLint("InflateParams") final FrameLayout content = (FrameLayout) LayoutInflater.from(activity).inflate(R.layout.widget_changelog_layout, null);
             final MaterialProgressBar progress = content.findViewById(R.id.changelog_progress);
             final WebView webView = content.findViewById(R.id.changelog_web_view);
-            webView.loadData(activity.getString(R.string.changelog_text), "text/html", "utf-8");
             //noinspection deprecation
             webView.setWebViewClient(new WebViewClient() {
                 @Override
@@ -82,6 +81,13 @@ public class Changelog {
                     return super.shouldOverrideUrlLoading(view, url);
                 }
             });
+            // Android 10+ (targetSdk 29+) treats unescaped '#' in loadData as a
+            // fragment delimiter. Our bundled HTML contains CSS hex colors.
+            // Register the client before starting the load so the spinner is
+            // hidden only once the page actually finishes loading.
+            webView.loadDataWithBaseURL(null,
+                    activity.getString(R.string.changelog_text),
+                    "text/html", "UTF-8", null);
             new MaterialDialog.Builder(activity)
                     .customView(content, false)
                     .title("Changelog")
