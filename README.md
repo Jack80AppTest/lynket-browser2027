@@ -1,3 +1,22 @@
+# Lynket Custom 2027 — Android 16 reference (fork)
+
+This repository also contains **Lynket Custom 2027**, a maintained fork of the original [Lynket / Chromer](https://github.com/arunkumar9t2/lynket-browser). The original project description, credits, contribution instructions and GPL license are preserved **below** for historical context; links to the original Play Store listing refer to the original app, not to this fork.
+
+**Current validated source reference:** [`stable/v3.0.1`](https://github.com/Jack80AppTest/lynket-browser2027/tree/stable/v3.0.1) — internal version `3.0.1` (`versionCode 64`), `compileSdk 36`, `targetSdk 36`. This is a development-signed Android build, **not** a Google Play production artifact. See the version-specific build report in [`docs/V3_0_1_VERSIONING.md`](docs/V3_0_1_VERSIONING.md).
+
+**Where to start as a developer:**
+- [**Architecture and maintenance map**](docs/P16_CODE_ARCHITECTURE.md): source entry points, navigation, WebHeads persistence, Android compatibility, and regression tests.
+- [**P16 code-cleanup report**](docs/P16_CODE_CLEANUP.md): documents exactly what was changed (documentation/comments only).
+- Android app module: [`android-app/app/`](android-app/app/); Gradle wrapper and project settings: [`android-app/`](android-app/).
+- Source reference history is in [`docs/`](docs/). Older P14/P15/P16 reports are development history, not instructions to change the current implementation.
+
+**Behavioral contract:** hiding WebHeads only removes the overlay. It does **not** delete saved tabs. Explicit close actions remove persisted URLs; incognito tabs are not saved. Chrome Custom Tabs and sharing use separate paths; preserve their activity lifecycle semantics when making changes.
+
+**Build and tests:** from `android-app/`, the Android Debug build is `./gradlew :app:assembleDebug`. The project CI workflows include specific Robolectric tests and Android compatibility checks. The current fork Debug application ID ends with `.debug`; do not confuse it with a production-signed package.
+
+---
+
+## Original Lynket README (upstream text retained)
 
 # Lynket
 **Android browser app based on Custom Tabs protocol.**
