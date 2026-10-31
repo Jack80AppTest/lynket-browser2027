@@ -90,4 +90,14 @@ Après compilation CI, installer/tester P16 sur la **Galaxy Tab A11+ Android 16*
 - **P16 reste candidate jusqu'à validation explicite. `main`, P14, P15 validée et la branche Developer Android 14 restent intacts. Aucune pull request ni release.**
 
 ### Résultat CI du correctif
-À compléter après réussite du nouveau build, confirmation du run et de l'artefact P16 (les APK antérieurs n'incluent pas ce correctif).
+**GitHub Actions P16 : entièrement verte**, [run `41224535954`](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41224535954), job `124605823470`, `completed / success`, **21 étapes réussies**, aucune étape supprimée.
+- **Commit exact compilé** : `7d68ffa573fc9241b1e646a2387b9acbb4904fbc`.
+- `:app:assembleDebug` : réussi; tous les contrôles Android 11–16, Changelog, insets Android 16 et report des correctifs P15 : réussis.
+- Nouveau contrôle des callbacks Chrome et du traitement du partage avant fermeture : réussi. **Attention : contrôle statique, pas simulation de Chrome Android 14 ou de Samsung Internet.**
+- Trois tests Robolectric : `BubbleSessionStoreTest`, `SavedBubblesCardModelTest` et `SettingsGroupAdapterTest` : tous réussis.
+- `aapt` : `com.jk8026.lynket2027.debug`, targetSdk `36`, versionCode `62`, versionName `2.1.7 - dev`; signature APK scheme v2 : vérifiée par `apksigner`.
+- **APK natif DIRECT sans ZIP** : [Lynket_2027_v2.1.7_TargetSdk_P16_Debug.apk](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41224535954/artifacts/13051826396) — ID artefact `13051826396`, **8 692 305 octets**, `actions/upload-artifact@v7`, `archive:false`.
+- SHA-256 de **métadonnée GitHub d'artefact** (non recalculée sur l'APK téléchargé) : `2c43fd06a9172045c187ad1df9ff2bd38c08221652ba7acab4f103ad15167215`. Expiration GitHub indiquée **29 janvier 2027 à 17:26:27 UTC**.
+- Le précédent P16 artefact `13049929192` / run `41221342701` **ne contient pas ces deux nouveaux correctifs**.
+- **Validation utilisateur encore obligatoire** : tester Minimiser et Slide Over depuis Chrome et Samsung Internet sur Galaxy S23 Ultra **Android 14**, contrôler que Chrome Custom Tabs réellement minimise, et reconfirmer ces fonctions et les bulles sur Galaxy Tab A11+ **Android 16**. Ne pas déclarer « réparé » ni proposer une pull request avant ces essais.
+- Aucun changement de `main`, P14, P15 (validée) ou Developer Android 14; mise à jour de rapport après compilation seulement (`paths-ignore: docs/**`).
