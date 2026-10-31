@@ -83,6 +83,7 @@ constructor(
                     id("recents-progress")
                 }
             }
+            else -> Unit // Preserve previous behavior for empty/error states.
         }
 
         // Independent persistent-session card immediately below Recents.
