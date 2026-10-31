@@ -26,3 +26,17 @@
 6. **Do not call P11 validated or proceed to P12 until user explicitly confirms testing on physical phone. Do not merge to `main`/stable or publish release without explicit instruction.**
 
 **Status: P11 candidate staged; CI and device validation pending.**
+
+## P11 CI result — full success; physical-device validation pending
+
+- **Verified green GitHub Actions:** https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41195000275
+- Exact tested application code commit: `e5479dc0b50f1e6e69444a029b8fcbce72823bb5`.
+- `:app:assembleDebug`: **success** on Kotlin 2.2.21, Gradle 8.11.1, AGP 8.10.1, compileSdk 36, **targetSdk 30**.
+- Dedicated XML check for manifest `<queries>`, browser VIEW http/https, launcher apps, Custom Tabs service, voice recognition, built-in browser providers, no `QUERY_ALL_PACKAGES`: **success**.
+- Existing automated tests (`BubbleSessionStoreTest`, `SavedBubblesCardModelTest`, `SettingsGroupAdapterTest`): **success** unchanged.
+- APK package ID `com.jk8026.lynket2027.debug`, Android version 2.1.7/code62, targetSdk30, packed `<queries>` and signature using v2 APK scheme: **success**.
+- **Direct APK artifact, not ZIP**: [Lynket_2027_v2.1.7_TargetSdk_P11_Debug.apk](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41195000275/artifacts/13040149654), **8,689,972 bytes**.
+- No functional code, database, overlay, menus, layouts or UI changes apart from intended Android package visibility manifest declaration and targetSdk.
+- **P11 STATUS: CI green, NOT yet validated on physical Samsung Galaxy S23 Ultra.**
+- Important phone-test additions compared to P10: custom-tab browser provider **discovery and selection**, installed-app lists in per-app settings, voice search/recognition, secondary-browser actions; in addition to sharing URL, WebHeads overlay, hide/restore, tab persistence on app process relaunch, settings and themes.
+- **P10 remains latest explicitly user-validated rollback** at `7af8b398544eb53387e29097b779a6b7e311fc50`. No P12, no merge into `main`/stable, no release without further explicit user approval.
