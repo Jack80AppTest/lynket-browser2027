@@ -316,7 +316,7 @@
     <string name="chromer_flexible">Flexible</string>
     <string name="tutorial_amp_intro">Lynket can find and load AMP pages automatically which leads to quicker and smoother reading experience.</string>
     <string name="illustrations_and_video">Illustrations and Video</string>
-    <string name="beta_testers">Google+ Beta testers</string>
+    <string name="beta_testers">Beta testers</string>
     <string name="tips">Tips</string>
     <string name="tips_description">See tips to get the best out of Lynket</string>
     <string name="choose_provider_tip">Lynket supports any browser implementing the Custom Tab protocol. Lynket also inherits behaviour from the provider chosen. For example, using Brave will enable adblock.</string>

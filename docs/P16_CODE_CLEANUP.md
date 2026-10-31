@@ -75,3 +75,11 @@ The user explicitly required the app to retain its **original display name, Lynk
 ## Publication policy
 
 No merge to `main`, no PR, no new tag/release, no edits to `stable/v3.0.1` without a further explicit instruction. The version 3.0.1 release already created by the user remains unchanged.
+
+## Removing obsolete Google+ links from About — approved cleanup
+
+- The author's own name, portrait and other links remain intact. Only the obsolete “Add to Google+ Circles” row and its old destination were removed; the remaining Author adapter positions were adjusted together.
+- Original contributor names, John Krauza's modernization credit and the historical beta-tester attribution remain visible. The beta-testers label is now “Beta testers” / “Bêta-testeurs”, with no Google+ icon.
+- The three obsolete Google+ profile/community URLs for legacy contributors were removed from the Credits click handler; Credits entries are now non-clickable informational rows. No replacement URLs were invented.
+- Version 3.0.1, app title “Lynket”, application identifiers, build dependencies, manifest, permissions, WebHeads, Custom Tabs and data persistence are unchanged.
+- Build verification of this exact change: to be appended after GitHub Actions completes.

@@ -248,14 +248,6 @@ class AboutFragment : Fragment() {
                     holder.about_row_item_image.setImageDrawable(roundedBitmapDrawable)
                 }
                 1 -> {
-                    holder.about_app_title.setText(R.string.add_to_circles)
-                    holder.about_app_subtitle.visibility = View.GONE
-                    holder.about_row_item_image.background = IconicsDrawable(requireActivity())
-                            .icon(CommunityMaterial.Icon.cmd_google_circles)
-                            .color(ContextCompat.getColor(requireActivity(), R.color.google_plus))
-                            .sizeDp(24)
-                }
-                2 -> {
                     holder.about_app_title.setText(R.string.follow_twitter)
                     holder.about_app_subtitle.visibility = View.GONE
                     holder.about_row_item_image.background = IconicsDrawable(requireActivity())
@@ -263,7 +255,7 @@ class AboutFragment : Fragment() {
                             .color(ContextCompat.getColor(requireActivity(), R.color.twitter))
                             .sizeDp(24)
                 }
-                3 -> {
+                2 -> {
                     holder.about_app_title.setText(R.string.connect_linkedIn)
                     holder.about_app_subtitle.visibility = View.GONE
                     holder.about_row_item_image.background = IconicsDrawable(requireActivity())
@@ -271,7 +263,7 @@ class AboutFragment : Fragment() {
                             .color(ContextCompat.getColor(requireActivity(), R.color.linkedin))
                             .sizeDp(24)
                 }
-                4 -> {
+                3 -> {
                     holder.about_app_title.setText(R.string.fork_on_github)
                     holder.about_app_subtitle.visibility = View.GONE
                     holder.about_row_item_image.background = IconicsDrawable(requireActivity())
@@ -279,7 +271,7 @@ class AboutFragment : Fragment() {
                             .color(Color.BLACK)
                             .sizeDp(24)
                 }
-                5 -> {
+                4 -> {
                     holder.about_app_title.setText(R.string.more_apps)
                     holder.about_app_subtitle.visibility = View.GONE
                     holder.about_row_item_image.background = IconicsDrawable(requireActivity())
@@ -291,7 +283,7 @@ class AboutFragment : Fragment() {
         }
 
         override fun getItemCount(): Int {
-            return 6
+            return 5
         }
 
         internal inner class ItemHolder(val containerView: View)
@@ -313,22 +305,18 @@ class AboutFragment : Fragment() {
                 when (position) {
                     0 -> return
                     1 -> {
-                        val myProfile = Intent(Intent.ACTION_VIEW, Uri.parse("http://google.com/+arunkumar5592"))
-                        requireActivity().startActivity(myProfile)
-                    }
-                    2 -> {
                         val twitterIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/arunkumar_9t2"))
                         requireActivity().startActivity(twitterIntent)
                     }
-                    3 -> {
+                    2 -> {
                         val linkedInIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://in.linkedin.com/in/arunkumar9t2"))
                         requireActivity().startActivity(linkedInIntent)
                     }
-                    4 -> {
+                    3 -> {
                         val github = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/arunkumar9t2/"))
                         requireActivity().startActivity(github)
                     }
-                    5 -> {
+                    4 -> {
                         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/dev?id=9082544673727889961")))
                     }
                 }
@@ -387,10 +375,9 @@ class AboutFragment : Fragment() {
                 beta -> {
                     holder.about_app_title.setText(R.string.beta_testers)
                     holder.about_app_subtitle.gone()
-                    holder.about_row_item_image.setImageDrawable(IconicsDrawable(requireActivity())
-                            .icon(CommunityMaterial.Icon.cmd_google_plus)
-                            .colorRes(R.color.md_red_700)
-                            .sizeDp(24))
+                    // Beta testers retain their credit, without a defunct Google+ icon.
+                    GlideApp.with(holder.itemView.context).clear(holder.about_row_item_image)
+                    holder.about_row_item_image.setImageDrawable(null)
                 }
             }
         }
@@ -398,7 +385,7 @@ class AboutFragment : Fragment() {
         override fun getItemCount() = items.size
 
         internal inner class ItemHolder(val containerView: View)
-            : RecyclerView.ViewHolder(containerView), View.OnClickListener {
+            : RecyclerView.ViewHolder(containerView) {
             private val row by lazy(LazyThreadSafetyMode.NONE) {
                 FragmentAboutListItemTemplateBinding.bind(itemView)
             }
@@ -407,34 +394,11 @@ class AboutFragment : Fragment() {
             val about_row_item_image get() = row.aboutRowItemImage
 
 
+            // Historical contributors are acknowledged as text; their
+            // former Google+ destinations are no longer available.
             init {
-                itemView.setOnClickListener(this)
-            }
-
-            override fun onClick(view: View) {
-                when (items[adapterPosition]) {
-                    patryk -> {
-                        requireActivity()
-                                .startActivity(Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse("https://plus.google.com/+PatrykGoworowski")
-                                ))
-                    }
-                    max -> {
-                        requireActivity()
-                                .startActivity(Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse("https://plus.google.com/+Windows10-tutorialsBlogspot")
-                                ))
-                    }
-                    beta -> {
-                        requireActivity()
-                                .startActivity(Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse("https://plus.google.com/communities/109754631011301174504")
-                                ))
-                    }
-                }
+                itemView.isClickable = false
+                itemView.isFocusable = false
             }
         }
     }
