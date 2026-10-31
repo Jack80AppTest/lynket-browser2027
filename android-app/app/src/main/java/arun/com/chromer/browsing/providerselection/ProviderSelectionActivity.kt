@@ -51,7 +51,8 @@ import butterknife.Unbinder
 import com.afollestad.materialdialogs.MaterialDialog
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.iconics.IconicsDrawable
-import kotlinx.android.synthetic.main.activity_provider_selection.*
+import arun.com.chromer.databinding.ActivityProviderSelectionBinding
+import android.view.ViewGroup
 import rx.subscriptions.CompositeSubscription
 import java.util.*
 import javax.inject.Inject
@@ -74,6 +75,10 @@ class ProviderSelectionActivity : BaseActivity() {
 
     override fun getLayoutRes() = R.layout.activity_provider_selection
 
+    private val binding by lazy(LazyThreadSafetyMode.NONE) {
+        ActivityProviderSelectionBinding.bind(findViewById<ViewGroup>(android.R.id.content).getChildAt(0))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupToolbar()
@@ -93,7 +98,7 @@ class ProviderSelectionActivity : BaseActivity() {
 
 
     private fun setupToolbar() {
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         if (supportActionBar != null) {
             supportActionBar!!.setDisplayHomeAsUpEnabled(true)
             supportActionBar!!.setHomeAsUpIndicator(R.drawable.article_ic_close)
@@ -101,7 +106,7 @@ class ProviderSelectionActivity : BaseActivity() {
     }
 
     private fun setupCustomTabProvidersCard() {
-        providerRecyclerView.apply {
+        binding.providerRecyclerView.apply {
             layoutManager = GridLayoutManager(this@ProviderSelectionActivity, 4)
             adapter = providersAdapter
         }
@@ -119,9 +124,9 @@ class ProviderSelectionActivity : BaseActivity() {
                         .icon(CommunityMaterial.Icon.cmd_web)
                         .colorRes(R.color.primary)
                         .sizeDp(56))
-                .into(webViewImg)
+                .into(binding.webViewImg)
         if (!Utils.ANDROID_LOLLIPOP) {
-            webViewNotRecommended.show()
+            binding.webViewNotRecommended.show()
         }
     }
 

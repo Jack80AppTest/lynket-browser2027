@@ -54,7 +54,8 @@ import dagger.multibindings.IntoMap
 import dev.arunkumar.android.dagger.viewmodel.UsesViewModel
 import dev.arunkumar.android.dagger.viewmodel.ViewModelKey
 import dev.arunkumar.android.dagger.viewmodel.viewModel
-import kotlinx.android.synthetic.main.activity_main.*
+import arun.com.chromer.databinding.ActivityMainBinding
+import android.view.ViewGroup
 import javax.inject.Inject
 
 @SuppressLint("CheckResult")
@@ -68,6 +69,10 @@ class HomeActivity : BaseActivity(), Snackable, UsesViewModel {
     @Inject
     override lateinit var viewModelFactory: ViewModelProvider.Factory
     private val homeActivityViewModel by viewModel<HomeActivityViewModel>()
+
+    private val binding by lazy(LazyThreadSafetyMode.NONE) {
+        ActivityMainBinding.bind(findViewById<ViewGroup>(android.R.id.content).getChildAt(0))
+    }
 
     // A HomeActivity already in the back stack can keep its old colors after
     // the user changes the theme in Settings. Remember what it was built with.
@@ -104,15 +109,15 @@ class HomeActivity : BaseActivity(), Snackable, UsesViewModel {
     }
 
     override fun snack(textToSnack: String) {
-        Snackbar.make(coordinatorLayout, textToSnack, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(binding.coordinatorLayout, textToSnack, Snackbar.LENGTH_SHORT).show()
     }
 
     override fun snackLong(textToSnack: String) {
-        Snackbar.make(coordinatorLayout, textToSnack, Snackbar.LENGTH_LONG).show()
+        Snackbar.make(binding.coordinatorLayout, textToSnack, Snackbar.LENGTH_LONG).show()
     }
 
     private fun setupToolbar() {
-        tipsIcon.setImageDrawable(IconicsDrawable(this)
+        binding.tipsIcon.setImageDrawable(IconicsDrawable(this)
                 .icon(CommunityMaterial.Icon.cmd_lightbulb_on)
                 .colorRes(R.color.md_yellow_700)
                 .sizeDp(24))
@@ -120,10 +125,10 @@ class HomeActivity : BaseActivity(), Snackable, UsesViewModel {
 
     private fun setupEventListeners() {
         subs.add(rxEventBus.filteredEvents<TabsManager.FinishRoot>().subscribe { finish() })
-        settingsIcon.setOnClickListener {
+        binding.settingsIcon.setOnClickListener {
             startActivity(Intent(this, SettingsGroupActivity::class.java))
         }
-        tipsIcon.setOnClickListener {
+        binding.tipsIcon.setOnClickListener {
             startActivity(Intent(this, TipsActivity::class.java))
         }
     }
@@ -151,7 +156,7 @@ class HomeActivity : BaseActivity(), Snackable, UsesViewModel {
     }
 
     private fun setupFeed() {
-        homeFeedRecyclerView.apply {
+        binding.homeFeedRecyclerView.apply {
             setController(homeFeedController)
             (itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
         }
@@ -167,7 +172,7 @@ class HomeActivity : BaseActivity(), Snackable, UsesViewModel {
     }
 
     private fun setupSearchBar() {
-        materialSearchView.apply {
+        binding.materialSearchView.apply {
             // Handle voice item failed
             voiceSearchFailed()
                     .takeUntil(lifecycleEvents.destroys)
@@ -192,9 +197,9 @@ class HomeActivity : BaseActivity(), Snackable, UsesViewModel {
                     .takeUntil(lifecycleEvents.destroys)
                     .subscribe { hasFocus ->
                         if (hasFocus) {
-                            shadowView.show()
+                            binding.shadowView.show()
                         } else {
-                            shadowView.gone()
+                            binding.shadowView.gone()
                         }
                     }
 
@@ -208,8 +213,8 @@ class HomeActivity : BaseActivity(), Snackable, UsesViewModel {
     }
 
     override fun onBackPressed() {
-        if (materialSearchView.hasFocus()) {
-            materialSearchView.clearFocus()
+        if (binding.materialSearchView.hasFocus()) {
+            binding.materialSearchView.clearFocus()
             return
         }
         super.onBackPressed()
@@ -217,7 +222,7 @@ class HomeActivity : BaseActivity(), Snackable, UsesViewModel {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        materialSearchView.onActivityResult(requestCode, resultCode, data)
+        binding.materialSearchView.onActivityResult(requestCode, resultCode, data)
     }
 
     @Module

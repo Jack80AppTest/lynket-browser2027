@@ -28,13 +28,18 @@ import arun.com.chromer.shared.base.Snackable
 import arun.com.chromer.shared.base.activity.BaseActivity
 import butterknife.OnClick
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_history.*
+import arun.com.chromer.databinding.ActivityHistoryBinding
+import android.view.ViewGroup
 
 class HistoryActivity : BaseActivity(), Snackable {
 
+    private val binding by lazy(LazyThreadSafetyMode.NONE) {
+        ActivityHistoryBinding.bind(findViewById<ViewGroup>(android.R.id.content).getChildAt(0))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         if (supportActionBar != null) {
             supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         }
@@ -60,11 +65,11 @@ class HistoryActivity : BaseActivity(), Snackable {
     }
 
     override fun snack(textToSnack: String) {
-        Snackbar.make(coordinatorLayout, textToSnack, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(binding.coordinatorLayout, textToSnack, Snackbar.LENGTH_SHORT).show()
     }
 
     override fun snackLong(textToSnack: String) {
-        Snackbar.make(coordinatorLayout, textToSnack, Snackbar.LENGTH_LONG).show()
+        Snackbar.make(binding.coordinatorLayout, textToSnack, Snackbar.LENGTH_LONG).show()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
