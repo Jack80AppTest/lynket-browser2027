@@ -59,6 +59,7 @@ import dev.arunkumar.android.dagger.viewmodel.ViewModelKey
 import dev.arunkumar.android.dagger.viewmodel.viewModel
 import arun.com.chromer.databinding.ActivityMainBinding
 import android.view.ViewGroup
+import android.view.WindowInsets
 import javax.inject.Inject
 
 @SuppressLint("CheckResult")
@@ -119,10 +120,39 @@ class HomeActivity : BaseActivity(), Snackable, UsesViewModel {
 
         Changelog.conditionalShow(this)
 
+        protectHomeContentFromSystemBars()
         setupToolbar()
         setupSearchBar()
         setupFeed()
         setupEventListeners()
+    }
+
+    /**
+     * Android 15+ may draw our home screen behind the navigation bar or the
+     * tablet taskbar. Keep the search field, menu buttons and screen header in
+     * the safe content area; on Android 14 and earlier preserve P14 layout.
+     *
+     * Use original padding for every inset dispatch so rotating the device
+     * cannot accumulate padding and move the search bar progressively up.
+     */
+    private fun protectHomeContentFromSystemBars() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) return
+
+        val root = binding.root
+        val initialLeft = root.paddingLeft
+        val initialTop = root.paddingTop
+        val initialRight = root.paddingRight
+        val initialBottom = root.paddingBottom
+
+        root.setOnApplyWindowInsetsListener { view, windowInsets ->
+            val safe = windowInsets.getInsets(
+                    WindowInsets.Type.systemBars() or WindowInsets.Type.displayCutout()
+            )
+            view.setPadding(initialLeft + safe.left, initialTop + safe.top,
+                    initialRight + safe.right, initialBottom + safe.bottom)
+            windowInsets
+        }
+        root.post { root.requestApplyInsets() }
     }
 
     override fun snack(textToSnack: String) {

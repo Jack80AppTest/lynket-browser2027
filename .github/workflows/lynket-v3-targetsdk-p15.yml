@@ -224,6 +224,37 @@ jobs:
           print('Changelog HTML, safe loadDataWithBaseURL, event-order and full-source audit: OK')
           PY
 
+      - name: Verify safe homepage search area in tablet and landscape layouts
+        working-directory: android-app
+        run: |
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+
+          ns = '{http://schemas.android.com/apk/res/android}'
+          app = '{http://schemas.android.com/apk/res-auto}'
+          layout = ET.parse('app/src/main/res/layout/activity_main.xml').getroot()
+          card = layout.find('androidx.cardview.widget.CardView')
+          assert card is not None and card.attrib[ns + 'layout_marginBottom'] == '0dp'
+          container = card.find('androidx.constraintlayout.widget.ConstraintLayout')
+          assert container is not None
+          feed = container.find('com.airbnb.epoxy.EpoxyRecyclerView')
+          search = container.find('arun.com.chromer.search.view.MaterialSearchView')
+          assert feed is not None and search is not None
+          assert feed.attrib[app + 'layout_constraintBottom_toTopOf'] == '@id/materialSearchView'
+          assert app + 'layout_constraintBottom_toBottomOf' not in feed.attrib
+          assert search.attrib[app + 'layout_constraintBottom_toBottomOf'] == 'parent'
+          assert search.attrib[ns + 'layout_marginBottom'] == '8dp'
+          activity = Path('app/src/main/java/arun/com/chromer/home/HomeActivity.kt').read_text()
+          assert 'Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM' in activity
+          assert 'root.setOnApplyWindowInsetsListener' in activity
+          assert 'WindowInsets.Type.systemBars() or WindowInsets.Type.displayCutout()' in activity
+          assert 'initialBottom + safe.bottom' in activity
+          assert 'root.post { root.requestApplyInsets() }' in activity
+          assert 'protectHomeContentFromSystemBars()' in activity
+          print('Home screen search and cards do not overlap; tablet system insets are handled (static regression).')
+          PY
+
       - name: Test persistent bubble storage
         working-directory: android-app
         run: |

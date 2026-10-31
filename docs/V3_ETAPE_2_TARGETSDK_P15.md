@@ -53,3 +53,26 @@ Le rapport est passif, ignoré par la CI via `paths-ignore: docs/**`, et ne doit
 - L'APK P15 original du run `41204588299` **ne contient pas** le correctif. Tester uniquement le nouvel APK.
 - **P15 en attente de validation manuelle** sur tablette Android 16. Un APK ciblant API 35 sur Android 16 peut tourner, mais cela ne valide pas à lui seul les changements propres à une cible API 36.
 - Aucun merge dans `main`, et P14 / version Developer 3.0.0 restent intacts.
+
+
+## Correctif P15 — recherche masquée par la barre système (tablette) et chevauchement paysage (téléphone)
+
+### Retours utilisateur et diagnostic
+- Captures Galaxy S23 Ultra : en portrait la recherche reste visible, mais en paysage elle peut recouvrir la carte « Bulles sauvegardées » et les boutons MASQUER / RESTAURER. Le défilement est déjà en bas.
+- Captures Galaxy Tab A11+ Android 16 (clair / AMOLED, portrait / paysage) : recherche invisible ou partiellement visible **sous la barre système / barre des tâches du bas**. Le contenu ne permet pas de la dégager par défilement.
+- La cause probable dans `activity_main.xml` est un `MaterialSearchView` épinglé au bas de son `ConstraintLayout` tandis que `homeFeedRecyclerView` est également contraint jusqu'au bas du parent, sans réserver la hauteur de la recherche; une marge négative `-8dp` du conteneur peut accentuer le débordement. Sur Android 15/16, les barres système peuvent masquer les vues lorsque les insets ne sont pas traités. Référence officielle : https://developer.android.com/develop/ui/views/layout/edge-to-edge
+- **Correctif P15 uniquement**, explicitement demandé avant tout changement P16 : aucune modernisation P16 n'est intégrée dans cette branche.
+
+### Modifications minimales
+1. `activity_main.xml` : le `homeFeedRecyclerView` s'arrête à `@id/materialSearchView` au lieu de `parent` pour que les cartes restent défilables au-dessus de la barre de recherche; marge négative du conteneur CardView remise à `0dp`. La recherche garde son ancrage inférieur `8dp`.
+2. `HomeActivity.kt` : exclusivement sur Android 15+ (SDK >= 35), appliquer au conteneur racine les insets système (statut, navigation / taskbar, découpe d'écran). Le calcul part des paddings d'origine et ne s'accumule pas après rotation/changement d'écran; **Android 14 et moins n'ont pas ce nouvel ajustement**.
+3. `.github/workflows/lynket-v3-targetsdk-p15.yml` : nouveau contrôle XML/Kotlin statique pour le positionnement, l'espace de défilement et les insets, tout en conservant les contrôles Android 11–15, l'audit Changelog, les trois tests Robolectric, identité/signature APK et upload direct sans ZIP.
+4. Version `2.1.7`, versionCode `62`, targetSdk `35`, minSdk `16`, package Debug, style AMOLED, WebHeads, sauvegarde SQLite et comportement MASQUER ≠ FERMER **inchangés**.
+
+### Validation et portage futur
+- Ce correctif de layout n'a pas encore été validé visuellement par l'utilisateur : **ne pas appeler P15 validée tant que les captures sur téléphone/tablette ne sont pas conformes**. Vérifier les deux orientations, thèmes clair/AMOLED, boutons MASQUER/RESTAURER, focus, clavier et recherche.
+- La branche P16 `dev/3.0.0-targetsdk-p16` était déjà créée avant ces retours; **aucune modification sur P16** dans ce correctif. Après validation P15, intégrer les ajustements de façon contrôlée à P16, vérifier la compatibilité avec son traitement global des insets (éviter tout double padding), puis reconstruire P16. Ne pas utiliser son APK précédent comme preuve du correctif P15.
+- Une CI verte vérifie le code et des assertions statiques, **pas l'affichage réel sous One UI/Android 16**.
+
+### CI du correctif positionnement
+À compléter uniquement une fois que le workflow du commit de code aura terminé et que l'artefact sera vérifié.
