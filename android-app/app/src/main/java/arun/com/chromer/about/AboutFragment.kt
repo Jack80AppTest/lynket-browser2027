@@ -350,10 +350,12 @@ class AboutFragment : Fragment() {
             return ItemHolder(view)
         }
 
+        private val john = "John Krauza"
         private val patryk = "Patryk"
         private val max = "Max"
         private val beta = "Beta Testers"
         private val items = arrayListOf(
+                john,
                 patryk,
                 max,
                 beta
@@ -364,6 +366,14 @@ class AboutFragment : Fragment() {
         @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: ItemHolder, position: Int) {
             when (items[position]) {
+                john -> {
+                    holder.about_app_title.text = john
+                    holder.about_app_subtitle.setText(R.string.android_modernization_credit)
+                    holder.about_app_subtitle.visibility = View.VISIBLE
+                    // Keep the same credit-row spacing without introducing a portrait or link.
+                    GlideApp.with(holder.itemView.context).clear(holder.about_row_item_image)
+                    holder.about_row_item_image.setImageDrawable(null)
+                }
                 patryk -> {
                     holder.about_app_title.text = "Patryk Goworowski"
                     holder.about_app_subtitle.setText(R.string.icon_design)
