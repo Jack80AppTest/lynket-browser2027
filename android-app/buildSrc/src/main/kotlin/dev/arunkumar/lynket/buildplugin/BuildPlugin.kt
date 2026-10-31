@@ -3,7 +3,6 @@
  */
 package dev.arunkumar.lynket.buildplugin
 
-import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import java.util.*
@@ -25,11 +24,11 @@ class BuildPlugin : Plugin<Project> {
         val localPropertiesFile = rootProject.file("local.properties")
         if (localPropertiesFile.exists()) {
             val localProperties = Properties().apply { load(localPropertiesFile.bufferedReader()) }
-            allprojects(Action<Project> { project ->
+            allprojects {
                 localProperties.forEach { key, value ->
-                    project.putPropertyIfNotExists(key.toString(), value)
+                    putPropertyIfNotExists(key.toString(), value)
                 }
-            })
+            }
         }
     }
 
@@ -38,9 +37,9 @@ class BuildPlugin : Plugin<Project> {
      * build run successfully
      */
     private fun Project.ensureBuildVariables() {
-        allprojects(Action<Project> { project ->
-            project.putPropertyIfNotExists("FABRIC_KEY", "")
-            project.putPropertyIfNotExists("PLAY_LICENSE_KEY", "")
-        })
+        allprojects {
+            putPropertyIfNotExists("FABRIC_KEY", "")
+            putPropertyIfNotExists("PLAY_LICENSE_KEY", "")
+        }
     }
 }
