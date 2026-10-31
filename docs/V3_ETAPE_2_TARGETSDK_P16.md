@@ -56,4 +56,13 @@
 Après compilation CI, installer/tester P16 sur la **Galaxy Tab A11+ Android 16** puis le Galaxy S23 Ultra Android 14 : recherche en portrait/paysage, introduction Passer / Suivant / Terminer, FAB Historique et Onglets, WebView, Article, Changelog, thème clair/AMOLED et bulles SQLite/masquer/restaurer. P15 reste notre **base validée** jusqu'à confirmation expresse sur P16.
 
 ### Résultat final du build intégrant les correctifs P15
-À consigner seulement après obtention du run GitHub Actions terminé et de l'artefact réel.
+**GitHub Actions : succès complet** — [run `41221342701`](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41221342701), job `124596359868`, statut `completed / success`, **20 étapes réussies**, aucun test désactivé.
+- **Commit exact du code P16 compilé** : `a5e7ddfe4a299e5b261d61d59403a03f274b0767`. Les commits documentaires post-build ne modifient pas le code testé.
+- `:app:assembleDebug` : **réussi**. Android 11–16, compatibilité FGS WebHeads, Changelog, insets Android 16, nouvelle assertion anti-double-insets avec recherche/intro/Historique/Onglets : **réussis**.
+- Tests Robolectric `BubbleSessionStoreTest`, `SavedBubblesCardModelTest`, `SettingsGroupAdapterTest` : **tous réussis**.
+- `aapt` : **package** `com.jk8026.lynket2027.debug`, **targetSdk 36**, **versionCode 62**, **versionName 2.1.7 - dev**, manifeste et permissions de notification / FGS `specialUse` vérifiés. `apksigner` : signature APK scheme **v2** vérifiée.
+- **APK natif DIRECT sans ZIP** : [Lynket_2027_v2.1.7_TargetSdk_P16_Debug.apk](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41221342701/artifacts/13049929192), artefact GitHub **`13049929192`**, taille **8 692 143 octets**, `actions/upload-artifact@v7` / `archive:false`.
+- SHA-256 **rapportée dans les métadonnées GitHub de l'artefact** (non recalculée localement depuis le fichier) : `4011a76fd4eeec4de44d3aaf346fef01c0d1e9b0ce6c8ab5b751f90b7365208d`. Date d'expiration indiquée **29 janvier 2027 à 16:47:09 UTC**.
+- Les anciennes P16 run `41210296330` / artefact `13046371425` **n'incluent pas le portage de tous les correctifs P15**; ne pas les utiliser pour les essais de cette étape.
+- **P16 attend toujours la validation sur appareils** : tablet Android 16 et téléphone Android 14. Seule P15 est déjà officiellement validée physiquement, sur les deux appareils.
+- Aucun merge ni publication, et `main`, P14, la Developer Android 14 et P15 sont conservées intactes.
