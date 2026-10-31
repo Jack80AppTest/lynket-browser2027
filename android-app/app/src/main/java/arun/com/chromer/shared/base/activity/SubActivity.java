@@ -28,6 +28,12 @@ import androidx.appcompat.app.AppCompatActivity;
  */
 public abstract class SubActivity extends AppCompatActivity {
     @Override
+    public void onContentChanged() {
+        super.onContentChanged();
+        EdgeToEdgeInsets.apply(this);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finishWithTransition();

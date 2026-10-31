@@ -19,8 +19,6 @@
 <resources>
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Android 15 only: preserve the pre-P15 screen layout; revisit before API 36. -->
-        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -83,8 +81,6 @@
 
 
     <style name="ArticleTheme.Base" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <!-- Android 15 only: preserve the pre-P15 screen layout; revisit before API 36. -->
-        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
         <item name="colorPrimary">@color/article_colorPrimary</item>
         <item name="colorPrimaryDark">@color/article_colorPrimaryDark</item>
         <item name="colorAccent">@color/article_colorAccent</item>
@@ -97,14 +93,10 @@
     <style name="ArticleTheme" parent="ArticleTheme.Base" />
 
     <style name="ArticleImageViewTheme" parent="Theme.AppCompat.NoActionBar">
-        <!-- Android 15 only: preserve the pre-P15 screen layout; revisit before API 36. -->
-        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
         <item name="android:windowBackground">@android:color/black</item>
     </style>
 
     <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
-        <!-- Android 15 only: preserve the pre-P15 screen layout; revisit before API 36. -->
-        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="windowActionBar">false</item>
@@ -115,15 +107,11 @@
     </style>
 
     <style name="AppTheme.Launcher" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Android 15 only: preserve the pre-P15 screen layout; revisit before API 36. -->
-        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="android:windowBackground">@drawable/launch_screen</item>
     </style>
 
     <style name="Theme.AppCompat.Translucent" parent="Theme.AppCompat.NoActionBar">
-        <!-- Android 15 only: preserve the pre-P15 screen layout; revisit before API 36. -->
-        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:colorBackgroundCacheHint">@null</item>

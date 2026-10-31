@@ -62,6 +62,12 @@ public abstract class BaseActivity extends AppCompatActivity implements Provides
         }
     }
 
+    @Override
+    public void onContentChanged() {
+        super.onContentChanged();
+        EdgeToEdgeInsets.apply(this);
+    }
+
     @NonNull
     @Override
     public ActivityComponent getActivityComponent() {

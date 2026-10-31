@@ -1,0 +1,266 @@
+name: Lynket 2027 v3 - Target SDK P16 (Kotlin 2.2.21, AGP 8.10.1, Gradle 8.11.1)
+
+on:
+  push:
+    branches:
+      - dev/3.0.0-targetsdk-p16
+    paths-ignore:
+      - 'docs/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lynket2027-v3-targetsdk-p16-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-debug:
+    name: Build Android debug APK
+    runs-on: ubuntu-22.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout development branch
+        uses: actions/checkout@v4
+
+      - name: Java 11 for legacy tests and Java 17 for Gradle/AGP 8
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: |
+            11
+            17
+
+      - name: Initialize Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Install Android SDK platforms
+        run: |
+          sdkmanager --install "platforms;android-28" "platforms;android-29" "platforms;android-35" "platforms;android-36" "build-tools;35.0.0"
+
+      - name: Build Lynket 2027 as separate debug app
+        working-directory: android-app
+        env:
+          ORG_GRADLE_PROJECT_PLAY_LICENSE_KEY: diagnostic-only
+          ORG_GRADLE_PROJECT_FABRIC_KEY: diagnostic-only
+        run: |
+          chmod +x ./gradlew
+          java -version
+          ./gradlew --version
+          grep -F 'gradle-8.11.1-all.zip' gradle/wrapper/gradle-wrapper.properties
+          grep -F 'com.android.tools.build:gradle:8.10.1' build.gradle
+          grep -F "ext.kotlin_version = '2.2.21'" build.gradle
+          grep -F 'targetSdkVersion 36' app/build.gradle
+          ./gradlew --no-daemon :app:assembleDebug --stacktrace
+
+      - name: Validate Android 11 targeted package visibility declarations
+        working-directory: android-app
+        run: |
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          root = ET.parse('app/src/main/AndroidManifest.xml').getroot()
+          ns = '{http://schemas.android.com/apk/res/android}'
+          queries = root.find('queries')
+          assert queries is not None, 'Missing Android 11 <queries>'
+          found = set()
+          for item in queries.findall('intent'):
+              action = item.find('action')
+              assert action is not None
+              name = action.attrib[ns + 'name']
+              data = item.find('data')
+              scheme = data.attrib.get(ns + 'scheme') if data is not None else None
+              cats = tuple(sorted(c.attrib[ns + 'name'] for c in item.findall('category')))
+              found.add((name, scheme, cats))
+          required = {
+              ('android.intent.action.VIEW', 'http', ()),
+              ('android.intent.action.VIEW', 'https', ()),
+              ('android.intent.action.MAIN', None, ('android.intent.category.LAUNCHER',)),
+              ('android.support.customtabs.action.CustomTabsService', None, ()),
+              ('android.speech.action.RECOGNIZE_SPEECH', None, ()),
+              ('android.speech.RecognitionService', None, ()),
+          }
+          assert required <= found, f'Missing package visibility queries: {required - found}'
+          expected_packages = {'com.android.chrome', 'com.brave.browser', 'org.mozilla.focus',
+              'com.sec.android.app.sbrowser', 'org.mozilla.fennec_aurora',
+              'com.kiwibrowser.browser', 'com.vivaldi.browser'}
+          declared = {e.attrib[ns + 'name'] for e in queries.findall('package')}
+          assert expected_packages <= declared, f'Missing provider packages: {expected_packages - declared}'
+          permissions = {e.attrib[ns + 'name'] for e in root.findall('uses-permission')}
+          assert 'android.permission.QUERY_ALL_PACKAGES' not in permissions
+          for component in root.find('application'):
+              if component.tag in {'activity', 'activity-alias', 'service', 'receiver'} and component.find('intent-filter') is not None:
+                  assert ns + 'exported' in component.attrib, f'Missing android:exported on {component.attrib.get(ns + "name")}'
+          print('Android 11 package visibility and Android 12 component exports checked')
+          PY
+
+      - name: Verify Android 12 PendingIntent mutability handling
+        working-directory: android-app
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          src = Path('app/src/main/java/arun/com/chromer')
+          custom = (src / 'browsing/customtabs/CustomTabs.java').read_text()
+          bottom = (src / 'browsing/customtabs/bottombar/BottomBarManager.java').read_text()
+          head = (src / 'bubbles/webheads/WebHeadService.java').read_text()
+          bubble = (src / 'bubbles/system/BubbleNotificationUtil.kt').read_text()
+          assert 'PendingIntent.FLAG_MUTABLE' in custom and 'PendingIntent.FLAG_IMMUTABLE' in custom
+          assert 'PendingIntent.FLAG_MUTABLE' in bottom and 'PendingIntent.FLAG_MUTABLE' in bubble
+          assert 'PendingIntent.FLAG_IMMUTABLE' in head
+          assert 'browserCallbackPendingIntentFlags()' in custom
+          print('Browser fill-in callbacks mutable, notification intents immutable, native bubbles mutable')
+          PY
+
+      - name: Verify Android 13 notifications permission scope
+        working-directory: android-app
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+          root = ET.parse('app/src/main/AndroidManifest.xml').getroot()
+          ns = '{http://schemas.android.com/apk/res/android}'
+          permissions = [e.attrib[ns + 'name'] for e in root.findall('uses-permission')]
+          assert permissions.count('android.permission.POST_NOTIFICATIONS') == 1
+          assert 'android.permission.READ_MEDIA_IMAGES' not in permissions
+          assert 'android.permission.READ_MEDIA_VIDEO' not in permissions
+          assert 'android.permission.READ_MEDIA_AUDIO' not in permissions
+          activity = Path('app/src/main/java/arun/com/chromer/home/HomeActivity.kt').read_text()
+          assert 'Build.VERSION_CODES.TIRAMISU' in activity
+          assert 'Manifest.permission.POST_NOTIFICATIONS' in activity
+          assert 'PackageManager.PERMISSION_GRANTED' in activity
+          assert 'notification_permission_asked_api33' in activity
+          assert 'requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 133)' in activity
+          print('Android 13 request gated to API 33+, one-time user consent, no media permissions')
+          PY
+
+      - name: Verify Android 14 foreground service types and registered receiver
+        working-directory: android-app
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+          root = ET.parse('app/src/main/AndroidManifest.xml').getroot()
+          ns = '{http://schemas.android.com/apk/res/android}'
+          permissions = [e.attrib[ns + 'name'] for e in root.findall('uses-permission')]
+          assert permissions.count('android.permission.FOREGROUND_SERVICE') == 1
+          assert permissions.count('android.permission.FOREGROUND_SERVICE_SPECIAL_USE') == 1
+          assert 'android.permission.POST_NOTIFICATIONS' in permissions
+          services = {s.attrib[ns + 'name']: s for s in root.find('application').findall('service')}
+          for name in ['.appdetect.AppDetectService', 'arun.com.chromer.bubbles.webheads.WebHeadService']:
+              service = services[name]
+              assert service.attrib[ns + 'exported'] == 'false'
+              assert service.attrib[ns + 'foregroundServiceType'] == 'specialUse'
+              subtype = service.find("property")
+              assert subtype is not None
+              assert subtype.attrib[ns + 'name'] == 'android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE'
+              assert len(subtype.attrib[ns + 'value']) >= 35
+          service = Path('app/src/main/java/arun/com/chromer/bubbles/webheads/WebHeadService.java').read_text()
+          assert 'Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU' in service
+          assert 'registerReceiver(notificationActionReceiver, notificationFilter, Context.RECEIVER_NOT_EXPORTED);' in service
+          assert 'registerReceiver(notificationActionReceiver, notificationFilter);' in service
+          app_detect = Path('app/src/main/java/arun/com/chromer/appdetect/AppDetectService.java').read_text()
+          assert 'new IntentFilter(Intent.ACTION_SCREEN_ON)' in app_detect
+          assert 'filter.addAction(Intent.ACTION_SCREEN_OFF)' in app_detect
+          print('Android 14 FGS specialUse permissions and scoped receiver flags checked')
+          PY
+
+      - name: Verify Android 16 edge-to-edge, back compatibility and saved bubbles
+        working-directory: android-app
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+          gradle = Path('app/build.gradle').read_text()
+          assert 'targetSdkVersion 36' in gradle
+          style = Path('app/src/main/res/values/styles.xml').read_text()
+          assert 'windowOptOutEdgeToEdgeEnforcement' not in style
+          root = ET.parse('app/src/main/AndroidManifest.xml').getroot()
+          ns = '{http://schemas.android.com/apk/res/android}'
+          assert root.find('application').attrib[ns + 'enableOnBackInvokedCallback'] == 'false'
+          shim = Path('app/src/main/java/arun/com/chromer/shared/base/activity/EdgeToEdgeInsets.java').read_text()
+          assert 'Build.VERSION.SDK_INT < 35' in shim
+          assert 'WindowInsets.Type.systemBars()' in shim
+          assert 'WindowInsets.Type.displayCutout()' in shim
+          assert 'root.setOnApplyWindowInsetsListener(' in shim
+          assert 'root.post(root::requestApplyInsets)' in shim
+          for name in ['BaseActivity.java', 'SubActivity.java']:
+              body = Path('app/src/main/java/arun/com/chromer/shared/base/activity', name).read_text()
+              assert 'EdgeToEdgeInsets.apply(this);' in body
+          web = Path('app/src/main/java/arun/com/chromer/bubbles/webheads/WebHeadsFloatingBubble.kt').read_text()
+          assert 'ForegroundServiceStartNotAllowedException' in web
+          assert 'BubbleSessionStore(ctx).use { store -> store.save(url, fromAmp) }' in web
+          assert 'if (!incognito)' in web
+          app_detect = Path('app/src/main/java/arun/com/chromer/util/ServiceManager.java').read_text()
+          assert 'ForegroundServiceStartNotAllowedException' in app_detect
+          restorer = Path('app/src/main/java/arun/com/chromer/bubbles/webheads/BubbleSessionRestorer.java').read_text()
+          assert 'Overlay restoration deferred until the next allowed launch' in restorer
+          print('Android 16 SDK 36: insets, legacy back, no opt-out, preserved FGS and URL persistence checked')
+          PY
+
+      - name: Regression check for changelog HTML and unsafe WebView data loads
+        working-directory: android-app
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          import xml.etree.ElementTree as ET
+
+          changelog = Path('app/src/main/java/arun/com/chromer/about/changelog/Changelog.java').read_text()
+          assert 'webView.loadDataWithBaseURL(null,' in changelog
+          assert changelog.index('webView.setWebViewClient(') < changelog.index('webView.loadDataWithBaseURL(')
+          assert 'webView.loadData(' not in changelog
+
+          tree = ET.parse('app/src/main/res/values/changelog.xml')
+          strings = [item for item in tree.getroot().findall('string')
+                     if item.attrib.get('name') == 'changelog_text']
+          assert len(strings) == 1
+          html = strings[0].text or ''
+          assert '<html>' in html and '#FF4081' in html and '2.1.7' in html
+
+          # Audit all production Java and Kotlin sources, not just the About screen.
+          direct_calls = []
+          for path in Path('app/src/main').rglob('*'):
+              if path.suffix in ('.java', '.kt'):
+                  for line_number, line in enumerate(path.read_text().splitlines(), 1):
+                      if re.search(r'\.\s*loadData\s*\(', line):
+                          direct_calls.append(f'{path}:{line_number}:{line.strip()}')
+          print('Direct WebView.loadData calls elsewhere in production sources:', len(direct_calls))
+          for line in direct_calls:
+              print(line)
+          assert not direct_calls, 'Unreviewed direct loadData call may mishandle HTML CSS # characters'
+          print('Changelog HTML, safe loadDataWithBaseURL, event-order and full-source audit: OK')
+          PY
+
+      - name: Test persistent bubble storage
+        working-directory: android-app
+        run: |
+          ./gradlew --no-daemon :app:testDebugUnitTest --tests arun.com.chromer.bubbles.webheads.BubbleSessionStoreTest --tests arun.com.chromer.home.epoxycontroller.model.SavedBubblesCardModelTest --tests arun.com.chromer.settings.SettingsGroupAdapterTest
+
+      - name: Verify APK package, target SDK 36 and signature
+        working-directory: android-app
+        run: |
+          APK="app/build/outputs/apk/debug/app-debug.apk"
+          test -s "$APK"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" | grep "^package: name='com.jk8026.lynket2027.debug' versionCode='62' versionName='2.1.7"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" | grep -F "targetSdkVersion:'36'"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump xmltree "$APK" AndroidManifest.xml | grep -F 'E: queries'
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump xmltree "$APK" AndroidManifest.xml | grep -F 'android.permission.POST_NOTIFICATIONS'
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump xmltree "$APK" AndroidManifest.xml | grep -F 'android.permission.FOREGROUND_SERVICE_SPECIAL_USE'
+          # aapt renders enum flags numerically; check the packaged attribute, not a literal enum label.
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump xmltree "$APK" AndroidManifest.xml | grep -F 'android:foregroundServiceType'
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs "$APK" | tee /tmp/lynket-p16-signature.txt
+          grep -F 'Verified using v2 scheme (APK Signature Scheme v2): true' /tmp/lynket-p16-signature.txt
+
+      - name: Name v3 Target SDK P16 APK (Android version still 2.1.7)
+        working-directory: android-app
+        run: |
+          mv app/build/outputs/apk/debug/app-debug.apk \
+             app/build/outputs/apk/debug/Lynket_2027_v2.1.7_TargetSdk_P16_Debug.apk
+
+      - name: Upload versioned APK directly without ZIP
+        if: success()
+        uses: actions/upload-artifact@v7
+        with:
+          path: android-app/app/build/outputs/apk/debug/Lynket_2027_v2.1.7_TargetSdk_P16_Debug.apk
+          archive: false
+          if-no-files-found: error
