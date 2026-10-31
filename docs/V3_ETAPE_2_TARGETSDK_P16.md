@@ -66,3 +66,28 @@ Après compilation CI, installer/tester P16 sur la **Galaxy Tab A11+ Android 16*
 - Les anciennes P16 run `41210296330` / artefact `13046371425` **n'incluent pas le portage de tous les correctifs P15**; ne pas les utiliser pour les essais de cette étape.
 - **P16 attend toujours la validation sur appareils** : tablet Android 16 et téléphone Android 14. Seule P15 est déjà officiellement validée physiquement, sur les deux appareils.
 - Aucun merge ni publication, et `main`, P14, la Developer Android 14 et P15 sont conservées intactes.
+
+
+## P16 — Correctif candidat pour Android 14 téléphone : Minimiser et Slide Over (retour 31 octobre 2026)
+
+### Retour utilisateur et constat comparatif
+- **Galaxy S23 Ultra sous Android 14 :** le bouton **Minimiser** dans la barre inférieure des pages Chrome Custom Tabs fonctionne rarement, alors qu'il fonctionne dans **Article**; le partage depuis **Chrome** vers Lynket peut rester sans effet en **Slide Over**, tandis que le partage depuis Samsung Internet peut fonctionner.
+- **Galaxy Tab A11+ Android 16 :** **les deux fonctions fonctionnent correctement**. Préservation de ce fonctionnement obligatoire. L'utilisateur a expressément autorisé ce correctif ciblé **sur P16 uniquement**, avant toute pull request.
+- Le mode **WebHeads** est déclaré fonctionnel et doit rester intact. Le partage, l'article, la navigation et la sauvegarde doivent conserver leur comportement.
+- Les fichiers `BottomBarReceiver.kt`, `ShareInterceptActivity.kt` et `DefaultTabsManager.kt` étaient identiques depuis P9 : la différence de comportement peut dépendre d'Android 14, du navigateur ou du cycle de vie, pas nécessairement des nouveaux insets.
+
+### Analyse précise (ne pas confondre hypothèse et certitude)
+1. **Custom Tab callback :** `BottomBarReceiver` rejetait tous les clics lorsque `intent.dataString` était null, malgré `EXTRA_KEY_ORIGINAL_URL` déjà enregistré dans le PendingIntent. Un fill-in URI manquant peut donc provoquer un bouton muet. Le lien d'origine est maintenant le **secours** pour les actions de la barre, notamment Minimiser; lorsque l'URL Chrome est disponible, elle reste prioritaire et l'ancien comportement est conservé.
+2. **Réception du partage :** `ShareInterceptActivity` appelait `tabsManager.openUrl()`, qui planifie le lancement sur `schedulerProvider.pool`, et exécutait **`finish()` immédiatement dans `finally`**. Android 14 peut refuser une ouverture après que l'activité de partage s'est terminée. Le nouveau chemin `openSharedUrl(activity, website): Completable` exécute la **même logique `openUrlInternal` depuis l'activité de partage encore active**, et attend `onComplete` pour `finish()`. Le chemin normal `openUrl()` et les modes bulles ne sont **pas changés**.
+3. Les partages `ACTION_SEND` et `ACTION_PROCESS_TEXT`, la recherche fournisseur, les URL extraites par `Utils.findURLs`, les options et la route `fromApp` restent les mêmes.
+4. L'événement interne `MinimizeEvent` et l'activité Chrome externe restent inchangés : **ce correctif corrige une cause de callback muet, mais ne garantit pas que Chrome, qui possède sa Custom Tab, accepte toutes les minimisations**. Si le bouton reste muet après test, il faudra les journaux Android (Logcat) ou un protocole de reproduction avant toute modification plus invasive du cycle de vie.
+5. Documentation Android sur les limitations de démarrage d'activités en arrière-plan : https://developer.android.com/guide/components/activities/secure-bal ; documentation Chrome sur le comportement des Custom Tabs : https://developer.chrome.com/docs/android/custom-tabs/.
+
+### Livraison et validation
+- Fichiers applicatifs modifiés : `BottomBarReceiver.kt`, `ShareInterceptActivity.kt`, `TabsManager.kt`, `DefaultTabsManager.kt` uniquement. Aucun changement de SQLite/WebHeads/permissions/manifest/insets/article/UI/numéros SDK/version.
+- Workflow P16 : étape de non-régression statique pour URL d'origine, réception ACTION_SEND, fin du partage **après ouverture**, préservation du chemin de navigation normal, WebHeads et mode Article; toujours trois tests Robolectric, compatibilité Android 11–16, identité/signature APK et artefact direct sans ZIP.
+- **Recette physique impérative :** comparer Samsung S23 Ultra Android 14 (Chrome et Samsung Internet) avec Galaxy Tab A11+ Android 16, en Custom Tabs, Slide Over, Article, WebHeads, navigation et réouverture. Vérifier l'absence de doublons ou perte d'URL. Si un problème persiste, ne pas fusionner.
+- **P16 reste candidate jusqu'à validation explicite. `main`, P14, P15 validée et la branche Developer Android 14 restent intacts. Aucune pull request ni release.**
+
+### Résultat CI du correctif
+À compléter après réussite du nouveau build, confirmation du run et de l'artefact P16 (les APK antérieurs n'incluent pas ce correctif).

@@ -41,10 +41,13 @@ class BottomBarReceiver : BroadcastReceiver() {
         (context.applicationContext as Chromer).appComponent.inject(this)
 
         val clickedId = intent.getIntExtra(CustomTabsIntent.EXTRA_REMOTEVIEWS_CLICKED_ID, -1)
-        val url = intent.dataString
+        // Chrome may omit the current-page fill-in URI for RemoteViews
+        // callbacks on some Android 14 devices. The original URL is already
+        // stored in our PendingIntent and works as a fallback.
         val orgUrl = intent.getStringExtra(Constants.EXTRA_KEY_ORIGINAL_URL)
+        val url = intent.dataString ?: orgUrl
         if (url == null || clickedId == -1) {
-            Timber.d("Skipped bottom bar callback")
+            Timber.w("Skipped bottom bar callback: missing URL or click ID")
             return
         }
 
@@ -52,7 +55,7 @@ class BottomBarReceiver : BroadcastReceiver() {
             R.id.bottom_bar_open_in_new_tab -> OpenInNewTab(context, url).perform()
             R.id.bottom_bar_share -> ShareUrl(context, url).perform()
             R.id.bottom_bar_tabs -> TabsScreen(context, url).perform()
-            R.id.bottom_bar_minimize_tab -> orgUrl?.let { MinimizeUrl(context, orgUrl).perform() }
+            R.id.bottom_bar_minimize_tab -> MinimizeUrl(context, orgUrl ?: url).perform()
             R.id.bottom_bar_article_view -> ArticleView(context, url).perform()
         }
     }

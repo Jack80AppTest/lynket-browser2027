@@ -94,6 +94,13 @@ interface TabsManager {
     )
 
     /**
+     * Executes a shared-link open while its receiving Activity is still alive.
+     * Caller subscribes on the UI thread and closes the receiver on completion.
+     * Unlike openUrl(), this does not schedule the launch after the receiver finishes.
+     */
+    fun openSharedUrl(activity: Activity, website: Website): Completable
+
+    /**
      * Opens the given Uri in a browsing tab.
      */
     fun openBrowsingTab(

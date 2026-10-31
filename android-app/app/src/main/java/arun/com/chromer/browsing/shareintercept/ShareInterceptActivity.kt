@@ -64,10 +64,11 @@ class ShareInterceptActivity : BaseActivity() {
                 findAndOpenLink(text)
             }
         } catch (exception: Exception) {
+            Timber.e(exception, "Could not process shared link")
             invalidLink()
-        } finally {
-            finish()
         }
+        // Do not finish here. In the URL case, the open must complete first;
+        // search text may additionally require asynchronous provider lookup.
     }
 
     override fun inject(activityComponent: ActivityComponent) {
@@ -87,7 +88,10 @@ class ShareInterceptActivity : BaseActivity() {
                     .map { it.getSearchUrl(receivedText) }
                     .subscribeBy(
                             onSuccess = ::openLink,
-                            onError = Timber::e
+                            onError = {
+                                Timber.e(it, "Could not resolve shared search text")
+                                invalidLink()
+                            }
                     )
         }
     }
@@ -95,9 +99,20 @@ class ShareInterceptActivity : BaseActivity() {
     private fun openLink(url: String?) {
         when (url) {
             null -> invalidLink()
-            else -> tabsManager.openUrl(this, website = Website(url))
+            else -> {
+                // Execute while this share receiver is still foreground.
+                // The standard openUrl() queues a background task, which can
+                // be rejected after this activity immediately finishes on
+                // Android 14 (notably when Chrome initiated the share).
+                tabsManager.openSharedUrl(this, Website(url)).subscribeBy(
+                        onComplete = { finish() },
+                        onError = {
+                            Timber.e(it, "Failed to open shared link")
+                            invalidLink()
+                        }
+                )
+            }
         }
-        finish()
     }
 
     private fun invalidLink() {

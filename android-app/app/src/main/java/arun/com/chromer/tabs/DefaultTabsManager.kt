@@ -103,6 +103,14 @@ constructor(
                 .subscribe()
     }
 
+    override fun openSharedUrl(activity: Activity, website: Website): Completable {
+        // Preserve the existing share route (fromApp=true), but leave
+        // scheduling to the visible ShareInterceptActivity. In particular,
+        // do not post an Activity launch onto the background worker after the
+        // share activity has called finish().
+        return openUrlInternal(activity, website)
+    }
+
     private fun openUrlInternal(
             context: Context,
             website: Website,

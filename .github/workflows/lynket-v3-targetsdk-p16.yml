@@ -282,6 +282,37 @@ jobs:
           print('P15 validated home, Intro, History and Tabs migrated to P16 without double insets.')
           PY
 
+      - name: Regression check for Android 14 Chrome share and Custom Tab minimize callbacks
+        working-directory: android-app
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          base = Path('app/src/main/java/arun/com/chromer')
+          bar = (base / 'browsing/customtabs/bottombar/BottomBarReceiver.kt').read_text()
+          assert 'val url = intent.dataString ?: orgUrl' in bar
+          assert 'MinimizeUrl(context, orgUrl ?: url).perform()' in bar
+          assert 'R.id.bottom_bar_open_in_new_tab ->' in bar
+          assert 'R.id.bottom_bar_share ->' in bar
+          assert 'R.id.bottom_bar_tabs ->' in bar
+          assert 'R.id.bottom_bar_article_view ->' in bar
+          share = (base / 'browsing/shareintercept/ShareInterceptActivity.kt').read_text()
+          assert 'tabsManager.openSharedUrl(this, Website(url)).subscribeBy(' in share
+          assert 'onComplete = { finish() }' in share
+          assert 'finally {' not in share
+          assert 'ACTION_SEND ->' in share and 'ACTION_PROCESS_TEXT ->' in share
+          assert 'Utils.findURLs(receivedText)' in share
+          iface = (base / 'tabs/TabsManager.kt').read_text()
+          manager = (base / 'tabs/DefaultTabsManager.kt').read_text()
+          assert 'fun openSharedUrl(activity: Activity, website: Website): Completable' in iface
+          assert 'override fun openSharedUrl(activity: Activity, website: Website): Completable' in manager
+          assert 'return openUrlInternal(activity, website)' in manager
+          assert 'subscribeOn(schedulerProvider.pool)' in manager, 'Regular link path changed'
+          assert 'floatingBubbleFactory[if (bubbles) NATIVE else WEB_HEADS].openBubble(' in manager
+          article = (base / 'browsing/article/ArticleActivity.kt').read_text()
+          assert 'menuDelegate.setupBottombar(views.bottomNavigation)' in article
+          print('Chrome callback URL fallback, foreground share completion, and unchanged tablet/bubble paths: OK')
+          PY
+
       - name: Test persistent bubble storage
         working-directory: android-app
         run: |
