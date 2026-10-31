@@ -29,7 +29,13 @@ User authorized **GO** for a minimal readability-only cleanup on the already val
 
 ## CI / delivery result
 
-**Pending verification.** Record only after a confirmed run, including run, commit actually compiled, APK artifact ID and result. User should receive **two distinct links together**: this GitHub Markdown report and the **direct APK without ZIP**.
+**GitHub Actions: COMPLETED / SUCCESS**, [run 41236975471](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41236975471), job `124642680276`, **21 green steps**. This includes `:app:assembleDebug`, the three existing Robolectric tests, Android 11–16 static compatibility/regression controls, package identification (`3.0.1`, code `64`, Debug package, targetSdk `36`), APK v2 signature verification and direct non-ZIP artifact upload.
+
+- **Exact compiled commit:** `3b3ec2733599db1de67a6586ad4e4566cc2df94c`. The following report-only commit is not included in the APK; no application code changed after this build.
+- **Direct APK, not ZIP:** [Lynket_Custom_2027_v3.0.1_P16_CodeCleanup_Debug.apk](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41236975471/artifacts/13055738685) — artifact ID `13055738685`, size **8,693,567 bytes**, `archive:false`.
+- GitHub artifact metadata SHA-256 (not locally rehashed): `f4f8405a29c20c3a82b5de8a5040d7adbba4c10061afe88abec7042f6f751790`.
+- Double-check on GitHub: **exactly six changed paths** against `stable/v3.0.1`: `README.md`, `EdgeToEdgeInsets.java`, `WebHeadService.java`, `docs/P16_CODE_ARCHITECTURE.md`, this report, and a branch-specific workflow. Both modified Java files are byte-identical to the baseline after reversing only the intentionally changed comments. No executable statements altered, no build/app/runtime configuration changed.
+- **Physical validation of the cleanup APK:** not yet performed; the previously validated 3.0.1 functionality remains the reference until the user verifies the cleanup candidate. No PR/merge/tag/release created for the cleanup.
 
 ## Publication policy
 
