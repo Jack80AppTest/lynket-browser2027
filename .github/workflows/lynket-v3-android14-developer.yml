@@ -166,6 +166,40 @@ jobs:
           print('Android 14 FGS specialUse permissions and scoped receiver flags checked')
           PY
 
+      - name: Regression check for changelog HTML and unsafe WebView data loads
+        working-directory: android-app
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          import xml.etree.ElementTree as ET
+
+          changelog = Path('app/src/main/java/arun/com/chromer/about/changelog/Changelog.java').read_text()
+          assert 'webView.loadDataWithBaseURL(null,' in changelog
+          assert changelog.index('webView.setWebViewClient(') < changelog.index('webView.loadDataWithBaseURL(')
+          assert 'webView.loadData(' not in changelog
+
+          tree = ET.parse('app/src/main/res/values/changelog.xml')
+          strings = [item for item in tree.getroot().findall('string')
+                     if item.attrib.get('name') == 'changelog_text']
+          assert len(strings) == 1
+          html = strings[0].text or ''
+          assert '<html>' in html and '#FF4081' in html and '2.1.7' in html
+
+          # Audit all production Java and Kotlin sources, not just the About screen.
+          direct_calls = []
+          for path in Path('app/src/main').rglob('*'):
+              if path.suffix in ('.java', '.kt'):
+                  for line_number, line in enumerate(path.read_text().splitlines(), 1):
+                      if re.search(r'\.\s*loadData\s*\(', line):
+                          direct_calls.append(f'{path}:{line_number}:{line.strip()}')
+          print('Direct WebView.loadData calls elsewhere in production sources:', len(direct_calls))
+          for line in direct_calls:
+              print(line)
+          assert not direct_calls, 'Unreviewed direct loadData call may mishandle HTML CSS # characters'
+          print('Changelog HTML, safe loadDataWithBaseURL, event-order and full-source audit: OK')
+          PY
+
       - name: Test persistent bubble storage
         working-directory: android-app
         run: |
