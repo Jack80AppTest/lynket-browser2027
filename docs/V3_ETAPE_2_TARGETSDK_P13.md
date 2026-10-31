@@ -35,3 +35,17 @@ Références officielles :
 - https://developer.android.com/develop/ui/views/notifications/notification-permission
 
 Ce rapport est purement documentaire, exclu des étapes CI/CD et ne déclenche aucun build par lui-même.
+
+## CI P13 — succès complet, essai téléphone en attente
+
+- GitHub Actions : [run 41198734017](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41198734017), `completed / success`, aucun échec.
+- **Commit de code effectivement compilé** : `029412c0ce9518ab984634f5fb6c715c0563ea72`.
+- `:app:assembleDebug` avec Kotlin 2.2.21 / Gradle 8.11.1 / AGP 8.10.1 / `compileSdk 36` / **`targetSdk 33`** : réussi.
+- Contrôles hérités Android 11 (visibilité) et Android 12 (`android:exported`, `PendingIntent`) : réussis.
+- Contrôle Android 13 (`POST_NOTIFICATIONS` + demande conditionnelle au démarrage de l'accueil) : réussi.
+- Tests Robolectric existants `BubbleSessionStoreTest`, `SavedBubblesCardModelTest`, `SettingsGroupAdapterTest` : réussis.
+- Contrôle APK : `com.jk8026.lynket2027.debug`, version 2.1.7 / code 62, target 33, permission empaquetée et schéma de signature v2 : réussi.
+- **Artefact APK direct sans ZIP** : [Lynket_2027_v2.1.7_TargetSdk_P13_Debug.apk](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41198734017/artifacts/13041841979), 8 690 366 octets, artifact ID `13041841979`, expiration annoncée le 29 janvier 2027.
+- SHA-256 tel que retourné dans les métadonnées GitHub : `ac39a3d76978c005ba73baa6422a2e0e990d733c4c459f031da759229e9110fd` (non recalculé localement).
+- Ce rapport sera enregistré dans un commit de documentation uniquement, distinct du commit applicatif compilé, sans déclencher de build (filtre `docs/**`).
+- **État : CI verte, P13 PAS ENCORE VALIDÉE sur le Galaxy S23 Ultra.** P12 est la dernière base validée sur téléphone; aucun P14, merge ni publication autorisé sans décision explicite.
