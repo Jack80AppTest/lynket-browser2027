@@ -57,12 +57,12 @@ import javax.inject.Inject
  * Created by Arunkumar on 07-04-2017.
  */
 class HomeFragment : BaseFragment(), Snackable {
-    private val binding get() = FragmentHomeBinding.bind(requireView())
+    private val binding get() = FragmentHomeBinding.bind(checkNotNull(view))
     // The provider-card widgets live in the legacy provider layout rather than fragment_home.
-    private val providerDescription get() = requireView().findViewById<TextView>(R.id.providerDescription)
-    private val providerIcon get() = requireView().findViewById<ImageView>(R.id.providerIcon)
-    private val providerReason get() = requireView().findViewById<TextView>(R.id.providerReason)
-    private val providerChangeButton get() = requireView().findViewById<View>(R.id.providerChangeButton)
+    private val providerDescription get() = checkNotNull(view).findViewById<TextView>(R.id.providerDescription)
+    private val providerIcon get() = checkNotNull(view).findViewById<ImageView>(R.id.providerIcon)
+    private val providerReason get() = checkNotNull(view).findViewById<TextView>(R.id.providerReason)
+    private val providerChangeButton get() = checkNotNull(view).findViewById<View>(R.id.providerChangeButton)
 
     @Inject
     lateinit var recentsAdapter: RecentsAdapter

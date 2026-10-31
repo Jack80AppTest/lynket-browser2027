@@ -34,7 +34,7 @@ import arun.com.chromer.databinding.FragmentProviderSelectionIntroBinding
 import javax.inject.Inject
 
 open class ProviderSelectionIntroFragment : BaseFragment(), ISlideBackgroundColorHolder {
-    private val binding get() = FragmentProviderSelectionIntroBinding.bind(requireView())
+    private val binding get() = FragmentProviderSelectionIntroBinding.bind(checkNotNull(view))
 
     override fun getDefaultBackgroundColor(): Int = ContextCompat.getColor(context!!, R.color.tutorialBackgrounColor)
 

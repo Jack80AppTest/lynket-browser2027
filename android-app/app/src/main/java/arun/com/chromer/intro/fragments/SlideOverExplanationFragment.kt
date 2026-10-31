@@ -35,7 +35,7 @@ import arun.com.chromer.databinding.FragmentSlideOverIntroBinding
 import javax.inject.Inject
 
 open class SlideOverExplanationFragment : BaseFragment(), ISlideBackgroundColorHolder {
-    private val binding get() = FragmentSlideOverIntroBinding.bind(requireView())
+    private val binding get() = FragmentSlideOverIntroBinding.bind(checkNotNull(view))
 
     override fun getDefaultBackgroundColor(): Int = ContextCompat.getColor(context!!, R.color.tutorialBackgrounColor)
 

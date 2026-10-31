@@ -33,7 +33,7 @@ import arun.com.chromer.databinding.FragmentArticleIntroBinding
 import javax.inject.Inject
 
 open class ArticleIntroFragment : BaseFragment(), ISlideBackgroundColorHolder {
-    private val binding get() = FragmentArticleIntroBinding.bind(requireView())
+    private val binding get() = FragmentArticleIntroBinding.bind(checkNotNull(view))
 
     override fun getDefaultBackgroundColor(): Int = ContextCompat.getColor(context!!, R.color.tutorialBackgrounColor)
 

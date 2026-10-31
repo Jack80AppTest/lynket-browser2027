@@ -50,7 +50,7 @@ import com.mikepenz.iconics.IconicsDrawable
  * Created by Arun on 11/11/2015.
  */
 class AboutFragment : Fragment() {
-    private val binding get() = FragmentAboutBinding.bind(requireView())
+    private val binding get() = FragmentAboutBinding.bind(checkNotNull(view))
 
     private lateinit var unBinder: Unbinder
 

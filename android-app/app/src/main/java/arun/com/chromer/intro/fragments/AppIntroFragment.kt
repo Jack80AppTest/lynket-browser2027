@@ -31,7 +31,7 @@ import com.github.paolorotolo.appintro.ISlideBackgroundColorHolder
 import arun.com.chromer.databinding.FragmentTextIntroBinding
 
 open class AppIntroFragment : BaseFragment(), ISlideBackgroundColorHolder {
-    private val binding get() = FragmentTextIntroBinding.bind(requireView())
+    private val binding get() = FragmentTextIntroBinding.bind(checkNotNull(view))
 
     override fun getDefaultBackgroundColor(): Int = ContextCompat.getColor(context!!, R.color.tutorialBackgrounColor)
 
