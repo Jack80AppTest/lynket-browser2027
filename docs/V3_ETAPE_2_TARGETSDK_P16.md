@@ -22,4 +22,15 @@
 - **P16 n'est validée que sur confirmation explicite de l'utilisateur.** Aucune fusion dans `main` sans ordre distinct.
 
 ## CI P16
-État de préparation : aucune exécution encore confirmée; ajouter plus tard le run réel et la référence de l'APK.
+**GitHub Actions : tous les contrôles réussis**, [run `41210296330`](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41210296330), job `124563742505`, état `completed / success`, **19 étapes réussies**.
+- Commit exact compilé : `95c6a4adad1dce24a5d4921c2ad5ef37c098249f`. Le commit précédent `caeba8485267547e35690a0d5dde9a7278eb1754` a été remplacé par un correctif de syntaxe du manifeste; **seul le dernier run vert est une candidate de livraison**. Le premier run P16 `41210269465` a été annulé par la concurrence des workflows et ne doit pas être utilisé.
+- `:app:assembleDebug` : réussite avec Kotlin 2.2.21, AGP 8.10.1, Gradle 8.11.1, `targetSdkVersion 36`, `compileSdk 36`, `minSdk 16`.
+- Vérifications statiques Android 11–14, Android 16 (`targetSdk 36`, pas d'opt-out edge-to-edge, Android 16 Retour préservé temporairement, insets système+encoches et non-cumul, compatibilité WebHeads FGS) : **réussies**.
+- Contrôle Changelog hérité de P15 : **réussi**, `loadDataWithBaseURL` après le callback, analyse des sources Java/Kotlin sans appel direct `.loadData`.
+- Trois tests Robolectric `BubbleSessionStoreTest`, `SavedBubblesCardModelTest`, `SettingsGroupAdapterTest` : **réussis**.
+- `aapt` : package Debug `com.jk8026.lynket2027.debug`, versionCode **62**, versionName **2.1.7 - dev**, `targetSdkVersion:'36'` et manifeste : **réussis**. `apksigner` : signature APK scheme v2 vérifiée.
+- **APK direct sans ZIP** : [Lynket_2027_v2.1.7_TargetSdk_P16_Debug.apk](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41210296330/artifacts/13046371425), artefact `13046371425`, **8 691 915 octets**, `actions/upload-artifact@v7` `archive:false`.
+- SHA-256 de l'artefact **rapporté par GitHub** (non recalculé à partir du fichier APK) : `14bc92ea28ebae19ceea86c98fb526f7412dd3d4fc791fa0e1efa6de15f33711`. Expiration affichée : **29 janvier 2027 à 14:28:41 UTC**.
+- Cette mise à jour documentaire est passive; workflow ignore `docs/**`, donc le code testé ne change pas.
+- **Non validé sur tablette Android 16** : la CI n'exécute ni interface réelle, ni émulateur/tablette Android 16. La migration d'insets est un garde-fou minimal susceptible de devoir être adaptée par écran après les tests réels; P16 reste une **candidate** et ne doit pas être publiée comme version validée.
+
