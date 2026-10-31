@@ -2,9 +2,9 @@
 
 ## Lynket Custom 2027 fork
 
-**John Krauza — Project lead and fork maintainer**
+**John Krauza — Android modernization and compatibility contributor**
 
-Initiated and guided the modernization of Lynket Custom 2027, including product decisions, feature specifications, Android device testing, validation and documentation. The fork's work includes:
+Contributed to and validated the modernization of the original Lynket application for recent Android versions. Work on the development fork includes:
 
 - Persistent WebHeads session storage and restoration of saved tabs.
 - Hide and Restore behavior that preserves open links.
@@ -13,7 +13,7 @@ Initiated and guided the modernization of Lynket Custom 2027, including product 
 - Build-tool modernization and Android 14–16 compatibility work.
 - Repeated real-device checks on phone and tablet, and regression-test validation.
 
-This contribution description recognizes project direction, implementation work carried out as part of the fork, and testing. It does not imply that the maintainer personally authored every code change.
+This recognition covers modernization, feature specifications and validation; it does not imply authorship of the original Lynket app or every modified line of code. The published app name remains Lynket.
 
 ## Original Lynket / Chromer project
 
