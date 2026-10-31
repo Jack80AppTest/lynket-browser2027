@@ -17,7 +17,7 @@ typealias UnRegisterAction = () -> Unit
 
 private fun Application.safeActivityStarted(action: (Activity, UnRegisterAction) -> Unit) {
     registerActivityLifecycleCallbacks(object : ActivityLifeCycleCallbackAdapter() {
-        override fun onActivityStarted(activity: Activity?) {
+        override fun onActivityStarted(activity: Activity) {
             super.onActivityStarted(activity)
             val unRegisterAction: UnRegisterAction = {
                 Timber.i("Unregistering lifecycle callbacks")

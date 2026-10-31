@@ -69,9 +69,7 @@ open class WebViewActivity : BrowsingActivity() {
         setupBottomBar()
     }
 
-    override fun getCurrentUrl(): String = if (webView.url != null)
-        webView.url
-    else super.getCurrentUrl()
+    override fun getCurrentUrl(): String = webView.url ?: super.getCurrentUrl()
 
     override fun onCreateOptionsMenu(menu: Menu) = menuDelegate.createOptionsMenu(menu)
 
@@ -161,11 +159,10 @@ open class WebViewActivity : BrowsingActivity() {
                     }
                 }
                 settings.javaScriptEnabled = true
-                val previousUrl = savedInstanceState?.getString(EXTRA_CURRENT_LOADING_URL)
-                if (previousUrl == null) {
-                    loadUrl(intent.dataString)
-                } else {
-                    loadUrl(previousUrl)
+                val urlToLoad = savedInstanceState?.getString(EXTRA_CURRENT_LOADING_URL)
+                        ?: intent.dataString
+                if (urlToLoad != null) {
+                    loadUrl(urlToLoad)
                 }
             }
 

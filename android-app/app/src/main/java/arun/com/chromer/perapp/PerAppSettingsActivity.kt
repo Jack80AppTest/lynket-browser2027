@@ -124,7 +124,7 @@ class PerAppSettingsActivity : BaseActivity(), CompoundButton.OnCheckedChangeLis
         menuInflater.inflate(R.menu.per_apps_menu, menu)
         val menuItem = menu.findItem(R.id.blacklist_switch_item)
         if (menuItem != null) {
-            val blackListSwitch = menuItem.actionView.findViewById<SwitchCompat>(R.id.blacklist_switch)
+            val blackListSwitch = menuItem.actionView?.findViewById<SwitchCompat>(R.id.blacklist_switch)
             if (blackListSwitch != null) {
                 val blackListActive = preferences.perAppSettings() && Utils.canReadUsageStats(this)
                 preferences.perAppSettings(blackListActive)
