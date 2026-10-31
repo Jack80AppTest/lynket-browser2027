@@ -27,8 +27,22 @@
 
 ## État
 
-Candidat P12 : compilation et tests GitHub Actions à confirmer par le run du commit d'application. Aucun test sur téléphone revendiqué. P11 demeure la dernière base validée tant que l'utilisateur n'a pas confirmé P12.
+P12 compilée, vérifiée et distribuée par GitHub Actions; validation sur téléphone encore en attente. La base P11 reste préservée.
 
 Références : https://developer.android.com/about/versions/12/behavior-changes-12 ; https://developer.android.com/develop/background-work/services/fgs/restrictions-bg-start ; https://developer.android.com/reference/androidx/browser/customtabs/CustomTabsIntent .
 
 Ce document est passif; aucun script de build ou workflow ne doit le lire ou le mettre à jour automatiquement.
+
+## CI P12 — succès complet, validation téléphone en attente
+
+- Workflow : https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41197537619 — `completed / success`.
+- **Commit de code compilé et testé** : `62c2d8fa4918409458565fc2ac983b807bce6ea5`.
+- `:app:assembleDebug` : **réussi** avec `targetSdk 31`, Kotlin 2.2.21, AGP 8.10.1, Gradle 8.11.1.
+- Validation XML du bloc `<queries>` et des attributs `android:exported` : **réussie**.
+- Contrôle Android 12 des flags `PendingIntent` : **réussi** (contrôles statiques complémentaires; ne remplace pas les tests sur appareil).
+- Trois tests Robolectric existants : `BubbleSessionStoreTest`, `SavedBubblesCardModelTest`, `SettingsGroupAdapterTest` : **réussis**.
+- Identifiant `com.jk8026.lynket2027.debug`, version `2.1.7` / code `62`, `targetSdkVersion:31`, manifeste empaqueté et signature APK v2 : **réussis**.
+- **APK livré directement, sans ZIP** : [Lynket_2027_v2.1.7_TargetSdk_P12_Debug.apk](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41197537619/artifacts/13041805234) — 8 690 001 octets, artifact ID `13041805234`.
+- Digest déclaré par GitHub : `sha256:07ee42013887e5c59e5876791b47c239bfe336d299720182f69b536691bba753` (non recalculé localement).
+- **Statut : CI P12 entièrement verte; tests sur Galaxy S23 Ultra toujours en attente.** P11 reste la dernière base validée sur téléphone. Aucune fusion ni publication autorisée.
+- Le présent commit de documentation se situe après le commit applicatif compilé; il ne modifie pas l'APK testé et n'est pas déclencheur du workflow P12 (`docs/**` ignoré).
