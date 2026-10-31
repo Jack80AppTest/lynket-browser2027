@@ -137,6 +137,7 @@ class ArticleActivity : BrowsingActivity() {
                     }
                 }
                 is Result.Failure -> onArticleLoadingFailed()
+                else -> Unit // Idle/Loading require no action here.
             }
         }
     }
