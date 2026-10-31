@@ -20,3 +20,17 @@
 5. No merge into main or any stable branch, no automatic release or proceeding to P9 without explicit user validation.
 
 **Status:** P8 initial code staged; GitHub CI and phone validation pending.
+
+## CI P8 — full success, physical-phone test pending
+
+- Complete successful GitHub Actions run: https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41191497314
+- Exact code commit tested: `4509febcfeb0604a0b82f9bcfa87613ba99e2a57`.
+- Kotlin Gradle Plugin / stdlib: **2.2.21**. Gradle 8.7 and AGP 8.5.2 remain unchanged. KAPT generated Dagger/Glide sources successfully.
+- Build `:app:assembleDebug`: **passed**.
+- Existing unit tests (bubble session store, saved bubbles card, settings theme): **passed**.
+- Android package/version/signature checked with aapt and apksigner: **passed**.
+- APK uploaded as standalone file (not zipped by workflow): [Lynket_2027_v2.1.7_Kotlin_2_2_P8_Debug.apk](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41191497314/artifacts/13038524846) (8,685,889 bytes).
+- First attempt [41191236619](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41191236619) failed on two Kotlin 2.2 errors from deprecated case conversion calls. Corrected in `4509febcfeb0604a0b82f9bcfa87613ba99e2a57`: `toLowerCase(Locale.getDefault())` -> `lowercase(Locale.getDefault())` and `toUpperCase()` -> `uppercase(java.util.Locale.getDefault())` to preserve device-locale behavior.
+- No WebHeads/session data serialization changes, permissions, UI layouts, Android targetSdk, app version, or plugin build-tool version changes.
+- **STATUS: P8 CI-green, not yet user validated on Galaxy S23 Ultra.** Wait for explicit physical-device test confirming WebHeads, hide/restore and tab persistence, custom search, browsing/article pages, sharing, tabs, menus, history and theme. P7 remains validated rollback.
+- **No merge** into main, stable release or protected branch, and no P9 until user explicitly approves P8.
