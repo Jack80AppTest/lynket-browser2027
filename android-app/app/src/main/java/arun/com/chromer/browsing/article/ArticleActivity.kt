@@ -336,7 +336,7 @@ class ArticleActivity : BrowsingActivity() {
 
 
     private val systemUiLowProfileOnScrollListener = object : RecyclerView.OnScrollListener() {
-        override fun onScrolled(views.recyclerView: RecyclerView, dx: Int, dy: Int) {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             setLowProfileSystemUi()
         }
     }
