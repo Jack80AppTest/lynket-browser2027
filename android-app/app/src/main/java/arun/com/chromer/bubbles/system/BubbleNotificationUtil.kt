@@ -87,7 +87,8 @@ constructor(
                 Intent(context, EmbeddableWebViewActivity::class.java).apply {
                     data = Uri.parse(website.url)
                 },
-                PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_UPDATE_CURRENT or
+                        (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) PendingIntent.FLAG_MUTABLE else 0)
         )
 
         val bubbleIcon: Icon = bubbleData.icon

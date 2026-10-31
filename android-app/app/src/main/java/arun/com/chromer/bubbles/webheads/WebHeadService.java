@@ -106,6 +106,11 @@ import static arun.com.chromer.shared.Constants.NO_COLOR;
 
 public class WebHeadService extends OverlayService implements WebHeadContract,
         CustomTabManager.ConnectionCallback {
+    private static int notificationPendingIntentFlags() {
+        return FLAG_UPDATE_CURRENT | (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                ? PendingIntent.FLAG_IMMUTABLE : 0);
+    }
+
     private BubbleSessionStore sessionStore;
 
     // Max visible web heads is set 6 for performance reasons.
@@ -208,9 +213,9 @@ public class WebHeadService extends OverlayService implements WebHeadContract,
                 notificationManager.createNotificationChannel(channel);
             }
         }
-        final PendingIntent contentIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_STOP_WEBHEAD_SERVICE), FLAG_UPDATE_CURRENT);
-        final PendingIntent contextActivity = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_OPEN_CONTEXT_ACTIVITY), FLAG_UPDATE_CURRENT);
-        final PendingIntent newTab = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_OPEN_NEW_TAB), FLAG_UPDATE_CURRENT);
+        final PendingIntent contentIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_STOP_WEBHEAD_SERVICE).setPackage(getPackageName()), notificationPendingIntentFlags());
+        final PendingIntent contextActivity = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_OPEN_CONTEXT_ACTIVITY).setPackage(getPackageName()), notificationPendingIntentFlags());
+        final PendingIntent newTab = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_OPEN_NEW_TAB).setPackage(getPackageName()), notificationPendingIntentFlags());
         Notification notification = new NotificationCompat.Builder(this, WebHeadService.class.getName())
                 .setSmallIcon(R.drawable.ic_chromer_notification)
                 .setPriority(PRIORITY_MIN)

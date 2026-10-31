@@ -126,6 +126,7 @@ public class BottomBarManager {
     public static PendingIntent getOnClickPendingIntent(Context context, String url) {
         final Intent broadcastIntent = new Intent(context, BottomBarReceiver.class);
         broadcastIntent.putExtra(Constants.EXTRA_KEY_ORIGINAL_URL, url);
-        return PendingIntent.getBroadcast(context, new Random().nextInt(), broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getBroadcast(context, new Random().nextInt(), broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT | (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S
+                ? PendingIntent.FLAG_MUTABLE : 0));
     }
 }

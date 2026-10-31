@@ -110,6 +110,7 @@
             tools:ignore="ExportedService" />
         <service
             android:name="arun.com.chromer.bubbles.webheads.qs.WebHeadTile"
+            android:exported="true"
             android:icon="@drawable/ic_bubble_chart_white_24dp"
             android:label="@string/web_heads"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
@@ -119,6 +120,7 @@
         </service>
         <service
             android:name=".browsing.incognito.IncognitoTile"
+            android:exported="true"
             android:icon="@drawable/ic_chromer_notification"
             android:label="@string/incognito_mode"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
@@ -128,6 +130,7 @@
         </service>
         <service
             android:name=".browsing.amp.qs.AmpTile"
+            android:exported="true"
             android:icon="@drawable/ic_action_amp_icon"
             android:label="@string/amp_mode"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
@@ -137,6 +140,7 @@
         </service>
         <service
             android:name=".browsing.article.qs.ArticleTile"
+            android:exported="true"
             android:icon="@drawable/ic_description_black_24dp"
             android:label="@string/article_mode"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
@@ -195,6 +199,7 @@
 
         <activity-alias
             android:name=".activities.BrowserInterceptActivity"
+            android:exported="true"
             android:label="@string/app_name"
             android:targetActivity=".browsing.browserintercept.BrowserInterceptActivity"
             android:theme="@style/Theme.AppCompat.Translucent">
@@ -242,6 +247,7 @@
             android:theme="@style/AppTheme.Tutorial" />
         <activity
             android:name=".browsing.shareintercept.ShareInterceptActivity"
+            android:exported="true"
             android:excludeFromRecents="true"
             android:label="@string/share_text_processor_label">
             <intent-filter>
