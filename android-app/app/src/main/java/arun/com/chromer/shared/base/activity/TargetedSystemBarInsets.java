@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.WindowInsets;
 
 import androidx.annotation.NonNull;
-import androidx.core.view.WindowCompat;
 
 public final class TargetedSystemBarInsets {
     private TargetedSystemBarInsets() { }
@@ -26,7 +25,7 @@ public final class TargetedSystemBarInsets {
 
         // Explicitly choose one layout contract. If decor fitting were left
         // enabled on some devices, padding could otherwise count the bars twice.
-        WindowCompat.setDecorFitsSystemWindows(activity.getWindow(), false);
+        activity.getWindow().setDecorFitsSystemWindows(false);
 
         final int originalLeft = root.getPaddingLeft();
         final int originalTop = root.getPaddingTop();

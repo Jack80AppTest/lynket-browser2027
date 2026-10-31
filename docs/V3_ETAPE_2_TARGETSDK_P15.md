@@ -105,3 +105,6 @@ Le traitement fait passer ces seules trois vues sous un contrat explicite edge-t
 
 ### CI et artefact de ce correctif
 À compléter après réussite effective du nouveau workflow. Les précédents APK P15 **n'incluent pas ces trois corrections**.
+
+### Incident CI initial et correction compatibilité
+Le premier run du code `da6e6c3a4f0f74f0eb95a137840243d1f5ec8b7f` (GitHub Actions [`41219161065`](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41219161065)) a échoué lors de `:app:compileDebugJavaWithJavac` : notre version installée d'AndroidX Core ne fournit pas `WindowCompat.setDecorFitsSystemWindows`. Correction *strictement technique* : appel natif Android `activity.getWindow().setDecorFitsSystemWindows(false)` (API >= 30, exécuté uniquement >= 35), sans mettre à jour les dépendances ni élargir le périmètre. L'assertion CI est alignée sur l'appel natif; seul le dernier run réussi compte pour la livraison.

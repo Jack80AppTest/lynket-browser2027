@@ -264,7 +264,7 @@ jobs:
 
           helper = Path('app/src/main/java/arun/com/chromer/shared/base/activity/TargetedSystemBarInsets.java').read_text()
           assert 'Build.VERSION.SDK_INT < 35' in helper
-          assert 'WindowCompat.setDecorFitsSystemWindows(activity.getWindow(), false)' in helper
+          assert 'activity.getWindow().setDecorFitsSystemWindows(false)' in helper
           assert 'WindowInsets.Type.systemBars() | WindowInsets.Type.displayCutout()' in helper
           assert 'originalBottom + safe.bottom' in helper
           assert 'originalTop + safe.top' in helper
