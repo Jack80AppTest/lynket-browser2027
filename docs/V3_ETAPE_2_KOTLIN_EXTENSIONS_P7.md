@@ -29,3 +29,15 @@
 - Removed `kotlin-android-extensions` application plugin and `androidExtensions { experimental = true }`; kept `viewBinding true` and all existing Android layouts and user-visible behavior.
 - No Kotlin language/plugin version jump in this migration: continue Kotlin 1.7.22 until new P7 baseline passes.
 - This complete migration must pass P7 GitHub Actions, Robolectric tests, verified APK packaging and subsequent user physical-device validation. P6 remains the last user-validated baseline.
+
+## Final P7 CI result — green; phone validation pending
+- Successful GitHub Actions run: https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41165033378
+- Tested code commit: `a61b55a7a1efaa2a510cd5bb76eb73be57bddf5c`.
+- `:app:assembleDebug`: **success**, with View Binding and no `kotlin-android-extensions` plugin.
+- Regression tests for bubble session persistence and saved-bubbles UI, and settings theme: **success**.
+- APK identity / package / signature verification: **success**.
+- Direct APK artifact: [Lynket_2027_v2.1.7_ViewBinding_P7_Debug.apk](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41165033378/artifacts/13028691671); about 8.57 MB.
+- No feature/layout changes intended, no Kotlin version bump (1.7.22 retained), no targetSdk bump.
+- Corrections after full migration commit `4941fade78d102f6f157e27973f8faea39464c3c`: `94850e643f5d147b6c9767f9fd956010539686ab` (restore callback parameter), `a61b55a7a1efaa2a510cd5bb76eb73be57bddf5c` (use `checkNotNull(view)` compatible with legacy AndroidX instead of `requireView()`).
+- **Status: P7 CI green, NOT user-validated on device.** User must test URL sharing, WebHeads overlay, hide/restore, saved tabs after restart, browsing/article view, custom search field, tabs lists, history and settings. Do not proceed to P8 before explicit user approval.
+- **P6 remains immutable last user-validated baseline** at `74c24d9f374a44e29371989079ac820098ca7739`. Never merge P7 to `main` without explicit permission.
