@@ -5,11 +5,14 @@ import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
 import dev.arunkumar.android.epoxy.model.KotlinEpoxyModelWithHolder
 import dev.arunkumar.android.epoxy.model.KotlinHolder
-import kotlinx.android.synthetic.main.layout_feed_header.*
+import arun.com.chromer.databinding.LayoutFeedHeaderBinding
 
 @EpoxyModelClass(layout = R.layout.layout_feed_header)
 abstract class HeaderLayoutModel : KotlinEpoxyModelWithHolder<HeaderLayoutModel.ViewHolder>() {
-    class ViewHolder : KotlinHolder()
+    class ViewHolder : KotlinHolder() {
+        private val views by lazy(LazyThreadSafetyMode.NONE) { LayoutFeedHeaderBinding.bind(containerView) }
+        val header get() = views.header
+    }
 
     @EpoxyAttribute
     lateinit var title: String

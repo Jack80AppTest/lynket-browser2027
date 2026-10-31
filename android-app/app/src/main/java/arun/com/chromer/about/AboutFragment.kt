@@ -35,6 +35,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import arun.com.chromer.BuildConfig
 import arun.com.chromer.R
+import arun.com.chromer.databinding.FragmentAboutBinding
+import arun.com.chromer.databinding.FragmentAboutListItemTemplateBinding
 import arun.com.chromer.about.changelog.Changelog
 import arun.com.chromer.extenstions.gone
 import arun.com.chromer.shared.Constants
@@ -43,14 +45,13 @@ import butterknife.ButterKnife
 import butterknife.Unbinder
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.iconics.IconicsDrawable
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.fragment_about.*
-import kotlinx.android.synthetic.main.fragment_about_list_item_template.*
 
 /**
  * Created by Arun on 11/11/2015.
  */
 class AboutFragment : Fragment() {
+    private val binding get() = FragmentAboutBinding.bind(requireView())
+
     private lateinit var unBinder: Unbinder
 
     override fun onCreateView(
@@ -71,17 +72,17 @@ class AboutFragment : Fragment() {
     }
 
     private fun populateData() {
-        about_app_version_list.apply {
+        binding.aboutAppVersionList.apply {
             isNestedScrollingEnabled = false
             layoutManager = LinearLayoutManager(context)
             adapter = AppAdapter()
         }
-        about_author_version_list.apply {
+        binding.aboutAuthorVersionList.apply {
             isNestedScrollingEnabled = false
             layoutManager = LinearLayoutManager(context)
             adapter = AuthorAdapter()
         }
-        creditsRv.apply {
+        binding.creditsRv.apply {
             isNestedScrollingEnabled = false
             layoutManager = LinearLayoutManager(context)
             adapter = CreditsAdapter()
@@ -165,8 +166,15 @@ class AboutFragment : Fragment() {
             return 7
         }
 
-        internal inner class ItemHolder(override val containerView: View)
-            : RecyclerView.ViewHolder(containerView), LayoutContainer, View.OnClickListener {
+        internal inner class ItemHolder(val containerView: View)
+            : RecyclerView.ViewHolder(containerView), View.OnClickListener {
+            private val row by lazy(LazyThreadSafetyMode.NONE) {
+                FragmentAboutListItemTemplateBinding.bind(itemView)
+            }
+            val about_app_title get() = row.aboutAppTitle
+            val about_app_subtitle get() = row.aboutAppSubtitle
+            val about_row_item_image get() = row.aboutRowItemImage
+
 
             init {
                 itemView.setOnClickListener(this)
@@ -286,8 +294,15 @@ class AboutFragment : Fragment() {
             return 6
         }
 
-        internal inner class ItemHolder(override val containerView: View)
-            : RecyclerView.ViewHolder(containerView), View.OnClickListener, LayoutContainer {
+        internal inner class ItemHolder(val containerView: View)
+            : RecyclerView.ViewHolder(containerView), View.OnClickListener {
+            private val row by lazy(LazyThreadSafetyMode.NONE) {
+                FragmentAboutListItemTemplateBinding.bind(itemView)
+            }
+            val about_app_title get() = row.aboutAppTitle
+            val about_app_subtitle get() = row.aboutAppSubtitle
+            val about_row_item_image get() = row.aboutRowItemImage
+
 
             init {
                 itemView.setOnClickListener(this)
@@ -372,8 +387,15 @@ class AboutFragment : Fragment() {
 
         override fun getItemCount() = items.size
 
-        internal inner class ItemHolder(override val containerView: View)
-            : RecyclerView.ViewHolder(containerView), LayoutContainer, View.OnClickListener {
+        internal inner class ItemHolder(val containerView: View)
+            : RecyclerView.ViewHolder(containerView), View.OnClickListener {
+            private val row by lazy(LazyThreadSafetyMode.NONE) {
+                FragmentAboutListItemTemplateBinding.bind(itemView)
+            }
+            val about_app_title get() = row.aboutAppTitle
+            val about_app_subtitle get() = row.aboutAppSubtitle
+            val about_row_item_image get() = row.aboutRowItemImage
+
 
             init {
                 itemView.setOnClickListener(this)

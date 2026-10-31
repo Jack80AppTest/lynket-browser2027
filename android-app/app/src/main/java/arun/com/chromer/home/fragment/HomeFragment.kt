@@ -27,6 +27,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import arun.com.chromer.R
+import arun.com.chromer.databinding.FragmentHomeBinding
+import android.widget.TextView
+import android.widget.ImageView
 import arun.com.chromer.browsing.providerselection.ProviderSelectionActivity
 import arun.com.chromer.data.Result
 import arun.com.chromer.data.website.model.Website
@@ -48,14 +51,19 @@ import arun.com.chromer.util.glide.appicon.ApplicationIcon
 import butterknife.OnClick
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.iconics.IconicsDrawable
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.layout_provider_info_card.*
 import javax.inject.Inject
 
 /**
  * Created by Arunkumar on 07-04-2017.
  */
 class HomeFragment : BaseFragment(), Snackable {
+    private val binding get() = FragmentHomeBinding.bind(requireView())
+    // The provider-card widgets live in the legacy provider layout rather than fragment_home.
+    private val providerDescription get() = requireView().findViewById<TextView>(R.id.providerDescription)
+    private val providerIcon get() = requireView().findViewById<ImageView>(R.id.providerIcon)
+    private val providerReason get() = requireView().findViewById<TextView>(R.id.providerReason)
+    private val providerChangeButton get() = requireView().findViewById<View>(R.id.providerChangeButton)
+
     @Inject
     lateinit var recentsAdapter: RecentsAdapter
     @Inject
@@ -112,9 +120,9 @@ class HomeFragment : BaseFragment(), Snackable {
     private fun setRecents(websites: List<Website>) {
         recentsAdapter.setWebsites(websites)
         if (websites.isEmpty()) {
-            recent_missing_text.show()
+            binding.recentMissingText.show()
         } else {
-            recent_missing_text.gone()
+            binding.recentMissingText.gone()
         }
     }
 
@@ -127,11 +135,11 @@ class HomeFragment : BaseFragment(), Snackable {
     }
 
     private fun setupRecents() {
-        recentsHeaderIcon.setImageDrawable(IconicsDrawable(context!!)
+        binding.recentsHeaderIcon.setImageDrawable(IconicsDrawable(context!!)
                 .icon(CommunityMaterial.Icon.cmd_history)
                 .colorRes(R.color.accent)
                 .sizeDp(24))
-        recentsList.apply {
+        binding.recentsList.apply {
             layoutManager = GridLayoutManager(activity, 4)
             adapter = recentsAdapter
         }
@@ -187,7 +195,7 @@ class HomeFragment : BaseFragment(), Snackable {
 
 
     private fun setupTipsCard() {
-        tipsIcon.setImageDrawable(IconicsDrawable(context!!)
+        binding.tipsIcon.setImageDrawable(IconicsDrawable(context!!)
                 .icon(CommunityMaterial.Icon.cmd_lightbulb_on)
                 .colorRes(R.color.md_yellow_700)
                 .sizeDp(24))

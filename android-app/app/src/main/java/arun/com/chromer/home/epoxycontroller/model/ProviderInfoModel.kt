@@ -15,7 +15,7 @@ import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import dev.arunkumar.android.epoxy.model.KotlinEpoxyModelWithHolder
 import dev.arunkumar.android.epoxy.model.KotlinHolder
-import kotlinx.android.synthetic.main.layout_provider_info_card.*
+import arun.com.chromer.databinding.LayoutProviderInfoCardBinding
 
 data class CustomTabProviderInfo(
         val iconUri: Uri,
@@ -55,5 +55,11 @@ abstract class ProviderInfoModel : KotlinEpoxyModelWithHolder<ProviderInfoModel.
         }
     }
 
-    class ViewHolder : KotlinHolder()
+    class ViewHolder : KotlinHolder() {
+        private val views by lazy(LazyThreadSafetyMode.NONE) { LayoutProviderInfoCardBinding.bind(containerView) }
+        val providerIcon get() = views.providerIcon
+        val providerDescription get() = views.providerDescription
+        val providerReason get() = views.providerReason
+        val providerChangeButton get() = views.providerChangeButton
+    }
 }

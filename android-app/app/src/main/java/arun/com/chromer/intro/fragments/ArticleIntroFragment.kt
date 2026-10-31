@@ -29,14 +29,16 @@ import arun.com.chromer.tabs.TabsManager
 import arun.com.chromer.util.glide.GlideApp
 import butterknife.OnClick
 import com.github.paolorotolo.appintro.ISlideBackgroundColorHolder
-import kotlinx.android.synthetic.main.fragment_slide_over_intro.*
+import arun.com.chromer.databinding.FragmentArticleIntroBinding
 import javax.inject.Inject
 
 open class ArticleIntroFragment : BaseFragment(), ISlideBackgroundColorHolder {
+    private val binding get() = FragmentArticleIntroBinding.bind(requireView())
+
     override fun getDefaultBackgroundColor(): Int = ContextCompat.getColor(context!!, R.color.tutorialBackgrounColor)
 
     override fun setBackgroundColor(backgroundColor: Int) {
-        root.setBackgroundColor(backgroundColor)
+        binding.root.setBackgroundColor(backgroundColor)
     }
 
     @Inject
@@ -47,7 +49,7 @@ open class ArticleIntroFragment : BaseFragment(), ISlideBackgroundColorHolder {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        GlideApp.with(this).load(R.drawable.tutorial_article_mode).into(imageView!!)
+        GlideApp.with(this).load(R.drawable.tutorial_article_mode).into(binding.imageView!!)
     }
 
     @OnClick(R.id.tryItButton)

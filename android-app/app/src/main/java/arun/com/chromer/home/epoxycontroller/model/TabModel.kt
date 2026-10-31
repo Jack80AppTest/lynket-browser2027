@@ -9,7 +9,7 @@ import com.airbnb.epoxy.EpoxyAttribute.Option.DoNotHash
 import com.airbnb.epoxy.EpoxyModelClass
 import dev.arunkumar.android.epoxy.model.KotlinEpoxyModelWithHolder
 import dev.arunkumar.android.epoxy.model.KotlinHolder
-import kotlinx.android.synthetic.main.widget_tab_model_preview.*
+import arun.com.chromer.databinding.WidgetTabModelPreviewBinding
 
 @EpoxyModelClass(layout = R.layout.widget_tab_model_preview)
 abstract class TabModel : KotlinEpoxyModelWithHolder<TabModel.ViewHolder>() {
@@ -33,5 +33,8 @@ abstract class TabModel : KotlinEpoxyModelWithHolder<TabModel.ViewHolder>() {
         }
     }
 
-    class ViewHolder : KotlinHolder()
+    class ViewHolder : KotlinHolder() {
+        private val views by lazy(LazyThreadSafetyMode.NONE) { WidgetTabModelPreviewBinding.bind(containerView) }
+        val icon get() = views.icon
+    }
 }

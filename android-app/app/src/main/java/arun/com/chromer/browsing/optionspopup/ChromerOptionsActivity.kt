@@ -27,6 +27,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import arun.com.chromer.R
+import arun.com.chromer.databinding.ActivityMoreMenuBinding
+import arun.com.chromer.databinding.ActivityMoreMenuItemTemplateBinding
 import arun.com.chromer.browsing.openwith.OpenIntentWithActivity
 import arun.com.chromer.data.website.model.Website
 import arun.com.chromer.di.activity.ActivityComponent
@@ -39,13 +41,14 @@ import arun.com.chromer.shortcuts.HomeScreenShortcutCreatorActivity
 import arun.com.chromer.tabs.TabsManager
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.iconics.IconicsDrawable
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.activity_more_menu.*
-import kotlinx.android.synthetic.main.activity_more_menu_item_template.*
 import javax.inject.Inject
 
 
 class ChromerOptionsActivity : BaseActivity() {
+    private val binding by lazy(LazyThreadSafetyMode.NONE) {
+        ActivityMoreMenuBinding.bind(findViewById<ViewGroup>(android.R.id.content).getChildAt(0))
+    }
+
 
     private var fromArticle: Boolean = false
 
@@ -55,8 +58,8 @@ class ChromerOptionsActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fromArticle = intent.getBooleanExtra(EXTRA_KEY_FROM_ARTICLE, false)
-        moreMenuList.layoutManager = LinearLayoutManager(this)
-        moreMenuList.adapter = MenuListAdapter()
+        binding.moreMenuList.layoutManager = LinearLayoutManager(this)
+        binding.moreMenuList.adapter = MenuListAdapter()
     }
 
     override fun getLayoutRes() = R.layout.activity_more_menu
@@ -195,7 +198,13 @@ class ChromerOptionsActivity : BaseActivity() {
 
         override fun getItemCount() = items.size
 
-        inner class MenuItemHolder(override val containerView: View)
-            : RecyclerView.ViewHolder(containerView), LayoutContainer
+        inner class MenuItemHolder(itemView: View)
+            : RecyclerView.ViewHolder(itemView) {
+            private val views by lazy(LazyThreadSafetyMode.NONE) {
+                ActivityMoreMenuItemTemplateBinding.bind(itemView)
+            }
+            val menu_image get() = views.menuImage
+            val menu_text get() = views.menuText
+        }
     }
 }

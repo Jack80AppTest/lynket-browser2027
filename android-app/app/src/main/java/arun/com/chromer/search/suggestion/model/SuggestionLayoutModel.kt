@@ -15,7 +15,7 @@ import com.airbnb.epoxy.EpoxyAttribute.Option.DoNotHash
 import com.airbnb.epoxy.EpoxyModelClass
 import dev.arunkumar.android.epoxy.model.KotlinEpoxyModelWithHolder
 import dev.arunkumar.android.epoxy.model.KotlinHolder
-import kotlinx.android.synthetic.main.widget_suggestions_item_template.*
+import arun.com.chromer.databinding.WidgetSuggestionsItemTemplateBinding
 
 @EpoxyModelClass(layout = R.layout.widget_suggestions_item_template)
 abstract class SuggestionLayoutModel : KotlinEpoxyModelWithHolder<SuggestionLayoutModel.ViewHolder>() {
@@ -58,5 +58,12 @@ abstract class SuggestionLayoutModel : KotlinEpoxyModelWithHolder<SuggestionLayo
         }
     }
 
-    class ViewHolder : KotlinHolder()
+    class ViewHolder : KotlinHolder() {
+        private val views by lazy(LazyThreadSafetyMode.NONE) {
+            WidgetSuggestionsItemTemplateBinding.bind(containerView)
+        }
+        val suggestionsText get() = views.suggestionsText
+        val suggestionIcon get() = views.suggestionIcon
+        val suggestionsSubTitle get() = views.suggestionsSubTitle
+    }
 }

@@ -32,6 +32,9 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import arun.com.chromer.R
+import arun.com.chromer.databinding.AcitivtyPerAppsBinding
+import arun.com.chromer.databinding.ActivityPerAppsContentBinding
+import android.view.ViewGroup
 import arun.com.chromer.di.activity.ActivityComponent
 import arun.com.chromer.extenstions.watch
 import arun.com.chromer.settings.Preferences
@@ -42,8 +45,6 @@ import arun.com.chromer.util.Utils
 import arun.com.chromer.util.viemodel.ViewModelFactory
 import com.afollestad.materialdialogs.MaterialDialog
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.acitivty_per_apps.*
-import kotlinx.android.synthetic.main.activity_per_apps_content.*
 import javax.inject.Inject
 
 class PerAppSettingsActivity : BaseActivity(), CompoundButton.OnCheckedChangeListener, Snackable {
@@ -60,6 +61,13 @@ class PerAppSettingsActivity : BaseActivity(), CompoundButton.OnCheckedChangeLis
         activityComponent.inject(this)
     }
 
+    private val views by lazy(LazyThreadSafetyMode.NONE) {
+        AcitivtyPerAppsBinding.bind(findViewById<ViewGroup>(android.R.id.content).getChildAt(0))
+    }
+    private val contentViews by lazy(LazyThreadSafetyMode.NONE) {
+        ActivityPerAppsContentBinding.bind(findViewById(R.id.swipeRefreshLayout))
+    }
+
     override fun getLayoutRes(): Int = R.layout.acitivty_per_apps
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,9 +78,9 @@ class PerAppSettingsActivity : BaseActivity(), CompoundButton.OnCheckedChangeLis
     }
 
     private fun setupList() {
-        appRecyclerView.layoutManager = LinearLayoutManager(this)
-        appRecyclerView.adapter = perAppListAdapter
-        (appRecyclerView.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
+        contentViews.appRecyclerView.layoutManager = LinearLayoutManager(this)
+        contentViews.appRecyclerView.adapter = perAppListAdapter
+        (contentViews.appRecyclerView.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
     }
 
 
@@ -107,10 +115,10 @@ class PerAppSettingsActivity : BaseActivity(), CompoundButton.OnCheckedChangeLis
     }
 
     private fun setupToolbar() {
-        setSupportActionBar(toolbar)
+        setSupportActionBar(views.toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        swipeRefreshLayout.apply {
+        contentViews.swipeRefreshLayout.apply {
             setColorSchemeResources(
                     R.color.colorPrimary,
                     R.color.colorAccent)
@@ -169,14 +177,14 @@ class PerAppSettingsActivity : BaseActivity(), CompoundButton.OnCheckedChangeLis
     }
 
     private fun loading(loading: Boolean) {
-        swipeRefreshLayout.isRefreshing = loading
+        contentViews.swipeRefreshLayout.isRefreshing = loading
     }
 
     override fun snack(message: String) {
-        Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(views.coordinatorLayout, message, Snackbar.LENGTH_SHORT).show()
     }
 
     override fun snackLong(message: String) {
-        Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG).show()
+        Snackbar.make(views.coordinatorLayout, message, Snackbar.LENGTH_LONG).show()
     }
 }

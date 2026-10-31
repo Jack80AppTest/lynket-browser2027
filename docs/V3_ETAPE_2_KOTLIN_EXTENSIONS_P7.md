@@ -23,3 +23,9 @@
 3. APK standalone artifact without ZIP, according to proven P6 workflow.
 4. When all 32 files are migrated, remove old plugin, compile/test, produce P7 APK; ask for user's physical-device validation before treating P7 as stable.
 5. Do not touch or merge P6 or main without explicit permission.
+
+## Complete synthetic source migration implementation (candidate, CI pending)
+- Expanded from initial 5 activity files to all **32 synthetics-affected Kotlin files** in main application source, including fragments, custom search view, RecyclerView holders, Epoxy holders and LayoutContainer implementations.
+- Removed `kotlin-android-extensions` application plugin and `androidExtensions { experimental = true }`; kept `viewBinding true` and all existing Android layouts and user-visible behavior.
+- No Kotlin language/plugin version jump in this migration: continue Kotlin 1.7.22 until new P7 baseline passes.
+- This complete migration must pass P7 GitHub Actions, Robolectric tests, verified APK packaging and subsequent user physical-device validation. P6 remains the last user-validated baseline.

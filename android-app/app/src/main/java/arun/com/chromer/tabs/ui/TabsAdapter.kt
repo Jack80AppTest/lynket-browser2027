@@ -27,14 +27,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import arun.com.chromer.R
+import arun.com.chromer.databinding.FragmentTabsItemTemplateBinding
 import arun.com.chromer.data.website.model.Website
 import arun.com.chromer.tabs.*
 import arun.com.chromer.util.glide.GlideRequests
 import butterknife.ButterKnife
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.iconics.IconicsDrawable
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.fragment_tabs_item_template.*
 
 /**
  * Created by arunk on 07-03-2017.
@@ -70,9 +69,15 @@ constructor(
     fun getTabAt(adapterPosition: Int): TabsManager.Tab = getItem(adapterPosition)
 
     inner class TabsViewHolder(
-            override val containerView: View,
+            val containerView: View,
             getItem: (Int) -> TabsManager.Tab
-    ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+    ) : RecyclerView.ViewHolder(containerView) {
+        private val views by lazy(LazyThreadSafetyMode.NONE) { FragmentTabsItemTemplateBinding.bind(itemView) }
+        val icon get() = views.icon
+        val websiteTitle get() = views.websiteTitle
+        val websiteUrl get() = views.websiteUrl
+        val websiteTabMode get() = views.websiteTabMode
+        val websiteTabModeIcon get() = views.websiteTabModeIcon
 
         init {
             ButterKnife.bind(this, itemView)

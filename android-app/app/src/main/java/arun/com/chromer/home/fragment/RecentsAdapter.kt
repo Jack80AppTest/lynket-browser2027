@@ -25,13 +25,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import arun.com.chromer.R
+import arun.com.chromer.databinding.WidgetWebsiteGridItemBinding
 import arun.com.chromer.data.website.model.Website
 import arun.com.chromer.di.scopes.PerFragment
 import arun.com.chromer.tabs.TabsManager
 import arun.com.chromer.util.glide.GlideApp
 import butterknife.ButterKnife
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.widget_website_grid_item.*
 import java.util.*
 import javax.inject.Inject
 
@@ -84,8 +83,11 @@ constructor(val tabsManager: TabsManager) : RecyclerView.Adapter<RecentsAdapter.
 
     class RecentsViewHolder(
             val tabsManager: TabsManager,
-            override val containerView: View
-    ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+            val containerView: View
+    ) : RecyclerView.ViewHolder(containerView) {
+        private val views by lazy(LazyThreadSafetyMode.NONE) { WidgetWebsiteGridItemBinding.bind(itemView) }
+        val icon get() = views.icon
+        val label get() = views.label
         init {
             ButterKnife.bind(this, itemView)
         }

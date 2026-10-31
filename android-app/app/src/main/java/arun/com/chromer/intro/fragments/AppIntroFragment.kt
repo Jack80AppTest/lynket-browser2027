@@ -28,14 +28,16 @@ import arun.com.chromer.di.fragment.FragmentComponent
 import arun.com.chromer.shared.base.fragment.BaseFragment
 import arun.com.chromer.util.glide.GlideApp
 import com.github.paolorotolo.appintro.ISlideBackgroundColorHolder
-import kotlinx.android.synthetic.main.fragment_text_intro.*
+import arun.com.chromer.databinding.FragmentTextIntroBinding
 
 open class AppIntroFragment : BaseFragment(), ISlideBackgroundColorHolder {
+    private val binding get() = FragmentTextIntroBinding.bind(requireView())
+
     override fun getDefaultBackgroundColor(): Int = ContextCompat.getColor(context!!, R.color.tutorialBackgrounColor)
 
     override fun setBackgroundColor(backgroundColor: Int) {
-        if (root != null) {
-            root.setBackgroundColor(backgroundColor)
+        if (view != null) {
+            binding.root.setBackgroundColor(backgroundColor)
         }
     }
 
@@ -63,19 +65,19 @@ open class AppIntroFragment : BaseFragment(), ISlideBackgroundColorHolder {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        root.setBackgroundColor(this.bgColor)
-        titleTv.text = this.title
+        binding.root.setBackgroundColor(this.bgColor)
+        binding.titleTv.text = this.title
         if (this.titleColor != 0) {
-            titleTv!!.setTextColor(this.titleColor)
+            binding.titleTv!!.setTextColor(this.titleColor)
         }
 
-        descriptionTv.text = this.description
+        binding.descriptionTv.text = this.description
         if (this.descColor != 0) {
-            descriptionTv!!.setTextColor(this.descColor)
+            binding.descriptionTv!!.setTextColor(this.descColor)
         }
 
         // Use glide to load the drawable
-        GlideApp.with(this).load(drawable).into(imageView!!)
+        GlideApp.with(this).load(drawable).into(binding.imageView!!)
     }
 
     companion object {

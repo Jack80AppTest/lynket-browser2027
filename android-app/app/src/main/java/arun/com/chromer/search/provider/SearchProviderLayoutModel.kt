@@ -8,11 +8,15 @@ import com.airbnb.epoxy.EpoxyAttribute.Option.DoNotHash
 import com.airbnb.epoxy.EpoxyModelClass
 import dev.arunkumar.android.epoxy.model.KotlinEpoxyModelWithHolder
 import dev.arunkumar.android.epoxy.model.KotlinHolder
-import kotlinx.android.synthetic.main.widget_search_provider_item.*
+import arun.com.chromer.databinding.WidgetSearchProviderItemBinding
 
 @EpoxyModelClass(layout = R.layout.widget_search_provider_item)
 abstract class SearchProviderLayoutModel : KotlinEpoxyModelWithHolder<SearchProviderLayoutModel.ViewHolder>() {
-    class ViewHolder : KotlinHolder()
+    class ViewHolder : KotlinHolder() {
+        private val views by lazy(LazyThreadSafetyMode.NONE) { WidgetSearchProviderItemBinding.bind(containerView) }
+        val searchProviderIcon get() = views.searchProviderIcon
+        val searchProviderName get() = views.searchProviderName
+    }
 
     @EpoxyAttribute
     lateinit var searchProvider: SearchProvider

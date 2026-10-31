@@ -29,6 +29,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.Toast
 import arun.com.chromer.R
+import arun.com.chromer.databinding.ActivityNewTabBinding
 import arun.com.chromer.data.website.model.Website
 import arun.com.chromer.di.activity.ActivityComponent
 import arun.com.chromer.extenstions.showKeyboard
@@ -37,9 +38,6 @@ import arun.com.chromer.tabs.TabsManager
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import com.afollestad.materialdialogs.MaterialDialog
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.*
-import kotlinx.android.synthetic.main.activity_new_tab.*
 import rx.subscriptions.CompositeSubscription
 import javax.inject.Inject
 
@@ -73,9 +71,9 @@ class NewTabDialogActivity : BaseActivity() {
 
     inner class NewTabDialog(
             private var activity: Activity?
-    ) : DialogInterface.OnDismissListener, LayoutContainer {
+    ) : DialogInterface.OnDismissListener {
 
-        override val containerView: View? get() = dialog.customView
+        private var binding: ActivityNewTabBinding? = null
 
         val subs = CompositeSubscription()
 
@@ -95,8 +93,9 @@ class NewTabDialogActivity : BaseActivity() {
             }
 
             unbinder = ButterKnife.bind(this, dialog.customView!!)
+            binding = ActivityNewTabBinding.bind(dialog.customView!!)
 
-            materialSearchView.apply {
+            requireNotNull(binding).materialSearchView.apply {
                 searchPerforms()
                         .takeUntil(lifecycleEvents.destroys)
                         .subscribe { url ->
@@ -133,7 +132,7 @@ class NewTabDialogActivity : BaseActivity() {
         }
 
         override fun onDismiss(dialogInterface: DialogInterface?) {
-            clearFindViewByIdCache()
+            binding = null
             subs.clear()
             activity?.finish()
             activity = null
@@ -141,7 +140,7 @@ class NewTabDialogActivity : BaseActivity() {
         }
 
         fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-            materialSearchView?.onActivityResult(requestCode, resultCode, data)
+            binding?.materialSearchView?.onActivityResult(requestCode, resultCode, data)
         }
     }
 }

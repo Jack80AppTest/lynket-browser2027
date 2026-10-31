@@ -13,7 +13,7 @@ import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.iconics.IconicsDrawable
 import dev.arunkumar.android.epoxy.model.KotlinEpoxyModelWithHolder
 import dev.arunkumar.android.epoxy.model.KotlinHolder
-import kotlinx.android.synthetic.main.layout_feed_recents_list.*
+import arun.com.chromer.databinding.LayoutFeedRecentsListBinding
 
 @EpoxyModelClass(layout = R.layout.layout_feed_recents_list)
 abstract class RecentsCardModel : KotlinEpoxyModelWithHolder<RecentsCardModel.ViewHolder>() {
@@ -47,5 +47,10 @@ abstract class RecentsCardModel : KotlinEpoxyModelWithHolder<RecentsCardModel.Vi
         }
     }
 
-    class ViewHolder : KotlinHolder()
+    class ViewHolder : KotlinHolder() {
+        private val views by lazy(LazyThreadSafetyMode.NONE) { LayoutFeedRecentsListBinding.bind(containerView) }
+        val recentsHeaderIcon get() = views.recentsHeaderIcon
+        val recentsEpoxyGrid get() = views.recentsEpoxyGrid
+        val historyButton get() = views.historyButton
+    }
 }

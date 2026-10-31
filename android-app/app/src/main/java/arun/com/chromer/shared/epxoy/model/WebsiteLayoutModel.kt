@@ -11,11 +11,15 @@ import com.airbnb.epoxy.EpoxyAttribute.Option.DoNotHash
 import com.airbnb.epoxy.EpoxyModelClass
 import dev.arunkumar.android.epoxy.model.KotlinEpoxyModelWithHolder
 import dev.arunkumar.android.epoxy.model.KotlinHolder
-import kotlinx.android.synthetic.main.widget_website_grid_item.*
+import arun.com.chromer.databinding.WidgetWebsiteGridItemBinding
 
 @EpoxyModelClass(layout = R.layout.widget_website_grid_item)
 abstract class WebsiteLayoutModel : KotlinEpoxyModelWithHolder<WebsiteLayoutModel.ViewHolder>() {
-    class ViewHolder : KotlinHolder()
+    class ViewHolder : KotlinHolder() {
+        private val views by lazy(LazyThreadSafetyMode.NONE) { WidgetWebsiteGridItemBinding.bind(containerView) }
+        val label get() = views.label
+        val icon get() = views.icon
+    }
 
     @EpoxyAttribute
     lateinit var website: Website

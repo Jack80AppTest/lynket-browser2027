@@ -27,6 +27,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import arun.com.chromer.R
+import arun.com.chromer.databinding.ActivityTipsBinding
+import arun.com.chromer.databinding.LayoutTipsCardBinding
 import arun.com.chromer.di.activity.ActivityComponent
 import arun.com.chromer.extenstions.inflate
 import arun.com.chromer.shared.base.activity.BaseActivity
@@ -34,12 +36,13 @@ import arun.com.chromer.util.Utils
 import com.bumptech.glide.RequestManager
 import com.mikepenz.community_material_typeface_library.CommunityMaterial
 import com.mikepenz.iconics.IconicsDrawable
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.activity_tips.*
-import kotlinx.android.synthetic.main.layout_tips_card.*
 import javax.inject.Inject
 
 class TipsActivity : BaseActivity() {
+    private val binding by lazy(LazyThreadSafetyMode.NONE) {
+        ActivityTipsBinding.bind(findViewById<ViewGroup>(android.R.id.content).getChildAt(0))
+    }
+
     override fun inject(activityComponent: ActivityComponent) = activityComponent.inject(this)
 
     override fun getLayoutRes() = R.layout.activity_tips
@@ -65,7 +68,7 @@ class TipsActivity : BaseActivity() {
 
     private fun setupToolbar() {
         setTitle(R.string.tips)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.article_ic_close)
@@ -73,9 +76,9 @@ class TipsActivity : BaseActivity() {
     }
 
     private fun setupTipsList() {
-        tips_recycler_view.layoutManager = LinearLayoutManager(this)
-        tips_recycler_view.setHasFixedSize(true)
-        tips_recycler_view.adapter = TipsRecyclerViewAdapter()
+        binding.tipsRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.tipsRecyclerView.setHasFixedSize(true)
+        binding.tipsRecyclerView.adapter = TipsRecyclerViewAdapter()
     }
 
     inner class TipsRecyclerViewAdapter : RecyclerView.Adapter<TipsItemHolder>() {
@@ -168,5 +171,11 @@ class TipsActivity : BaseActivity() {
         ) = TipsItemHolder(parent.inflate(R.layout.layout_tips_card))
     }
 
-    class TipsItemHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer
+    class TipsItemHolder(val containerView: View) : RecyclerView.ViewHolder(containerView) {
+        private val views by lazy(LazyThreadSafetyMode.NONE) { LayoutTipsCardBinding.bind(itemView) }
+        val title get() = views.title
+        val subtitle get() = views.subtitle
+        val image get() = views.image
+        val icon get() = views.icon
+    }
 }

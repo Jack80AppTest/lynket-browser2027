@@ -13,7 +13,7 @@ import com.airbnb.epoxy.EpoxyAttribute.Option.DoNotHash
 import com.airbnb.epoxy.EpoxyModelClass
 import dev.arunkumar.android.epoxy.model.KotlinEpoxyModelWithHolder
 import dev.arunkumar.android.epoxy.model.KotlinHolder
-import kotlinx.android.synthetic.main.layout_tabs_info_card.*
+import arun.com.chromer.databinding.LayoutTabsInfoCardBinding
 
 @EpoxyModelClass(layout = R.layout.layout_tabs_info_card)
 abstract class TabsInfoModel : KotlinEpoxyModelWithHolder<TabsInfoModel.ViewHolder>() {
@@ -49,6 +49,11 @@ abstract class TabsInfoModel : KotlinEpoxyModelWithHolder<TabsInfoModel.ViewHold
     }
 
     class ViewHolder : KotlinHolder() {
+        private val views by lazy(LazyThreadSafetyMode.NONE) { LayoutTabsInfoCardBinding.bind(containerView) }
+        val tabsDescription get() = views.tabsDescription
+        val tabsCard get() = views.tabsCard
+        val tabsPreviewRecyclerView get() = views.tabsPreviewRecyclerView
+
         override fun bindView(itemView: View) {
             super.bindView(itemView)
             tabsPreviewRecyclerView.apply {

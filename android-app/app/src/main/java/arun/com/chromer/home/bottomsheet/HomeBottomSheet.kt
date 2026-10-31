@@ -22,9 +22,13 @@ import com.mikepenz.materialdrawer.AccountHeaderBuilder
 import com.mikepenz.materialdrawer.DrawerBuilder
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
-import kotlinx.android.synthetic.main.layout_home_bottom_sheet.*
+import arun.com.chromer.databinding.LayoutHomeBottomSheetBinding
 
 class HomeBottomSheet : BottomSheetDialogFragment() {
+
+    private var _binding: LayoutHomeBottomSheetBinding? = null
+    private val binding get() = requireNotNull(_binding)
+
 
     companion object {
         private const val INTRO = 1L
@@ -49,7 +53,10 @@ class HomeBottomSheet : BottomSheetDialogFragment() {
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.layout_home_bottom_sheet, container, false)
+    ): View {
+        _binding = LayoutHomeBottomSheetBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -137,6 +144,10 @@ class HomeBottomSheet : BottomSheetDialogFragment() {
         }.apply {
             setSelection(-1)
         }
-        homeBottomSheet.addView(drawer.slider)
+        binding.homeBottomSheet.addView(drawer.slider)
+    }
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }
