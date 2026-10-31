@@ -136,6 +136,7 @@
     <string name="webhead_spawn_summary">Initial spawn location</string>
     <string name="webhead_spawn_title">Choose where the web heads initially appears</string>
     <string name="credits">Credits</string>
+    <string name="android_modernization_credit">Modernization and compatibility with recent Android versions</string>
     <string name="icon_design">Icon Design</string>
     <string name="overlay_permission_content">To draw the web heads on screen, screen overlay permission needs to be granted. Would you like to grant it now?</string>
     <string name="webheads_intro_1">When you open a link in any app, a floating bubble called web head will be created on screen and Lynket will attempt to prefetch the link.</string>
