@@ -37,6 +37,20 @@ User authorized **GO** for a minimal readability-only cleanup on the already val
 - Double-check on GitHub: **exactly six changed paths** against `stable/v3.0.1`: `README.md`, `EdgeToEdgeInsets.java`, `WebHeadService.java`, `docs/P16_CODE_ARCHITECTURE.md`, this report, and a branch-specific workflow. Both modified Java files are byte-identical to the baseline after reversing only the intentionally changed comments. No executable statements altered, no build/app/runtime configuration changed.
 - **Physical validation of the cleanup APK:** not yet performed; the previously validated 3.0.1 functionality remains the reference until the user verifies the cleanup candidate. No PR/merge/tag/release created for the cleanup.
 
+## Additional explicitly approved contributor credit — 31 October 2026
+
+After the original comment-only cleanup, the user explicitly requested an **in-app attribution** and approved a visual example matching the existing Credits list. This is an intentional **UI text-only exception** to the original documentation-only scope; no navigation, business logic, WebHeads persistence or SDK settings were changed.
+
+- `android-app/app/src/main/java/arun/com/chromer/about/AboutFragment.kt`: prepend a static, non-linked `John Krauza` entry to the existing Credits adapter. Keep Arunkumar in the independent **Author** section and preserve the Patryk, Max and beta tester rows. No personal portrait or email address is added.
+- `android-app/app/src/main/res/values/strings.xml` and `values-fr/strings.xml`: add English and French text describing **modernization and compatibility with recent Android versions**.
+- `README.md` and `CONTRIBUTORS.md`: correct the attribution to *Android modernization and compatibility contributor*. `Lynket Custom 2027` remains a development fork name; the **installed app name, package identifiers and icon remain unchanged**.
+- No update to `app/build.gradle`, manifest, original credit/author code, external library versions, or Android SDK. Version remains **3.0.1** / code **64**, Android API **36**.
+- Compared `AboutFragment.kt` against `stable/v3.0.1`: exactly one new string-valued item and one new display case, no existing code changed. Each strings file adds only its new localized entry. This UI text addition requires a **new APK compilation and on-device visual check**, unlike the prior purely comment-only cleanup.
+
+**Attribution build:** [GitHub Actions run 41240713796](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41240713796), compiled revision `89822cdee647cdbe3cbedcb23dccae3ddcdb1e74`. Build result and direct APK artifact link: **pending actual completion** (do not substitute earlier cleanup APK `13055738685`).
+
+**Next step:** after this candidate is validated by the user, discuss preparing an upstream pull request for the original Lynket developer, who would independently decide if and how to integrate modernized code and publish to Play Store. Do not create a PR, release or tag without explicit authorization.
+
 ## Publication policy
 
 No merge to `main`, no PR, no new tag/release, no edits to `stable/v3.0.1` without a further explicit instruction. The version 3.0.1 release already created by the user remains unchanged.
