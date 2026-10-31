@@ -29,6 +29,7 @@ import arun.com.chromer.di.activity.ActivityComponent
 import arun.com.chromer.di.activity.ActivityModule
 import arun.com.chromer.intro.fragments.*
 import arun.com.chromer.shared.base.ProvidesActivityComponent
+import arun.com.chromer.shared.base.activity.EdgeToEdgeInsets
 import arun.com.chromer.util.ColorUtil
 import arun.com.chromer.util.Utils
 import com.github.paolorotolo.appintro.AppIntro
@@ -88,6 +89,11 @@ class ChromerIntroActivity : AppIntro(), ProvidesActivityComponent {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.statusBarColor = ColorUtil.getDarkenedColorForStatusBar(bgColor)
         }
+
+        // The legacy AppIntro activity does not inherit our BaseActivity:
+        // protect Skip/Next/Done above the Android 16 tablet taskbar.
+        // Use P16's one shared insets listener; do not stack P15's helper.
+        EdgeToEdgeInsets.apply(this)
     }
 
     override fun onSkipPressed(currentFragment: Fragment?) {

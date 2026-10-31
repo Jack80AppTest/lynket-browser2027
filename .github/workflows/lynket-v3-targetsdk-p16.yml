@@ -182,6 +182,7 @@ jobs:
           assert 'WindowInsets.Type.systemBars()' in shim
           assert 'WindowInsets.Type.displayCutout()' in shim
           assert 'root.setOnApplyWindowInsetsListener(' in shim
+          assert 'activity.getWindow().setDecorFitsSystemWindows(false);' in shim
           assert 'root.post(root::requestApplyInsets)' in shim
           for name in ['BaseActivity.java', 'SubActivity.java']:
               body = Path('app/src/main/java/arun/com/chromer/shared/base/activity', name).read_text()
@@ -229,6 +230,56 @@ jobs:
               print(line)
           assert not direct_calls, 'Unreviewed direct loadData call may mishandle HTML CSS # characters'
           print('Changelog HTML, safe loadDataWithBaseURL, event-order and full-source audit: OK')
+          PY
+
+      - name: Verify validated P15 layouts and no double Android 16 insets
+        working-directory: android-app
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+
+          root = ET.parse('app/src/main/res/layout/activity_main.xml').getroot()
+          ns = '{http://schemas.android.com/apk/res/android}'
+          app = '{http://schemas.android.com/apk/res-auto}'
+          card = root.find('androidx.cardview.widget.CardView')
+          assert card is not None and card.attrib[ns + 'layout_marginBottom'] == '0dp'
+          container = card.find('androidx.constraintlayout.widget.ConstraintLayout')
+          feed = container.find('com.airbnb.epoxy.EpoxyRecyclerView')
+          search = container.find('arun.com.chromer.search.view.MaterialSearchView')
+          assert feed is not None and search is not None
+          assert feed.attrib[app + 'layout_constraintBottom_toTopOf'] == '@id/materialSearchView'
+          assert app + 'layout_constraintBottom_toBottomOf' not in feed.attrib
+          assert search.attrib[app + 'layout_constraintBottom_toBottomOf'] == 'parent'
+          assert search.attrib[ns + 'layout_marginBottom'] == '8dp'
+
+          base = Path('app/src/main/java/arun/com/chromer/shared/base/activity/BaseActivity.java').read_text()
+          sub = Path('app/src/main/java/arun/com/chromer/shared/base/activity/SubActivity.java').read_text()
+          insets = Path('app/src/main/java/arun/com/chromer/shared/base/activity/EdgeToEdgeInsets.java').read_text()
+          assert 'EdgeToEdgeInsets.apply(this);' in base
+          assert 'EdgeToEdgeInsets.apply(this);' in sub
+          assert 'activity.getWindow().setDecorFitsSystemWindows(false);' in insets
+          assert 'WindowInsets.Type.systemBars() | WindowInsets.Type.displayCutout()' in insets
+          assert 'bottom + bars.bottom' in insets
+
+          intro = Path('app/src/main/java/arun/com/chromer/intro/ChromerIntroActivity.kt').read_text()
+          assert 'EdgeToEdgeInsets.apply(this)' in intro
+          assert 'showSkipButton(true)' in intro and 'isProgressButtonEnabled = true' in intro
+          home = Path('app/src/main/java/arun/com/chromer/home/HomeActivity.kt').read_text()
+          assert 'class HomeActivity : BaseActivity()' in home
+          assert 'protectHomeContentFromSystemBars()' not in home, 'Duplicate home screen insets'
+          for screen, layout_name in [('history', 'activity_history'), ('tabs', 'activity_tabs')]:
+              path = 'app/src/main/java/arun/com/chromer/' + (
+                  'history/HistoryActivity.kt' if screen == 'history' else 'tabs/ui/TabsActivity.kt')
+              code = Path(path).read_text()
+              assert ': BaseActivity()' in code
+              assert 'TargetedSystemBarInsets' not in code, 'Duplicate FAB/taskbar inset'
+              layout = ET.parse('app/src/main/res/layout/' + layout_name + '.xml').getroot()
+              fab = layout.find('com.google.android.material.floatingactionbutton.FloatingActionButton')
+              assert fab is not None and fab.attrib[ns + 'layout_gravity'] == 'bottom|end'
+          assert not Path('app/src/main/java/arun/com/chromer/shared/base/activity/TargetedSystemBarInsets.java').exists()
+          assert 'targetSdkVersion 36' in Path('app/build.gradle').read_text()
+          print('P15 validated home, Intro, History and Tabs migrated to P16 without double insets.')
           PY
 
       - name: Test persistent bubble storage

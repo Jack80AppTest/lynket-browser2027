@@ -34,3 +34,26 @@
 - Cette mise à jour documentaire est passive; workflow ignore `docs/**`, donc le code testé ne change pas.
 - **Non validé sur tablette Android 16** : la CI n'exécute ni interface réelle, ni émulateur/tablette Android 16. La migration d'insets est un garde-fou minimal susceptible de devoir être adaptée par écran après les tests réels; P16 reste une **candidate** et ne doit pas être publiée comme version validée.
 
+
+
+## Intégration des correctifs P15 validés sur téléphone et tablette — 31 octobre 2026
+
+**Décision utilisateur** : « C'est parfait autant sur le téléphone que sur la tablette. J'ai vérifié tous les écrans, tout fonctionne. Tout fonctionne parfaitement maintenant et tout est bien aligné. » L'utilisateur a expressément autorisé le portage de **tous les correctifs P15 visuels et fonctionnels** vers P16, **sans modifier `main`** et a demandé un fichier de transfert complet pour la prochaine conversation.
+
+### Base et principe anti-régression
+- P15 validée : `dev/3.0.0-targetsdk-p15`, code compilé/CI réussi `90d5bf5f01a521fbee063611e2e5330f7d63aaf7`, rapport-only HEAD `6e6dbb9b7d47e7647a39194d07db487ca25bd48c`, GitHub Actions run `41219490319`, APK `13049068743`. L'utilisateur confirme **les tests visuels et tous les écrans sur Galaxy S23 Ultra et Galaxy Tab A11+ Android 16**, et valide ces corrections.
+- Branche P16 existante `dev/3.0.0-targetsdk-p16` issue de l'ancienne P15 (`41470514...`) : **pas de recréation forcée ni réécriture d'historique**; intégration ciblée par nouveau commit.
+- **NE PAS copier à l'aveugle** le P15 `TargetedSystemBarInsets.java` ni l'injection individuelle dans `HistoryActivity` et `TabsActivity` : en P16 ces écrans héritent de `BaseActivity.onContentChanged() → EdgeToEdgeInsets.apply(this)`. Les deux approches cumulées créeraient un **double padding**. Les effets P15 sont reproduits par la protection unique commune à P16, avec vérifications CI.
+- **NE PAS recopier la méthode `HomeActivity.protectHomeContentFromSystemBars()` de P15** dans P16 : la protection P16 agit déjà depuis `BaseActivity`, à la racine de la fenêtre.
+- **Reprendre intégralement** le `activity_main.xml` validé P15, qui réserve la place de la recherche en dessous des cartes (`homeFeedRecyclerView` contraint au-dessus de `materialSearchView`) et supprime la marge négative `-8dp` du CardView.
+- **Introduction** : `ChromerIntroActivity` hérite directement de la bibliothèque AppIntro; elle n'hérite pas de `BaseActivity`. L'appel `EdgeToEdgeInsets.apply(this)` est ajouté après la configuration des commandes afin de protéger Passer / Suivant / Terminer des barres système/tablette.
+- **EdgeToEdgeInsets** : utiliser `Window.setDecorFitsSystemWindows(false)`, API Android native disponible sous la garde API >= 35, en reprenant le contrat explicite validé sur P15. Aucune mise à jour de dépendance AndroidX.
+- **Historique et Onglets** : layout et actions des boutons flottants inchangés (comme en P15); ils utilisent déjà le chemin unique des insets P16. Le workflow vérifie `BaseActivity`, le FAB inférieur, et l'absence de `TargetedSystemBarInsets` supplémentaire.
+- Aucun changement de persistance SQLite, WebHeads, restauration, Masquer ≠ Fermer, Changelog déjà corrigé depuis P15, navigateur WebView, mode Article, fournisseur Custom Tabs, gestion des notifications, thèmes et préférences.
+- `targetSdkVersion 36`, compileSdk 36, minSdk 16, `versionName 2.1.7` et `versionCode 62` conservés, Debug `com.jk8026.lynket2027.debug`; workflow P16 dédié, trois tests Robolectric, APK direct sans ZIP.
+
+### Critères de recette P16 (non encore validée sur appareil)
+Après compilation CI, installer/tester P16 sur la **Galaxy Tab A11+ Android 16** puis le Galaxy S23 Ultra Android 14 : recherche en portrait/paysage, introduction Passer / Suivant / Terminer, FAB Historique et Onglets, WebView, Article, Changelog, thème clair/AMOLED et bulles SQLite/masquer/restaurer. P15 reste notre **base validée** jusqu'à confirmation expresse sur P16.
+
+### Résultat final du build intégrant les correctifs P15
+À consigner seulement après obtention du run GitHub Actions terminé et de l'artefact réel.

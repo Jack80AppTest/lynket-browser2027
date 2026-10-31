@@ -20,6 +20,11 @@ public final class EdgeToEdgeInsets {
     /** Called after setContentView; safe for the unchanged minSdk 16. */
     public static void apply(@NonNull Activity activity) {
         if (Build.VERSION.SDK_INT < 35) return;
+
+        // Use a single edge-to-edge contract for P16. The legacy AndroidX
+        // WindowCompat API is unavailable in this project's dependency set.
+        // Window.setDecorFitsSystemWindows() is native API 30+.
+        activity.getWindow().setDecorFitsSystemWindows(false);
         final View root = activity.findViewById(android.R.id.content);
         if (root == null) return;
 
