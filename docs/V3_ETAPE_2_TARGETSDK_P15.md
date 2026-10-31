@@ -39,3 +39,17 @@
 **P15 ne devient validée que sur confirmation explicite après tests utilisateur sur Galaxy S23 Ultra.**
 Vérifier partage des liens, fournisseurs Chrome/Samsung, bulles/compteur/ordre, MASQUER et RESTAURER automatiques (sans doublon), fermeture explicite d'une bulle, relance, boot, notifications, options par application, recherche, historique et thèmes. Les changements de comportement propres à Android 15 nécessitent également un vrai test Android 15 (appareil ou émulateur), non couvert par une simple compilation.
 Le rapport est passif, ignoré par la CI via `paths-ignore: docs/**`, et ne doit pas déclencher un build.
+
+
+## Correctif Changelog reporté à P15 — 31 octobre 2026
+- Autorisation expresse de reporter le correctif 3.0.0 Android 14 Developer à P15, avant reprise de P16.
+- **Aucun changement de cible/version ni de fonctionnement des WebHeads** : `targetSdkVersion 35`, `compileSdk 36`, `versionCode 62`, `versionName 2.1.7` conservés.
+- Correctif de `android-app/app/src/main/java/arun/com/chromer/about/changelog/Changelog.java` repris **à l'identique** depuis la branche Developer 3.0.0 corrigée : `WebView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null)` et `WebViewClient` enregistré **avant** le chargement HTML. La source P9/P10 était identique; son comportement a divergé au passage target 28 → 29, probablement à cause des `#` non échappés du CSS.
+- Le workflow P15 ajoute le même contrôle statique parcourant tous les Java/Kotlin de production pour détecter des appels directs `.loadData(`; aucun appel direct restant, contrôle réussi.
+- **CI définitive verte :** [run `41209946048`](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41209946048), job terminé `completed/success`, **19 étapes réussies** : build, contrôles Android 11–15, audit Changelog, trois tests Robolectric, `aapt` targetSdk 35/package/version et `apksigner` v2.
+- **Commit exact compilé :** `41470514079c48fab2481275ec9ed4047207fd73`. Mise à jour documentaire ultérieure seulement, hors code compilé.
+- **APK direct corrigé, sans ZIP :** [Lynket_2027_v2.1.7_TargetSdk_P15_Debug.apk](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41209946048/artifacts/13045922510), artefact ID `13045922510`, **8 691 558 octets**.
+- SHA-256 fourni dans les métadonnées GitHub de l'artefact (non recalculé directement depuis le fichier) : `b69355a3b29aac796a07800a86b547c96c283748f54e0971f6575b2f3cc050ed`; expiration indiquée **2027-01-29 14:23:58 UTC**.
+- L'APK P15 original du run `41204588299` **ne contient pas** le correctif. Tester uniquement le nouvel APK.
+- **P15 en attente de validation manuelle** sur tablette Android 16. Un APK ciblant API 35 sur Android 16 peut tourner, mais cela ne valide pas à lui seul les changements propres à une cible API 36.
+- Aucun merge dans `main`, et P14 / version Developer 3.0.0 restent intacts.
