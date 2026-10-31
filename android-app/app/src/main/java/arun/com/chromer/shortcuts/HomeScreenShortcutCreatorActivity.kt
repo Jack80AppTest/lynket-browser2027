@@ -153,6 +153,7 @@ class HomeScreenShortcutCreatorActivity : BrowsingActivity() {
                                     }
                                 })
                     }
+                    else -> Unit // Preserve the existing no-op for other result states.
                 }
             }
             return dialog
