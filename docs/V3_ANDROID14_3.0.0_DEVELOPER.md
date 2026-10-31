@@ -61,5 +61,10 @@
 > **Statut** : à valider sur appareil avant annonce publique comme version stable.
 
 ## Suivi CI et validation matérielle
-Résultats finaux de la CI Developer, commit construit, artefact direct et SHA à compléter uniquement après vérification dans GitHub Actions.
+**GitHub Actions terminé : succès intégral**. Exécution [`41206713690`](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41206713690), job `124553160375`, statut `completed / success`. Toutes les étapes réussies : compilation Debug, contrôles Android 11/12/13/14, trois tests Robolectric, contrôle `aapt` package/versionCode 63/versionName 3.0.0/targetSdk 34, signature v2 vérifiée, upload direct sans ZIP.
+- **Commit exact testé et compilé** : `e5f2c26a3144dca1e6ca1f27177bfd23ff923652` (code source P14 + ajustement version `3.0.0/63`, workflow et documentation).
+- **APK direct :** [Lynket_Custom_2027_v3.0.0_Android14_Developer.apk](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41206713690/artifacts/13043534995), ID artefact `13043534995`, **8 690 888 octets**, `archive: false`.
+- Empreinte **rapportée par GitHub pour l'artefact** : `sha256:2c2ab16e7edb571ab52f0b254b62f1ed0194845e8ec85d64706f1c7e934d6961`. Métadonnée de GitHub, non recalculée depuis le fichier téléchargé. Date d'expiration affichée : **29 janvier 2027 à 13:41:36 UTC**.
+- Le **commit documentaire** de mise à jour de ce rapport est postérieur au commit testé et ne modifie ni code, ni workflow : aucun rebuild nécessaire; le workflow ignore `docs/**`.
+- **Aucune GitHub Release/tag créé, `main` inchangé.**
 P14 est la référence validée; la version 3.0.0 Developer reste **candidate** en attente des tests sur Galaxy S23 Ultra.
