@@ -20,7 +20,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 
 kapt {
     useBuildCache = true
@@ -28,7 +28,12 @@ kapt {
 }
 
 android {
-    compileSdkVersion 29
+    namespace 'arun.com.chromer'
+    compileSdkVersion 36
+    buildFeatures {
+        viewBinding true
+        buildConfig true
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -93,9 +98,6 @@ android {
 }
 
 
-androidExtensions {
-    experimental = true
-}
 
 dependencies {
     // Kotlin
