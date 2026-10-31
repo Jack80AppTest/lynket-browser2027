@@ -623,7 +623,14 @@ public class WebHeadService extends OverlayService implements WebHeadContract,
         notificationFilter.addAction(ACTION_STOP_WEBHEAD_SERVICE);
         notificationFilter.addAction(ACTION_OPEN_CONTEXT_ACTIVITY);
         notificationFilter.addAction(ACTION_OPEN_NEW_TAB);
-        registerReceiver(notificationActionReceiver, notificationFilter);
+        // Android 14 requires export flags for application-defined dynamic receivers.
+        // The notification PendingIntents are package-scoped and executed as this app.
+        // Keep these actions private; unlike screen ON/OFF they are not system-only.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(notificationActionReceiver, notificationFilter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(notificationActionReceiver, notificationFilter);
+        }
     }
 
     private void unregisterReceivers() {
