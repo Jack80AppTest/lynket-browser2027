@@ -1,9 +1,10 @@
 plugins {
     `java-gradle-plugin`
-    id("org.jetbrains.kotlin.jvm").version("1.3.31")
+    id("org.jetbrains.kotlin.jvm").version("1.7.22")
 }
 
 repositories {
+    mavenCentral()
     jcenter()
 }
 
