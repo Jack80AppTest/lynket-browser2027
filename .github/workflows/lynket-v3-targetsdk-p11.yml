@@ -1,0 +1,122 @@
+name: Lynket 2027 v3 - Target SDK P11 (Kotlin 2.2.21, AGP 8.10.1, Gradle 8.11.1)
+
+on:
+  push:
+    branches:
+      - dev/3.0.0-targetsdk-p11
+    paths-ignore:
+      - 'docs/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lynket2027-v3-targetsdk-p11-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-debug:
+    name: Build Android debug APK
+    runs-on: ubuntu-22.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout development branch
+        uses: actions/checkout@v4
+
+      - name: Java 11 for legacy tests and Java 17 for Gradle/AGP 8
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: |
+            11
+            17
+
+      - name: Initialize Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Install Android SDK platforms
+        run: |
+          sdkmanager --install "platforms;android-28" "platforms;android-29" "platforms;android-36" "build-tools;35.0.0"
+
+      - name: Build Lynket 2027 as separate debug app
+        working-directory: android-app
+        env:
+          ORG_GRADLE_PROJECT_PLAY_LICENSE_KEY: diagnostic-only
+          ORG_GRADLE_PROJECT_FABRIC_KEY: diagnostic-only
+        run: |
+          chmod +x ./gradlew
+          java -version
+          ./gradlew --version
+          grep -F 'gradle-8.11.1-all.zip' gradle/wrapper/gradle-wrapper.properties
+          grep -F 'com.android.tools.build:gradle:8.10.1' build.gradle
+          grep -F "ext.kotlin_version = '2.2.21'" build.gradle
+          grep -F 'targetSdkVersion 30' app/build.gradle
+          ./gradlew --no-daemon :app:assembleDebug --stacktrace
+
+      - name: Validate Android 11 targeted package visibility declarations
+        working-directory: android-app
+        run: |
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          root = ET.parse('app/src/main/AndroidManifest.xml').getroot()
+          ns = '{http://schemas.android.com/apk/res/android}'
+          queries = root.find('queries')
+          assert queries is not None, 'Missing Android 11 <queries>'
+          found = set()
+          for item in queries.findall('intent'):
+              action = item.find('action')
+              assert action is not None
+              name = action.attrib[ns + 'name']
+              data = item.find('data')
+              scheme = data.attrib.get(ns + 'scheme') if data is not None else None
+              cats = tuple(sorted(c.attrib[ns + 'name'] for c in item.findall('category')))
+              found.add((name, scheme, cats))
+          required = {
+              ('android.intent.action.VIEW', 'http', ()),
+              ('android.intent.action.VIEW', 'https', ()),
+              ('android.intent.action.MAIN', None, ('android.intent.category.LAUNCHER',)),
+              ('android.support.customtabs.action.CustomTabsService', None, ()),
+              ('android.speech.action.RECOGNIZE_SPEECH', None, ()),
+              ('android.speech.RecognitionService', None, ()),
+          }
+          assert required <= found, f'Missing package visibility queries: {required - found}'
+          expected_packages = {'com.android.chrome', 'com.brave.browser', 'org.mozilla.focus',
+              'com.sec.android.app.sbrowser', 'org.mozilla.fennec_aurora',
+              'com.kiwibrowser.browser', 'com.vivaldi.browser'}
+          declared = {e.attrib[ns + 'name'] for e in queries.findall('package')}
+          assert expected_packages <= declared, f'Missing provider packages: {expected_packages - declared}'
+          permissions = {e.attrib[ns + 'name'] for e in root.findall('uses-permission')}
+          assert 'android.permission.QUERY_ALL_PACKAGES' not in permissions
+          print('Android 11 package visibility queries checked without QUERY_ALL_PACKAGES')
+          PY
+
+      - name: Test persistent bubble storage
+        working-directory: android-app
+        run: |
+          ./gradlew --no-daemon :app:testDebugUnitTest --tests arun.com.chromer.bubbles.webheads.BubbleSessionStoreTest --tests arun.com.chromer.home.epoxycontroller.model.SavedBubblesCardModelTest --tests arun.com.chromer.settings.SettingsGroupAdapterTest
+
+      - name: Verify APK package, target SDK 30 and signature
+        working-directory: android-app
+        run: |
+          APK="app/build/outputs/apk/debug/app-debug.apk"
+          test -s "$APK"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" | grep "^package: name='com.jk8026.lynket2027.debug' versionCode='62' versionName='2.1.7"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" | grep -F "targetSdkVersion:'30'"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump xmltree "$APK" AndroidManifest.xml | grep -F 'E: queries'
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs "$APK" | tee /tmp/lynket-p11-signature.txt
+          grep -F 'Verified using v2 scheme (APK Signature Scheme v2): true' /tmp/lynket-p11-signature.txt
+
+      - name: Name v3 Target SDK P11 APK (Android version still 2.1.7)
+        working-directory: android-app
+        run: |
+          mv app/build/outputs/apk/debug/app-debug.apk \
+             app/build/outputs/apk/debug/Lynket_2027_v2.1.7_TargetSdk_P11_Debug.apk
+
+      - name: Upload versioned APK directly without ZIP
+        if: success()
+        uses: actions/upload-artifact@v7
+        with:
+          path: android-app/app/build/outputs/apk/debug/Lynket_2027_v2.1.7_TargetSdk_P11_Debug.apk
+          archive: false
+          if-no-files-found: error

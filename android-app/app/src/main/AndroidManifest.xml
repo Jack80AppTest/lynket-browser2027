@@ -38,6 +38,48 @@
 
     <uses-sdk tools:overrideLibrary="in.arunkumarsampath.transitionx" />
 
+    <!-- Android 11 package visibility: only the browsers, launchers, Custom Tabs
+         services and speech recognizers actually queried by Lynket. -->
+    <queries>
+        <!-- Installed browser discovery: Utils and CustomTabs use ACTION_VIEW. -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="http" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+
+        <!-- Per-app preferences list: AppSystemStore enumerates launchable apps. -->
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+
+        <!-- CustomTabs.isPackageSupportCustomTabs resolves this service action. -->
+        <intent>
+            <action android:name="android.support.customtabs.action.CustomTabsService" />
+        </intent>
+
+        <!-- Voice search detection and recognition services. -->
+        <intent>
+            <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
+        </intent>
+        <intent>
+            <action android:name="android.speech.RecognitionService" />
+        </intent>
+
+        <!-- Existing preloaded browser provider entries used for installed checks. -->
+        <package android:name="com.android.chrome" />
+        <package android:name="com.brave.browser" />
+        <package android:name="org.mozilla.focus" />
+        <package android:name="com.sec.android.app.sbrowser" />
+        <package android:name="org.mozilla.fennec_aurora" />
+        <package android:name="com.kiwibrowser.browser" />
+        <package android:name="com.vivaldi.browser" />
+    </queries>
+
     <application
         android:name=".Chromer"
         android:allowBackup="false"
