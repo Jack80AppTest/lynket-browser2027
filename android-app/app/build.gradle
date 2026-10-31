@@ -28,7 +28,7 @@ kapt {
 
 android {
     namespace 'arun.com.chromer'
-    compileSdkVersion 34
+    compileSdkVersion 36
     buildFeatures {
         buildConfig true
         aidl true
