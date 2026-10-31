@@ -28,7 +28,11 @@ kapt {
 }
 
 android {
-    compileSdkVersion 29
+    namespace 'arun.com.chromer'
+    compileSdkVersion 33
+    buildFeatures {
+        buildConfig true
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8

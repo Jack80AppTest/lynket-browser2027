@@ -1,0 +1,79 @@
+name: Lynket 2027 v3 - toolchain P5 reduced (Kotlin 1.7.22, AGP 8.0.2, Gradle 8.0.2)
+
+on:
+  push:
+    branches:
+      - dev/3.0.0-toolchain-p5-reduced
+    paths-ignore:
+      - 'docs/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lynket2027-v3-toolchain-p5-reduced-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-debug:
+    name: Build Android debug APK
+    runs-on: ubuntu-22.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout development branch
+        uses: actions/checkout@v4
+
+      - name: Java 17 for SDK and Gradle
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Initialize Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Install legacy Android SDK platforms
+        run: |
+          sdkmanager --install "platforms;android-28" "platforms;android-29" "platforms;android-33" "build-tools;33.0.2"
+
+      - name: Build Lynket 2027 as separate debug app
+        working-directory: android-app
+        env:
+          ORG_GRADLE_PROJECT_PLAY_LICENSE_KEY: diagnostic-only
+          ORG_GRADLE_PROJECT_FABRIC_KEY: diagnostic-only
+        run: |
+          chmod +x ./gradlew
+          java -version
+          ./gradlew --version
+          grep -F 'gradle-8.0.2-all.zip' gradle/wrapper/gradle-wrapper.properties
+          grep -F 'com.android.tools.build:gradle:8.0.2' build.gradle
+          grep -F "ext.kotlin_version = '1.7.22'" build.gradle
+          ./gradlew --no-daemon :app:assembleDebug --stacktrace
+
+      - name: Test persistent bubble storage
+        working-directory: android-app
+        run: |
+          ./gradlew --no-daemon :app:testDebugUnitTest --tests arun.com.chromer.bubbles.webheads.BubbleSessionStoreTest --tests arun.com.chromer.home.epoxycontroller.model.SavedBubblesCardModelTest --tests arun.com.chromer.settings.SettingsGroupAdapterTest
+
+      - name: Verify APK package and signature
+        working-directory: android-app
+        run: |
+          APK="app/build/outputs/apk/debug/app-debug.apk"
+          test -s "$APK"
+          "$ANDROID_HOME/build-tools/33.0.2/aapt" dump badging "$APK" | grep "^package: name='com.jk8026.lynket2027.debug' versionCode='62' versionName='2.1.7"
+          "$ANDROID_HOME/build-tools/33.0.2/apksigner" verify --verbose --print-certs "$APK"
+
+      - name: Name v3 toolchain P5 reduced APK (Android version still 2.1.7)
+        working-directory: android-app
+        run: |
+          mv app/build/outputs/apk/debug/app-debug.apk \
+             app/build/outputs/apk/debug/Lynket_2027_v2.1.7_Toolchain_P5 reduced_Debug.apk
+
+      - name: Upload versioned APK directly without ZIP
+        if: success()
+        uses: actions/upload-artifact@v7
+        with:
+          path: android-app/app/build/outputs/apk/debug/Lynket_2027_v2.1.7_Toolchain_P5 reduced_Debug.apk
+          archive: false
+          if-no-files-found: error
