@@ -179,7 +179,8 @@ jobs:
           "$ANDROID_HOME/build-tools/35.0.0/aapt" dump xmltree "$APK" AndroidManifest.xml | grep -F 'E: queries'
           "$ANDROID_HOME/build-tools/35.0.0/aapt" dump xmltree "$APK" AndroidManifest.xml | grep -F 'android.permission.POST_NOTIFICATIONS'
           "$ANDROID_HOME/build-tools/35.0.0/aapt" dump xmltree "$APK" AndroidManifest.xml | grep -F 'android.permission.FOREGROUND_SERVICE_SPECIAL_USE'
-          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump xmltree "$APK" AndroidManifest.xml | grep -F 'specialUse'
+          # aapt renders enum flags numerically; check the packaged attribute, not a literal enum label.
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump xmltree "$APK" AndroidManifest.xml | grep -F 'android:foregroundServiceType'
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs "$APK" | tee /tmp/lynket-p14-signature.txt
           grep -F 'Verified using v2 scheme (APK Signature Scheme v2): true' /tmp/lynket-p14-signature.txt
 
