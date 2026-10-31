@@ -68,12 +68,12 @@ jobs:
         working-directory: android-app
         run: |
           mv app/build/outputs/apk/debug/app-debug.apk \
-             app/build/outputs/apk/debug/Lynket_2027_v2.1.7_Toolchain_P5 reduced_Debug.apk
+             app/build/outputs/apk/debug/Lynket_2027_v2.1.7_Toolchain_P5_Reduced_Debug.apk
 
       - name: Upload versioned APK directly without ZIP
         if: success()
         uses: actions/upload-artifact@v7
         with:
-          path: android-app/app/build/outputs/apk/debug/Lynket_2027_v2.1.7_Toolchain_P5 reduced_Debug.apk
+          path: android-app/app/build/outputs/apk/debug/Lynket_2027_v2.1.7_Toolchain_P5_Reduced_Debug.apk
           archive: false
           if-no-files-found: error
