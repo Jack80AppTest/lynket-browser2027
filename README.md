@@ -4,13 +4,13 @@ This repository also contains **Lynket Custom 2027**, a maintained fork of the o
 
 **Current validated source reference:** [`stable/v3.0.1`](https://github.com/Jack80AppTest/lynket-browser2027/tree/stable/v3.0.1) — internal version `3.0.1` (`versionCode 64`), `compileSdk 36`, `targetSdk 36`. This is a development-signed Android build, **not** a Google Play production artifact. See the version-specific build report in [`docs/V3_0_1_VERSIONING.md`](docs/V3_0_1_VERSIONING.md).
 
-## Fork maintainer and contributions
+## Android modernization contribution
 
-**John Krauza — Lynket Custom 2027 project lead and fork maintainer.**
+**John Krauza — Android modernization and compatibility contributor.**
 
-John initiated and directed the fork's improvements, specified and tested its behavior on Android devices, and coordinated its Android modernization and documentation. His contributions include the design and validation of persistent WebHeads, tab restoration, Hide/Restore controls, the AMOLED interface, Chrome Custom Tabs / Slide Over fixes, and Android 14–16 compatibility.
+John coordinated and validated the modernization work that keeps Lynket compatible with recent Android releases, including changes to Android build tools, API compatibility, UI insets and navigation behavior. He also specified and tested the fork's preserved WebHeads sessions, Hide/Restore behavior, AMOLED theme and Chrome navigation fixes on real devices.
 
-This acknowledgment refers to the **Lynket Custom 2027 fork**, not authorship of the original Lynket / Chromer application. Original authorship and credits are preserved below. No personal contact information is published.
+This acknowledgment recognizes modernization and testing contributions to **Lynket**, not authorship of the original app or a change to the app's name. Original authorship and credits are preserved below. No personal contact information is published.
 
 See [`CONTRIBUTORS.md`](CONTRIBUTORS.md) for a brief attribution of the fork and upstream project.
 
