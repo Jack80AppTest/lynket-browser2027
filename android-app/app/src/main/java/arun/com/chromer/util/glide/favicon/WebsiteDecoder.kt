@@ -115,7 +115,7 @@ class WebsiteDecoder(private val context: Context, glide: Glide) : ResourceDecod
             setColor(ColorUtil.getForegroundWhiteOrBlack(color))
             style = Paint.Style.FILL
         }
-        drawTextInCanvasCentre(canvas, textPaint, getFirstLetter(label).toUpperCase())
+        drawTextInCanvasCentre(canvas, textPaint, getFirstLetter(label).uppercase(java.util.Locale.getDefault()))
         return icon
     }
 
