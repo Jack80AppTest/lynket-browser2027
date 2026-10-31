@@ -24,7 +24,12 @@ Aucun changement de `ShareInterceptActivity`, `BottomBarReceiver`, `DefaultTabsM
 
 ## Résultat des tests
 
-À compléter uniquement après résultat réel de GitHub Actions. Une compilation réussie n'est pas une nouvelle validation physique : vérifier au minimum À propos → Version 3.0.1, journal des modifications, Minimiser/Slide Over, bulles et compatibilité sur les deux appareils avant d'intégrer le nouveau commit à `stable/v3.0.1`.
+**GitHub Actions 3.0.1 : SUCCESS**, [run 41226767899](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41226767899), job 124612434523, **21 étapes réussies**. Code exact compilé : `96c2a143867432bd263c0de4f389110de1291899`. La mise à jour documentaire après le build ne change aucun octet applicatif. Les trois tests Robolectric ont réussi; contrôles Android 11–16, Custom Tabs/Slide Over, absence de double insets, XML Changelog, `aapt` (versionName `3.0.1`, code `64`, targetSdk `36`, identifiant Debug) et `apksigner` (v2) ont réussi.
+
+- **APK direct, sans ZIP :** [Lynket_Custom_2027_v3.0.1_Android16_Debug.apk](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41226767899/artifacts/13051949706), ID `13051949706`, **8 693 525 octets**.
+- SHA256 des métadonnées GitHub de l'artefact, et non recalculé depuis les octets APK : `31e50e9f2c1cad51b7df738450fdddaef855a4ba608bc38aa55f6e9522e7f708`.
+- Appareils : **fonctionnalités P16 déjà validées physiquement** avant le changement de numéro. La présentation 3.0.1 du nouvel APK reste à vérifier physiquement dans À propos et Changelog après installation. Ne pas prétendre que ce nouvel APK est déjà retesté sur les deux appareils.
+- Publication : la Release/tag 3.0.1 n'est pas encore créée; `main` inchangée, signature Debug maintenue.
 
 ## Livraison et publication
 
