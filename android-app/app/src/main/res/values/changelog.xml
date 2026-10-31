@@ -36,6 +36,21 @@ a {
 <body>
 <strong>You can view this again in the About screen.</strong>
 <br></br>
+<strong>3.0.1 — Lynket Custom 2027 (Android 16)</strong>
+<ul>
+    <li><b>NEW: </b> Updated Android 16 compatibility (target SDK 36) while keeping earlier Android support.</li>
+    <li><b>FIX: </b> Search, bottom actions and system-bar spacing on phones and tablets in portrait and landscape.</li>
+    <li><b>FIX: </b> Chrome Custom Tabs Minimize button handles missing callback URLs.</li>
+    <li><b>FIX: </b> Slide Over when sharing links from Chrome by completing the share launch before closing its activity.</li>
+    <li><b>FIX: </b> Changelog display and Intro, History and Tabs controls on newer Android versions.</li>
+    <li><b>UNCHANGED: </b> Persistent saved bubbles, automatic restoration, Hide/Restore controls, Article mode and light/AMOLED themes.</li>
+</ul>
+<strong>3.0.0 — Lynket Custom 2027 (Android 14 Developer)</strong>
+<ul>
+    <li><b>IMPROVED: </b> Modernized Android build toolchain, including Gradle, Android Gradle Plugin and Kotlin.</li>
+    <li><b>IMPROVED: </b> Android 14 compatibility (target SDK 34), including foreground-service declarations and modern Android permissions.</li>
+    <li><b>UNCHANGED: </b> Existing Custom Tabs, WebHeads and saved-session behaviors.</li>
+</ul>
 <strong>2.1.7 — Lynket 2027 (AMOLED Stable)</strong>
 <ul>
     <li><b>NEW: </b> Optional pure-black AMOLED theme in Look and feel &gt; Personalization, disabled by default.</li>
