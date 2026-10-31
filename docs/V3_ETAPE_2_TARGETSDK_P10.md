@@ -31,3 +31,15 @@
 6. **Never merge or release into `main`, `stable/*`, or any production release without explicit user approval**. P9 remains the validated rollback baseline.
 
 **Status: P10 in development; CI and physical phone verification pending.**
+
+## P10 CI result — complete success / physical-device test pending
+
+- **GitHub Actions success:** https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41193822471
+- Exact tested app code commit: `11519037023be5bcbcb0b280b15d72a993c21dd2`.
+- App `:app:assembleDebug`: **success** with Android `targetSdkVersion 29`.
+- Existing Robolectric unit tests — persistent WebHeads session store, saved bubbles card, settings/theme: **success**, no disabled tests.
+- aapt badging confirms `com.jk8026.lynket2027.debug`, version `2.1.7` / code 62, **`targetSdkVersion:29`**; `apksigner verify`: **success**.
+- Direct standalone APK: [Lynket_2027_v2.1.7_TargetSdk_P10_Debug.apk](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41193822471/artifacts/13039963359), **8,689,535 bytes**; no ZIP uploaded by workflow.
+- Source changes: `targetSdkVersion 28` → `29` only, plus dedicated workflow and documentation; no app source, WebHeads/session DB, layout, permissions, other Android tool versions or runtime business logic changed.
+- **Status: P10 CI-green, NOT user-validated on phone**. User must confirm that sharing links, WebHeads overlay, saving and restoring bubbles, app restart, Custom Tabs, search, navigation, tabs/history, themes, and background behavior all work on S23 Ultra.
+- **P9 remains latest validated rollback base**, `dev/3.0.0-toolchain-p9` at `0a9a96d76fffdbd93290f185f588bd381540885c`. Do not start P11 or merge/release without new explicit user approval.
