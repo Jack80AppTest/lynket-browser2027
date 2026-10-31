@@ -38,3 +38,16 @@ Références officielles :
 - https://developer.android.com/develop/background-work/services/fgs/service-types
 
 Ce rapport est passif; le workflow ignore `docs/**`, aucun script de build ne dépend du document.
+
+## CI P14 — résultat final vert, test téléphone en attente
+
+- Run définitif : https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41200476595 — `completed / success`.
+- Commit applicatif compilé : `f8e706bf29d0a9887f6f0b43e35d6170dab287f9`.
+- Commit additionnel du workflow de contrôle (sans modification applicative) : `2f5f47e1b2104d8c2794b7407d9341f300e0bc4f` (HEAD correspondant au run vert).
+- Première CI, run `41200184315` : application `assembleDebug` **réussie**, vérifications XML et trois tests Robolectric **réussis**, mais échec de l'assertion de packaging `grep -F 'specialUse'` : `aapt dump xmltree` encode l'attribut `foregroundServiceType` par une valeur numérique, pas le nom de l'enum. **Correction CI seulement**, remplacée par la recherche de l'attribut empaqueté `android:foregroundServiceType`.
+- Deuxième CI : `:app:assembleDebug` réussi, contrôles hérités Android 11/12/13 réussis, contrôles Android 14 types FGS / permission / sous-types / récepteur dynamique réussis, tests unitaires `BubbleSessionStoreTest`, `SavedBubblesCardModelTest`, `SettingsGroupAdapterTest` réussis, contrôles APK `targetSdk 34` / package / version / signature v2 réussis.
+- Identité inchangée : `com.jk8026.lynket2027.debug`, versionName `2.1.7` / versionCode `62`; `compileSdk 36`, `minSdk 16` et toolchain conservés.
+- **APK direct sans ZIP** : [Lynket_2027_v2.1.7_TargetSdk_P14_Debug.apk](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41200476595/artifacts/13042472120), artefact `13042472120`, **8 690 901 octets**. Expiration déclarée par GitHub : 29 janvier 2027.
+- SHA-256 issu des métadonnées GitHub (non recalculé indépendamment) : `953900d96def9fff6a0cb42db95a7a779aa3f04300868fca1fa77fd4d0cbbd41`.
+- Le présent ajout de documentation est un commit distinct ne touchant pas au code et ne redéclenche pas le workflow (filtre `docs/**`).
+- **Statut : CI entièrement verte. P14 EN ATTENTE de validation explicite sur Galaxy S23 Ultra.** P13 reste la dernière version validée sur téléphone. Aucune fusion `main` ou P15 sans GO explicite.
