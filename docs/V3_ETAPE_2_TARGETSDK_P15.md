@@ -75,4 +75,13 @@ Le rapport est passif, ignoré par la CI via `paths-ignore: docs/**`, et ne doit
 - Une CI verte vérifie le code et des assertions statiques, **pas l'affichage réel sous One UI/Android 16**.
 
 ### CI du correctif positionnement
-À compléter uniquement une fois que le workflow du commit de code aura terminé et que l'artefact sera vérifié.
+**GitHub Actions P15 — résultat définitif vert** : [run `41216859339`](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41216859339), statut `completed/success`, **20 étapes réussies**.
+- **Commit exact compilé** : `275cdfa356f697df34de4672cd66433f760d9882`. Toute mise à jour documentaire suivante ne modifie pas le code testé.
+- `:app:assembleDebug` : **réussi**. Tous les contrôles Android 11/12/13/14/15, le scan Changelog et la nouvelle vérification XML/Kotlin du layout recherche/insets tablette : **réussis**.
+- Trois tests Robolectric : `BubbleSessionStoreTest`, `SavedBubblesCardModelTest`, `SettingsGroupAdapterTest` **réussis**. Package Debug `com.jk8026.lynket2027.debug`, `targetSdk 35`, `versionCode 62`, `versionName 2.1.7 - dev`, et signature APK v2 vérifiés par `aapt` / `apksigner`.
+- **Nouvel APK direct sans ZIP** : [Lynket_2027_v2.1.7_TargetSdk_P15_Debug.apk](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41216859339/artifacts/13048307165), ID `13048307165`, **8 693 045 octets**, `archive:false`.
+- Empreinte SHA-256 d'artefact fournie par GitHub (non recalculée localement depuis le fichier APK) : `3c22df6772e963499a26629b490027b832817bc77f81eb40f090603f2138537a`. Date d'expiration indiquée **2027-01-29 15:51:47 UTC**.
+- Les APK P15 précédents (runs `41204588299` et `41209946048`) **n'incluent pas la correction recherche/tablette**. Tester le nouvel APK uniquement.
+- **Validation physique en attente** sur Galaxy S23 Ultra (paysage/portrait) et Galaxy Tab A11+ Android 16 (paysage/portrait, thèmes clair et AMOLED). La réussite des assertions statiques ne garantit pas que One UI réserve correctement l'espace de sa barre des tâches ni que le clavier reste accessible.
+- P16 reste **gelée sur son commit antérieur** et ses insets existants; après confirmation P15 seulement, analyser le portage en évitant de cumuler les paddings système.
+
