@@ -146,6 +146,7 @@ class HomeFragment : BaseFragment(), Snackable {
                 is Result.Success<List<Website>> -> {
                     setRecents(result.data!!)
                 }
+                else -> Unit // Other result states were previously ignored.
             }
         }
     }
