@@ -19,7 +19,10 @@
 
 package arun.com.chromer.util;
 
+import android.app.ForegroundServiceStartNotAllowedException;
 import android.content.Context;
+import android.os.Build;
+import android.util.Log;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
@@ -51,8 +54,18 @@ public class ServiceManager {
     }
 
     public static void startAppDetectionService(@NonNull Context context) {
-        ContextCompat.startForegroundService(context, new Intent(context, AppDetectService.class)
-                .putExtra(Constants.EXTRA_KEY_CLEAR_LAST_TOP_APP, true));
+        try {
+            ContextCompat.startForegroundService(context, new Intent(context, AppDetectService.class)
+                    .putExtra(Constants.EXTRA_KEY_CLEAR_LAST_TOP_APP, true));
+        } catch (RuntimeException error) {
+            // Android 15 may reject a background start when no overlay is visible.
+            // Keep the user's per-app preferences; retry on a permitted launch.
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM
+                    || !(error instanceof ForegroundServiceStartNotAllowedException)) {
+                throw error;
+            }
+            Log.w("Lynket2027AppDetect", "App detection start deferred by Android 15", error);
+        }
     }
 
     public static void stopAppDetectionService(@NonNull Context context) {
