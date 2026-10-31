@@ -47,7 +47,12 @@ After the original comment-only cleanup, the user explicitly requested an **in-a
 - No update to `app/build.gradle`, manifest, original credit/author code, external library versions, or Android SDK. Version remains **3.0.1** / code **64**, Android API **36**.
 - Compared `AboutFragment.kt` against `stable/v3.0.1`: exactly one new string-valued item and one new display case, no existing code changed. Each strings file adds only its new localized entry. This UI text addition requires a **new APK compilation and on-device visual check**, unlike the prior purely comment-only cleanup.
 
-**Attribution build:** [GitHub Actions run 41240713796](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41240713796), compiled revision `89822cdee647cdbe3cbedcb23dccae3ddcdb1e74`. Build result and direct APK artifact link: **pending actual completion** (do not substitute earlier cleanup APK `13055738685`).
+**Attribution build: SUCCESS (21/21 steps)** — [GitHub Actions run 41240713796](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41240713796), compiled revision `89822cdee647cdbe3cbedcb23dccae3ddcdb1e74`. Three Robolectric suites, Android 11–16 compatibility/regression checks, `aapt` package/version/target SDK, and APK v2 signing checks passed.
+
+- **Correct APK for the in-app credit:** [Lynket_Custom_2027_v3.0.1_P16_CodeCleanup_Debug.apk](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41240713796/artifacts/13056954290), direct without ZIP, artifact ID `13056954290`, **8,694,391 bytes**. Note: the artifact name matches the earlier cleanup build but **the artifact ID and compiled commit are different**; do not confuse it with older artifact `13055738685` that lacks the in-app credit.
+- GitHub artifact metadata digest (not an independently rehashed APK): `sha256:e0bd8fa4ca4ade395c917ab5828a7dd5793a7769ee1738a3e21d26478e4a98f4`.
+- App behavior and data handling were not changed; a visual/physical check in **About → Credits** is still required before stable integration.
+- This report-only update does not change the compiled source; no other application files were changed after the successful build.
 
 **Next step:** after this candidate is validated by the user, discuss preparing an upstream pull request for the original Lynket developer, who would independently decide if and how to integrate modernized code and publish to Play Store. Do not create a PR, release or tag without explicit authorization.
 
