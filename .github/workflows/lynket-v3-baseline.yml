@@ -1,0 +1,81 @@
+name: Lynket 2027 v3 - baseline validation (unchanged v2.1.7 code)
+
+on:
+  push:
+    branches:
+      - dev/3.0.0
+    paths-ignore:
+      - 'docs/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lynket2027-v3-baseline-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-debug:
+    name: Build Android debug APK
+    runs-on: ubuntu-22.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout development branch
+        uses: actions/checkout@v4
+
+      - name: Java 17 for Android SDK tools
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Initialize Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Install legacy Android SDK platforms
+        run: |
+          sdkmanager --install "platforms;android-28" "platforms;android-29" "build-tools;29.0.3"
+
+      - name: Java 8 for Gradle 5.6.2 and Android plugin 3.5.2
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '8'
+
+      - name: Build Lynket 2027 as separate debug app
+        working-directory: android-app
+        env:
+          ORG_GRADLE_PROJECT_PLAY_LICENSE_KEY: diagnostic-only
+          ORG_GRADLE_PROJECT_FABRIC_KEY: diagnostic-only
+        run: |
+          chmod +x ./gradlew
+          java -version
+          ./gradlew --no-daemon :app:assembleDebug --stacktrace
+
+      - name: Test persistent bubble storage
+        working-directory: android-app
+        run: |
+          ./gradlew --no-daemon :app:testDebugUnitTest --tests arun.com.chromer.bubbles.webheads.BubbleSessionStoreTest --tests arun.com.chromer.home.epoxycontroller.model.SavedBubblesCardModelTest --tests arun.com.chromer.settings.SettingsGroupAdapterTest
+
+      - name: Verify APK package and signature
+        working-directory: android-app
+        run: |
+          APK="app/build/outputs/apk/debug/app-debug.apk"
+          test -s "$APK"
+          "$ANDROID_HOME/build-tools/29.0.3/aapt" dump badging "$APK" | grep "^package: name='com.jk8026.lynket2027.debug' versionCode='62' versionName='2.1.7"
+          "$ANDROID_HOME/build-tools/29.0.3/apksigner" verify --verbose --print-certs "$APK"
+
+      - name: Name unchanged v2.1.7 baseline APK
+        working-directory: android-app
+        run: |
+          mv app/build/outputs/apk/debug/app-debug.apk \
+             app/build/outputs/apk/debug/Lynket_2027_v2.1.7_Baseline_v3_Debug.apk
+
+      - name: Upload versioned APK directly without ZIP
+        if: success()
+        uses: actions/upload-artifact@v7
+        with:
+          path: android-app/app/build/outputs/apk/debug/Lynket_2027_v2.1.7_Baseline_v3_Debug.apk
+          archive: false
+          if-no-files-found: error
