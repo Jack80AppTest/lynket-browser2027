@@ -30,3 +30,17 @@
 5. **Do not declare P9 validated or start P10 before explicit user phone-test confirmation. Do not merge into `main`, stable, or publish release without separate explicit approval.**
 
 **Status: P9 in progress; not yet CI green or user validated.**
+
+## P9 CI result — complete success; device validation pending
+
+- **Successful** workflow: https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41192891587
+- Exact tested app code commit: `6d301a89e1d16a9df8b09ea72f3c16fac599523e`.
+- Compile `:app:assembleDebug`: **success** with Gradle 8.11.1, AGP 8.10.1, compileSdk API 36 and Kotlin 2.2.21.
+- Regression unit tests for bubble session persistence, saved bubbles card and settings theme: **success**, unchanged.
+- APK package identity / version / signing verification: **success**.
+- Standalone APK artifact: [Lynket_2027_v2.1.7_Toolchain_P9_Debug.apk](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41192891587/artifacts/13039702505), 8,689,531 bytes. Workflow uses upload with `archive: false` (not ZIP).
+- First P9 run [41192670285](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41192670285) failed on three Android API 36 Kotlin nullability errors in Bitmap.Config inside two Glide bitmap decoders.
+- Corrective commits `d17aa0a7e7711d24fd1028029fac02e392c8e1ce` and `6d301a89e1d16a9df8b09ea72f3c16fac599523e` added `Bitmap.Config.ARGB_8888` fallback only when the source bitmap config is null; no other behavior intentionally changed.
+- `targetSdk 28`, `minSdk 16`, app Android version 2.1.7/code62, debuggable package `com.jk8026.lynket2027.debug`, existing permissions, WebHeads logic, saved tab/session storage and UI unchanged.
+- **Status: P9 CI-green, but NOT validated on the user's physical Galaxy S23 Ultra.** User still must confirm link sharing, WebHeads overlay, hide/restore, persistence after app restart, custom search, article mode, tabs, history, menus and theme. Do not begin P10 until user's explicit P9 device validation.
+- **P8 remains the latest user-validated rollback baseline** at `a73b671ce4bae84e38a5fa178e84b9f96c906128`. Do not merge into `main`, stable or a release without separately explicit user instruction.
