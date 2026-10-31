@@ -39,5 +39,5 @@ open class ActivityLifeCycleCallbackAdapter : Application.ActivityLifecycleCallb
 
     override fun onActivityStopped(activity: Activity) {}
 
-    override fun onActivityCreated(activity: Activity, bundle: Bundle) {}
+    override fun onActivityCreated(activity: Activity, bundle: Bundle?) {}
 }
