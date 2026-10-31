@@ -56,6 +56,22 @@ After the original comment-only cleanup, the user explicitly requested an **in-a
 
 **Next step:** after this candidate is validated by the user, discuss preparing an upstream pull request for the original Lynket developer, who would independently decide if and how to integrate modernized code and publish to Play Store. Do not create a PR, release or tag without explicit authorization.
 
+## Original Lynket title restored — authorized branding correction
+
+The user explicitly required the app to retain its **original display name, Lynket**, and not the temporary development-fork title. On the same P16 cleanup branch:
+
+- `android-app/app/build.gradle`: change only both build-type `app_name` resource values from `Lynket 2027` / `Lynket 2027 (Test)` to **`Lynket`**. `AndroidManifest.xml` already references `@string/app_name`, so no manifest change was required.
+- `android-app/app/src/main/res/values/changelog.xml`: remove `Custom 2027` / `2027` from exactly the five displayed version headers (3.0.1, 3.0.0, 2.1.7, 2.1.6, 2.1.5); all descriptions and earlier history are preserved.
+- All pre-existing app identities and data paths are untouched: `applicationId "com.jk8026.lynket2027"`, Debug suffix `.debug`, SQLite database, `versionName "3.0.1"`, `versionCode 64`, target/compile API 36, signing and features unchanged.
+- Names in the fork's development branch, technical artifact filename, historical docs and CI display name are **development identifiers**, not the installed application's brand; they remain unchanged by this targeted work.
+- The previously added **John Krauza** entry under **About → Credits** remains unchanged.
+
+**CI result: SUCCESS — 21/21 steps** [GitHub Actions run 41247057703](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41247057703). The exact compiled code commit is `e11bf0b5c9f4ad93f716a23a59b27d8ed616f973`. Includes Robolectric tests, Android 11–16 compatibility/regression checks, APK package/version/target SDK checks and signature v2.
+
+**Direct APK (without ZIP):** [Lynket_Custom_2027_v3.0.1_P16_CodeCleanup_Debug.apk](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41247057703/artifacts/13059619287) — artifact ID `13059619287`, **8,694,345 bytes**, GitHub artifact digest `sha256:a2ebd1509d3e171e8851f322e83716533da19f367e5844ccf5d1109b431408ad` (artifact metadata, not an independently hashed APK). Earlier APK artifact IDs do **not** contain this brand correction.
+
+**Pending physical verification:** verify launcher name, About → Version and Credits, and Changelog on a device before approving any stable integration. This follow-up report commit does not alter compiled code. No PR, merge, release or tag was created.
+
 ## Publication policy
 
 No merge to `main`, no PR, no new tag/release, no edits to `stable/v3.0.1` without a further explicit instruction. The version 3.0.1 release already created by the user remains unchanged.
