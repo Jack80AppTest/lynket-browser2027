@@ -279,6 +279,8 @@ public class WebHeadService extends OverlayService implements WebHeadContract,
         return START_STICKY;
     }
 
+    // Recreate only missing overlay views from the saved URL list.
+    // Do not clear the database here: overlays can be hidden independently.
     private void restoreSavedWebHeads() {
         if (sessionStore == null) return;
         try {
