@@ -21,8 +21,8 @@ public final class EdgeToEdgeInsets {
     public static void apply(@NonNull Activity activity) {
         if (Build.VERSION.SDK_INT < 35) return;
 
-        // Use a single edge-to-edge contract for P16. The legacy AndroidX
-        // WindowCompat API is unavailable in this project's dependency set.
+        // Use one system-bar inset strategy for this activity: combining it
+        // with per-screen padding would apply the same insets twice.
         // Window.setDecorFitsSystemWindows() is native API 30+.
         activity.getWindow().setDecorFitsSystemWindows(false);
         final View root = activity.findViewById(android.R.id.content);
