@@ -26,7 +26,16 @@
 - https://developer.android.com/develop/background-work/services/fgs/changes
 
 ## CI P15 et validation physique
-État initial : compilation et contrôles en attente au moment de la création du rapport. Les résultats de CI, commit compilé, run et artefact seront ajoutés après contrôle effectif.
+**CI P15 terminée avec succès** — https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41204588299 (`completed / success`, job `124546974411`).
+- Commit EXACT du code / workflow compilé : **`4481625fde21be4b7bee17f0de78a08ff26c2331`**. Le HEAD suivant, si documentaire seulement, n'est pas un nouveau code applicatif.
+- `:app:assembleDebug` **réussi**, Kotlin 2.2.21 / Gradle 8.11.1 / AGP 8.10.1; `targetSdk 35`, `compileSdk 36` et `minSdk 16`.
+- Contrôles Android 11 (visibilité des applications), Android 12 (`PendingIntent`), Android 13 (notification), Android 14 (FGS `specialUse` et receiver), Android 15 (retard de démarrage FGS, non-persistance incognito, opt-out visuel temporaire) : **tous réussis**.
+- Tests Robolectric : **`BubbleSessionStoreTest`**, **`SavedBubblesCardModelTest`**, **`SettingsGroupAdapterTest`** — les trois réussis, aucun test désactivé.
+- Contrôles `aapt` : **package `com.jk8026.lynket2027.debug`**, versionName `2.1.7` (suffixe de développement), versionCode **62**, `targetSdkVersion 35`, manifeste empaqueté; signature **APK Signature Scheme v2 vérifiée** par `apksigner`.
+- **APK P15 direct, sans ZIP** : [Lynket_2027_v2.1.7_TargetSdk_P15_Debug.apk](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41204588299/artifacts/13044535734), artefact GitHub Actions ID `13044535734`, taille **8 691 771 octets**. `archive: false` dans le workflow P15.
+- Hash de l'artefact publié par GitHub : `sha256:c33fc7294b177371a9bed11af1a648397555b1381a97f0809473b8459cf272fd` (**métadonnée de GitHub**, non vérifiée localement sur le fichier). `expired: false` au 31 octobre 2026; expiration indiquée **29 janvier 2027 à 13:13:24 UTC**.
+- **Compilation CI ≠ validation sur appareil. P15 reste candidate tant que l'utilisateur ne l'a pas testée sur son Galaxy S23 Ultra.** Les particularités du comportement Android 15 nécessitent en plus un test sur Android 15; aucune exécution de l'APK sur un émulateur Android 15 n'a été effectuée par ce workflow.
+
 **P15 ne devient validée que sur confirmation explicite après tests utilisateur sur Galaxy S23 Ultra.**
 Vérifier partage des liens, fournisseurs Chrome/Samsung, bulles/compteur/ordre, MASQUER et RESTAURER automatiques (sans doublon), fermeture explicite d'une bulle, relance, boot, notifications, options par application, recherche, historique et thèmes. Les changements de comportement propres à Android 15 nécessitent également un vrai test Android 15 (appareil ou émulateur), non couvert par une simple compilation.
 Le rapport est passif, ignoré par la CI via `paths-ignore: docs/**`, et ne doit pas déclencher un build.
