@@ -85,3 +85,19 @@ No merge to `main`, no PR, no new tag/release, no edits to `stable/v3.0.1` witho
 - **CI verification: SUCCESS (21/21 steps)** — [GitHub Actions run 41252786086](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41252786086), exact compiled commit `7cee9c612ca40e86a2c89b5dde7c90a605da8ea7`. Existing Robolectric bubble-persistence tests, Android 11–16 compatibility checks, APK identity/version/target SDK and signature verification passed.
 - **Direct APK without ZIP:** [Lynket_Custom_2027_v3.0.1_P16_CodeCleanup_Debug.apk](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41252786086/artifacts/13061667453), artifact ID `13061667453`, **8,693,820 bytes**, GitHub artifact metadata digest `sha256:c5763f9a494df2951468245536a44a099254a462711258f203c89349a6c405d2` (not an independently rehashed APK). This APK contains the Google+ cleanup; do not substitute older artifacts with the same filename.
 - Documentation-only follow-up does not alter compiled source. Physical check of **About → Author / Credits** remains with the user before marking the cleanup final.
+
+## Final About-screen cleanup — legacy Beta testers row removed
+
+On explicit user approval, remove only the obsolete **Beta testers / Bêta-testeurs** entry from `About → Credits` now that its defunct Google+ community action had already been removed in the previous step. Retain the three remaining credits exactly as before:
+
+- **John Krauza:** modernization and recent Android compatibility.
+- **Patryk Goworowski:** original icon design.
+- **Max Patchs:** original illustrations and video.
+
+**Exact code change:** `AboutFragment.kt` loses only the `beta` item and its display case. `values/strings.xml` and `values-fr/strings.xml` lose the now-unused `beta_testers` translation. All other UI/navigation behavior, SDK and build identity remain unchanged; the app name is **Lynket**, version **3.0.1**, versionCode **64**, targetSdk **36**.
+
+**GitHub Actions completed SUCCESS, 21/21 steps:** [run 41258327028](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41258327028), exact compiled commit `5e585f10a8dec0a24b8564d4f48ae7c68de60715`. The Git diff shows three files touched, and the APK build, Robolectric persistent-bubble tests, compatibility checks and signature verification passed.
+
+**Direct APK, no ZIP:** [Lynket_Custom_2027_v3.0.1_P16_CodeCleanup_Debug.apk](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/41258327028/artifacts/13064092039), artifact `13064092039`, size **8,693,767 bytes**. SHA-256 reported for the GitHub artifact: `ca52fa981c59ce49dd118677baeb0bd33332efa9ea29c645f8a6d0207d28f1fb` (GitHub metadata, not an independently hashed APK). **Earlier artifacts with the same filename do not include this final change.**
+
+This Markdown documentation update is not part of the compiled APK; source code and build settings are unchanged after the tested commit. The physical visual confirmation of the three remaining Credits rows belongs to the user. `main` and `stable/v3.0.1` are not merged or rewritten. The existing release/tag `3.0.1` remains untouched; any new tag/release is a separate manual publication step.
