@@ -341,12 +341,10 @@ class AboutFragment : Fragment() {
         private val john = "John Krauza"
         private val patryk = "Patryk"
         private val max = "Max"
-        private val beta = "Beta Testers"
         private val items = arrayListOf(
                 john,
                 patryk,
-                max,
-                beta
+                max
         )
         private val patrykProfileImg = "https://lh3.googleusercontent.com/hZdzG3b5epdGAOtQQgwSwBEeGqbIbQGg68lTD7Nvp2caLJ0CeIRksMII52Q8J6SwZbWcbFRCiNYg2ss=w384-h383-rw-no"
         private val maxImg = "https://lh3.googleusercontent.com/lJn5h7sLkNMBlQwbZsyZyPrp0JNv8woEtX0hLg1o1uLmMri1VkVN10DM2XJkI4owV5u5MS5ABPbQ4s4=s1024-rw-no"
@@ -371,13 +369,6 @@ class AboutFragment : Fragment() {
                     holder.about_app_title.text = "Max Patchs"
                     holder.about_app_subtitle.setText(R.string.illustrations_and_video)
                     GlideApp.with(holder.itemView.context).load(maxImg).into(holder.about_row_item_image)
-                }
-                beta -> {
-                    holder.about_app_title.setText(R.string.beta_testers)
-                    holder.about_app_subtitle.gone()
-                    // Beta testers retain their credit, without a defunct Google+ icon.
-                    GlideApp.with(holder.itemView.context).clear(holder.about_row_item_image)
-                    holder.about_row_item_image.setImageDrawable(null)
                 }
             }
         }
