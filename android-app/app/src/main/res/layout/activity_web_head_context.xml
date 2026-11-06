@@ -53,11 +53,12 @@
             android:textColor="@android:color/white"
             tools:targetApi="lollipop" />
 
-        <androidx.recyclerview.widget.RecyclerView
+        <arun.com.chromer.bubbles.webheads.ui.context.CappedWebsitesRecyclerView
             android:id="@+id/web_sites_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="vertical" />
+            android:scrollbars="vertical"
+            android:overScrollMode="ifContentScrolls" />
 
         <LinearLayout
             android:layout_width="match_parent"
