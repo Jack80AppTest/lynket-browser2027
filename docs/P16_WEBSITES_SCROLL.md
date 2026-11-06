@@ -23,7 +23,13 @@ Fix the **long-press WebHeads → Websites** dialog when 8+ sites are open: an u
 
 ## Tests and delivery
 
-Status: **not yet validated by CI**. Report the actual run, tested commit and APK artifact only when success is confirmed. On-device checks should cover 3, 7, 8 and 20 links (portrait/landscape, phone/tablet as available), visible Copy All / Share All / Hide Overlay buttons, normal scrolling, closing one site, and retained sessions after Hide.
+**GitHub Actions: SUCCESS, 22/22 steps.** [Run 42220129692](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/42220129692), exact compiled commit `bf6bddf5ec05b7a68bacac546305ae48ba6a5bac`. Existing three suites plus `CappedWebsitesRecyclerViewTest` completed, alongside Android compatibility/Custom Tabs/WebHeads static checks, APK identity and v2-signature validation. Tests cover the max-height calculation for **3, 7, 8 and 20 sites** and portrait/landscape-sized viewports; **actual on-device layout was not yet verified**.
+
+**Direct APK, confirmed real bytes (no ZIP):** [Lynket_v3.0.1_P16_WebsitesScroll_Debug.apk](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/42220129692/artifacts/13502689269), artifact ID `13502689269`, **8,693,981 bytes**. SHA-256 `49053fac477bafe43954621a49a7af11e11a8a4931bdcd8fc714666f5cb3d002`; locally rehashed and compared after downloading. The GitHub connector labeled this file `.zip` but inspection found AndroidManifest.xml and classes*.dex at the root, i.e. the APK itself.
+
+**User-facing delivery:** a fresh copy `/mnt/data/Lynket_v3.0.1_P16_WebsitesScroll_LIVRAISON.apk` was created via `python_user_visible.exec`, and its size, ZIP integrity, Android structure and SHA-256 were verified. The user must still confirm the downloadable ChatGPT link opens on their device.
+
+**Pending physical checks:** test 3, 7, 8 and 20 websites, portrait/landscape, phone/tablet if available; ensure Copy All / Share All / Hide Overlay remain visible, the list can scroll, individual X closes only its own bubble and Hide retains the saved session.
 
 Deliver the *same commit's* Debug APK as a verified **new ChatGPT attachment via `python_user_visible.exec`**, per the project's `APK_DELIVERY_WORKFLOW.md`; inspect ZIP-vs-APK content and verify size, Android structure and SHA-256. This Markdown remains passive documentation.
 
