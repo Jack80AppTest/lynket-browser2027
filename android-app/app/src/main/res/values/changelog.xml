@@ -36,6 +36,15 @@ a {
 <body>
 <strong>You can view this again in the About screen.</strong>
 <br></br>
+<strong>3.2 — Lynket</strong>
+<ul>
+    <li><b>NEW: </b> Export and import saved WebHeads URLs using a portable backup file from Settings &gt; WebHeads backup &amp; import.</li>
+    <li><b>NEW: </b> Restore website links after reinstalling Lynket or when moving to another Android device; import also accepts comma-separated and new-line-separated URL lists.</li>
+    <li><b>IMPROVED: </b> Import skips duplicate URLs and keeps existing WebHeads. The backup preserves URL order and AMP flags, not cookies or browser logins.</li>
+    <li><b>FIX: </b> Long WEBSITES lists now scroll while Copy All, Share All and Hide Overlay remain visible, including in landscape.</li>
+    <li><b>IMPROVED: </b> More efficient WEBSITES dialog height on compact landscape screens.</li>
+    <li><b>IMPROVED: </b> Modern Android 16 (API 36) compatibility, keeping Android 4.1+ minimum support; Chrome Custom Tabs and Slide Over fixes, automatic bubble restoration and optional AMOLED theme remain available.</li>
+</ul>
 <strong>3.0.1 — Lynket (Android 16)</strong>
 <ul>
     <li><b>NEW: </b> Updated Android 16 compatibility (target SDK 36) while keeping earlier Android support.</li>

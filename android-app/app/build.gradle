@@ -43,8 +43,8 @@ android {
         applicationId "com.jk8026.lynket2027"
         minSdkVersion 16
         targetSdkVersion 36
-        versionCode 64
-        versionName "3.0.1"
+        versionCode 65
+        versionName "3.2"
 
         multiDexEnabled true
 

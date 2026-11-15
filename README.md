@@ -2,7 +2,7 @@
 
 This repository also contains **Lynket Custom 2027**, a maintained fork of the original [Lynket / Chromer](https://github.com/arunkumar9t2/lynket-browser). The original project description, credits, contribution instructions and GPL license are preserved **below** for historical context; links to the original Play Store listing refer to the original app, not to this fork.
 
-**Current validated source reference:** [`stable/v3.0.1`](https://github.com/Jack80AppTest/lynket-browser2027/tree/stable/v3.0.1) — internal version `3.0.1` (`versionCode 64`), `compileSdk 36`, `targetSdk 36`. This is a development-signed Android build, **not** a Google Play production artifact. See the version-specific build report in [`docs/V3_0_1_VERSIONING.md`](docs/V3_0_1_VERSIONING.md).
+**Current stable source reference:** [`stable/v3.2`](https://github.com/Jack80AppTest/lynket-browser2027/tree/stable/v3.2) — internal version `3.2` (`versionCode 65`), `minSdk 16`, `compileSdk 36`, `targetSdk 36`. The downloadable CI APK uses the separate Debug package and **temporary Debug signature**; it is not a production-signed Google Play release. The previous reference [`stable/v3.0.1`](https://github.com/Jack80AppTest/lynket-browser2027/tree/stable/v3.0.1) remains preserved. See [`docs/V3_2_VERSIONING.md`](docs/V3_2_VERSIONING.md) and [`docs/V3_0_1_VERSIONING.md`](docs/V3_0_1_VERSIONING.md).
 
 ## Android modernization contribution
 
