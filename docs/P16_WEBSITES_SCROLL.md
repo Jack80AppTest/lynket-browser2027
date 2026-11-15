@@ -34,3 +34,17 @@ Fix the **long-press WebHeads → Websites** dialog when 8+ sites are open: an u
 Deliver the *same commit's* Debug APK as a verified **new ChatGPT attachment via `python_user_visible.exec`**, per the project's `APK_DELIVERY_WORKFLOW.md`; inspect ZIP-vs-APK content and verify size, Android structure and SHA-256. This Markdown remains passive documentation.
 
 No stable branch, `main`, PR, release or tag change without a separate explicit user instruction.
+
+## P16 Websites Scroll — landscape height refinement (new candidate)
+
+After validating the first candidate **on a real Galaxy S23 Ultra**, the user reported that all commands were finally visible in landscape, but only two website rows appeared while unused vertical space remained above the popup. The user explicitly approved a second targeted layout correction and required compatibility with old Android versions and the latest supported platform.
+
+- **Previous code:** reserved a hard-coded extra `64dp`, in addition to the 48dp header, 42dp Copy/Share action row and 48dp Hide button.
+- **Refinement:** compute the website-list maximum from the actual visible window frame, the other dialog elements' measured or XML-defined heights, and the ancestor padding/margins. Avoid subtracting system bars twice or inventing another large safety margin.
+- Preserve the existing 7-row maximum on sufficiently tall screens; landscape may fit three rows **if available space and actual row wrapping permit**. Do not force 3 rows if doing so would obscure actions.
+- Recalculate on measurement after rotation/resize. The code uses `getWindowVisibleDisplayFrame`, `View` and `ViewGroup` measurement: all supported before minSdk **16**; no Android 30+ API or dependency upgrade was introduced.
+- **No change** to dialog XML, adapter, WebHeads storage, navigation, share, individual close, Hide button, app name, `versionName 3.0.1`, code 64 or `targetSdk 36`.
+- Update the layout-policy unit test to cover 3/7/8/20 items, measurable padding and portrait/landscape/tiny viewports. Existing CI regression suite and APK signature checks remain mandatory.
+
+**Build and on-device test:** pending. Confirm all footer commands remain accessible while scrolling, including very short landscape windows and font scaling. CI checks structural and arithmetic contracts but cannot replace on-device visual verification.
+

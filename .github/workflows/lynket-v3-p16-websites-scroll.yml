@@ -344,7 +344,11 @@ jobs:
           assert 'MAX_VISIBLE_ROWS = 7' in cap
           assert 'View.MeasureSpec.AT_MOST' in cap
           assert 'visibleWindow.height()' in cap
-          assert 'RESERVED_PANEL_HEIGHT_DP' in cap
+          assert 'fixedControlsHeight()' in cap
+          assert 'containerChromeHeight()' in cap
+          assert 'measuredOrDeclaredHeight(sibling)' in cap
+          assert 'RESERVED_PANEL_HEIGHT_DP' not in cap
+          assert 'getWindowVisibleDisplayFrame(visibleWindow)' in cap
           activity = Path('app/src/main/java/arun/com/chromer/bubbles/webheads/ui/context/WebHeadContextActivity.java').read_text()
           assert 'new Intent(ACTION_HIDE_WEBHEAD_OVERLAY)' in activity
           assert 'ACTION_CLOSE_WEBHEAD_BY_URL' in activity

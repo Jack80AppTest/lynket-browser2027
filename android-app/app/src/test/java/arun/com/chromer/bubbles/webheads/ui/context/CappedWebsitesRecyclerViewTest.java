@@ -5,39 +5,49 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Regression checks for 3, 7, 8 and 20 websites and for a short landscape
- * viewport. Item heights can vary with text/font size; the height cap always
- * protects the action row independently of the number of items.
+ * Screens of different heights: the actual header/footer/padding are reserved.
+ * A 7-row cap still applies, but 8 or 20 sites scroll within the same viewport.
  */
 public class CappedWebsitesRecyclerViewTest {
-    private static final int ROW_HEIGHT_DP = 88;
+    private static final int ROW_DP = 88;
+    private static final int FIXED_ACTIONS_DP = 48 + 42 + 48;
 
     @Test
-    public void portraitListGrowsForThreeAndSevenButCapsEightAndTwenty() {
-        int height = CappedWebsitesRecyclerView.calculateMaximumHeight(950, 1f);
-        assertEquals(7 * ROW_HEIGHT_DP, height);
-
-        assertEquals(3 * ROW_HEIGHT_DP, Math.min(3 * ROW_HEIGHT_DP, height));
-        assertEquals(7 * ROW_HEIGHT_DP, Math.min(7 * ROW_HEIGHT_DP, height));
-        assertTrue(8 * ROW_HEIGHT_DP > height);
-        assertTrue(20 * ROW_HEIGHT_DP > height);
+    public void portraitKeepsNaturalShortListsAndCapsEightOrTwenty() {
+        int height = CappedWebsitesRecyclerView.calculateMaximumHeight(
+                950, FIXED_ACTIONS_DP, 12, 1f);
+        assertEquals(7 * ROW_DP, height);
+        assertEquals(3 * ROW_DP, Math.min(3 * ROW_DP, height));
+        assertEquals(7 * ROW_DP, Math.min(7 * ROW_DP, height));
+        assertTrue(8 * ROW_DP > height);
+        assertTrue(20 * ROW_DP > height);
     }
 
     @Test
-    public void landscapeLeavesRoomForAllThreeFooterActions() {
-        int height = CappedWebsitesRecyclerView.calculateMaximumHeight(360, 1f);
-        assertEquals(360 - (48 + 42 + 48 + 64), height);
-        assertTrue(height < 3 * ROW_HEIGHT_DP);
-        assertTrue(height < 7 * ROW_HEIGHT_DP);
-        assertTrue(height < 8 * ROW_HEIGHT_DP);
-        assertTrue(height < 20 * ROW_HEIGHT_DP);
+    public void landscapeReservesMeasuredHeaderActionsAndPaddingOnly() {
+        int height = CappedWebsitesRecyclerView.calculateMaximumHeight(
+                420, FIXED_ACTIONS_DP, 12, 1f);
+        assertEquals(420 - FIXED_ACTIONS_DP - 12, height);
+        assertTrue("Three normal rows can fit", height >= 3 * ROW_DP);
+        assertTrue(7 * ROW_DP > height);
+        assertTrue(8 * ROW_DP > height);
+        assertTrue(20 * ROW_DP > height);
     }
 
     @Test
-    public void capsScaleWithDensityAndNeverGoNegative() {
-        assertEquals(2 * 7 * ROW_HEIGHT_DP,
-                CappedWebsitesRecyclerView.calculateMaximumHeight(1900, 2f));
-        assertEquals(0, CappedWebsitesRecyclerView.calculateMaximumHeight(120, 1f));
-        assertEquals(0, CappedWebsitesRecyclerView.calculateMaximumHeight(0, 3f));
+    public void actualMarginsAreSubtractedAndDensityIsRespected() {
+        assertEquals(2 * 7 * ROW_DP,
+                CappedWebsitesRecyclerView.calculateMaximumHeight(1900,
+                        FIXED_ACTIONS_DP * 2, 12 * 2, 2f));
+        assertEquals(222, CappedWebsitesRecyclerView.calculateMaximumHeight(
+                390, FIXED_ACTIONS_DP, 30, 1f));
+    }
+
+    @Test
+    public void tinyViewportNeverCreatesNegativeListHeight() {
+        assertEquals(0, CappedWebsitesRecyclerView.calculateMaximumHeight(
+                120, FIXED_ACTIONS_DP, 12, 1f));
+        assertEquals(0, CappedWebsitesRecyclerView.calculateMaximumHeight(
+                0, FIXED_ACTIONS_DP * 3, 36, 3f));
     }
 }
