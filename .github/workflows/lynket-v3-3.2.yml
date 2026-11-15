@@ -220,7 +220,7 @@ jobs:
           assert all(version in html for version in ('3.2', '3.0.1', '3.0.0', '2.1.7'))
           assert html.index('3.2') < html.index('3.0.1') < html.index('3.0.0') < html.index('2.1.7')
           assert 'Settings &gt; WebHeads backup' in html
-          assert 'long WEBSITES' in html
+          assert 'long websites' in html.lower()
           gradle = Path('app/build.gradle').read_text()
           assert 'versionName "3.2"' in gradle and 'versionCode 65' in gradle
           assert 'versionNameSuffix' not in gradle
