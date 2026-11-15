@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Lynket / GPL-3.0-or-later: WebHeads backups in Settings. -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@color/card_background_light"
+    android:fitsSystemWindows="true">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+        <androidx.appcompat.widget.Toolbar android:id="@+id/toolbar"
+            android:layout_width="match_parent" android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+    </com.google.android.material.appbar.AppBarLayout>
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginStart="12dp" android:layout_marginEnd="12dp"
+            android:layout_marginTop="8dp" app:cardUseCompatPadding="true"
+            app:cardCornerRadius="4dp" app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/amoled_card_surface">
+            <LinearLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:orientation="vertical">
+                <LinearLayout android:id="@+id/webheads_backup_export_action"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:minHeight="86dp" android:padding="16dp"
+                    android:gravity="center_vertical" android:orientation="horizontal"
+                    android:clickable="true" android:focusable="true"
+                    android:background="?attr/selectableItemBackground">
+                    <ImageView android:layout_width="40dp" android:layout_height="40dp"
+                        android:contentDescription="@string/webheads_backup_export_action"
+                        android:src="@android:drawable/ic_menu_save"
+                        android:tint="@color/accent" android:padding="5dp"/>
+                    <LinearLayout android:layout_width="0dp"
+                        android:layout_height="wrap_content" android:layout_weight="1"
+                        android:layout_marginStart="12dp" android:orientation="vertical">
+                        <TextView android:id="@+id/webheads_backup_export_title"
+                            android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:text="@string/webheads_backup_export_action"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textSize="16sp"/>
+                        <TextView android:id="@+id/webheads_backup_export_description"
+                            android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:text="@string/webheads_backup_export_summary"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"/>
+                    </LinearLayout>
+                </LinearLayout>
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="@color/card_background_light"/>
+                <LinearLayout android:id="@+id/webheads_backup_import_action"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:minHeight="86dp" android:padding="16dp"
+                    android:gravity="center_vertical" android:orientation="horizontal"
+                    android:clickable="true" android:focusable="true"
+                    android:background="?attr/selectableItemBackground">
+                    <ImageView android:layout_width="40dp" android:layout_height="40dp"
+                        android:contentDescription="@string/webheads_backup_import_action"
+                        android:src="@android:drawable/ic_menu_revert"
+                        android:tint="@color/accent" android:padding="5dp"/>
+                    <LinearLayout android:layout_width="0dp"
+                        android:layout_height="wrap_content" android:layout_weight="1"
+                        android:layout_marginStart="12dp" android:orientation="vertical">
+                        <TextView android:id="@+id/webheads_backup_import_title"
+                            android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:text="@string/webheads_backup_import_action"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textSize="16sp"/>
+                        <TextView android:id="@+id/webheads_backup_import_description"
+                            android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:text="@string/webheads_backup_import_summary"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

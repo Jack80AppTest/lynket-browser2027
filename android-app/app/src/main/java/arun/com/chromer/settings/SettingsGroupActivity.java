@@ -43,6 +43,7 @@ import arun.com.chromer.R;
 import arun.com.chromer.settings.browsingmode.BrowsingModeActivity;
 import arun.com.chromer.settings.browsingoptions.BrowsingOptionsActivity;
 import arun.com.chromer.settings.lookandfeel.LookAndFeelActivity;
+import arun.com.chromer.settings.webheads.WebHeadsBackupSettingsActivity;
 import arun.com.chromer.shared.Constants;
 import arun.com.chromer.shared.base.activity.SubActivity;
 import arun.com.chromer.util.Utils;
@@ -143,6 +144,9 @@ public class SettingsGroupActivity extends SubActivity implements SettingsGroupA
                 break;
             case 2:
                 startActivity(new Intent(this, BrowsingOptionsActivity.class));
+                break;
+            case 3:
+                startActivity(new Intent(this, WebHeadsBackupSettingsActivity.class));
                 break;
         }
     }

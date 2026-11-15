@@ -6,11 +6,9 @@ package arun.com.chromer.bubbles.webheads;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -35,19 +33,7 @@ public final class BubbleBackupCoordinator {
 
     private BubbleBackupCoordinator() { }
 
-    @Nullable
-    private static Activity findActivity(Context context) {
-        for (int i = 0; context != null && i < 20; i++) {
-            if (context instanceof Activity) return (Activity) context;
-            context = context instanceof ContextWrapper
-                    ? ((ContextWrapper) context).getBaseContext() : null;
-        }
-        return null;
-    }
-
-    public static void launchExport(View v) {
-        Activity activity = findActivity(v.getContext());
-        if (activity == null) return;
+    public static void launchExport(Activity activity) {
         try (BubbleSessionStore store = new BubbleSessionStore(activity)) {
             if (store.count() == 0) {
                 show(activity, R.string.webheads_backup_no_links);
@@ -74,9 +60,7 @@ public final class BubbleBackupCoordinator {
         }
     }
 
-    public static void launchImport(View v) {
-        Activity activity = findActivity(v.getContext());
-        if (activity == null) return;
+    public static void launchImport(Activity activity) {
         try {
             Intent select = new Intent(Build.VERSION.SDK_INT >= 19
                     ? Intent.ACTION_OPEN_DOCUMENT : Intent.ACTION_GET_CONTENT);

@@ -108,4 +108,10 @@
     <string name="webheads_backup_invalid">Ce fichier ne contient aucun lien WebHeads valide.</string>
     <string name="webheads_backup_failed">Impossible de lire ou d’enregistrer la sauvegarde.</string>
     <string name="webheads_backup_legacy">Choisissez une application pour sauvegarder le texte des WebHeads.</string>
+    <string name="settings_webheads_backup">WebHeads — Sauvegarde et importation</string>
+    <string name="title_activity_webheads_backup">Sauvegarde des WebHeads</string>
+    <string name="webheads_backup_export_action">Exporter les WebHeads</string>
+    <string name="webheads_backup_import_action">Importer les WebHeads</string>
+    <string name="webheads_backup_export_summary">Enregistrer tous les liens ouverts dans un fichier transportable.</string>
+    <string name="webheads_backup_import_summary">Restaurer les liens depuis un fichier, même sur un autre appareil.</string>
 </resources>

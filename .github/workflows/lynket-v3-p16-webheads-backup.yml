@@ -1,4 +1,4 @@
-name: Lynket v3.0.1 - P16 WebHeads Backup verification
+name: Lynket v3.0.1 - P16 WebHeads Backup Settings
 
 on:
   push:
@@ -367,9 +367,22 @@ jobs:
           layout = Path('app/src/main/res/layout/layout_saved_bubbles_card.xml').read_text()
           gradle = Path('app/build.gradle').read_text()
           assert 'minSdkVersion 16' in gradle and 'targetSdkVersion 36' in gradle
-          assert 'saved_bubbles_export' in layout and 'saved_bubbles_import' in layout
-          assert 'BubbleBackupCoordinator::launchExport' in card
-          assert 'BubbleBackupCoordinator::launchImport' in card
+          home_layout = Path('app/src/main/res/layout/layout_saved_bubbles_card.xml').read_text()
+          settings_group = Path('app/src/main/java/arun/com/chromer/settings/SettingsGroupActivity.java').read_text()
+          settings_adapter = Path('app/src/main/java/arun/com/chromer/settings/SettingsGroupAdapter.java').read_text()
+          page = Path('app/src/main/java/arun/com/chromer/settings/webheads/WebHeadsBackupSettingsActivity.java').read_text()
+          page_xml = Path('app/src/main/res/layout/activity_webheads_backup_settings.xml').read_text()
+          manifest = Path('app/src/main/AndroidManifest.xml').read_text()
+          assert 'saved_bubbles_export' not in home_layout and 'saved_bubbles_import' not in home_layout
+          assert 'BubbleBackupCoordinator::launchExport' not in card
+          assert 'BubbleBackupCoordinator::launchImport' not in card
+          assert 'settings_webheads_backup' in settings_adapter
+          assert 'case 3:' in settings_group and 'WebHeadsBackupSettingsActivity.class' in settings_group
+          assert 'webheads_backup_export_action' in page_xml and 'webheads_backup_import_action' in page_xml
+          assert 'BubbleBackupCoordinator.launchExport(this)' in page
+          assert 'BubbleBackupCoordinator.launchImport(this)' in page
+          assert 'BubbleBackupCoordinator.handleActivityResult(this,' in page
+          assert '.settings.webheads.WebHeadsBackupSettingsActivity' in manifest
           assert 'Intent.ACTION_CREATE_DOCUMENT' in coordinator and 'Intent.ACTION_GET_CONTENT' in coordinator
           assert 'Build.VERSION.SDK_INT < 19' in coordinator
           assert 'BubbleSessionRestorer.restore(activity)' in coordinator
@@ -382,7 +395,7 @@ jobs:
       - name: Test persistent bubble storage
         working-directory: android-app
         run: |
-          ./gradlew --no-daemon :app:testDebugUnitTest --tests arun.com.chromer.bubbles.webheads.BubbleSessionStoreTest --tests arun.com.chromer.home.epoxycontroller.model.SavedBubblesCardModelTest --tests arun.com.chromer.settings.SettingsGroupAdapterTest --tests arun.com.chromer.bubbles.webheads.ui.context.CappedWebsitesRecyclerViewTest --tests arun.com.chromer.bubbles.webheads.BubbleBackupCodecTest
+          ./gradlew --no-daemon :app:testDebugUnitTest --tests arun.com.chromer.bubbles.webheads.BubbleSessionStoreTest --tests arun.com.chromer.home.epoxycontroller.model.SavedBubblesCardModelTest --tests arun.com.chromer.settings.SettingsGroupAdapterTest --tests arun.com.chromer.bubbles.webheads.ui.context.CappedWebsitesRecyclerViewTest --tests arun.com.chromer.bubbles.webheads.BubbleBackupCodecTest --tests arun.com.chromer.settings.WebHeadsBackupSettingsEntryTest
 
       - name: Verify APK package, target SDK 36 and signature
         working-directory: android-app
@@ -403,12 +416,12 @@ jobs:
         working-directory: android-app
         run: |
           mv app/build/outputs/apk/debug/app-debug.apk \
-             app/build/outputs/apk/debug/Lynket_v3.0.1_P16_WebHeadsBackup_Debug.apk
+             app/build/outputs/apk/debug/Lynket_v3.0.1_P16_WebHeadsBackup_Settings_Debug.apk
 
       - name: Upload versioned APK directly without ZIP
         if: success()
         uses: actions/upload-artifact@v7
         with:
-          path: android-app/app/build/outputs/apk/debug/Lynket_v3.0.1_P16_WebHeadsBackup_Debug.apk
+          path: android-app/app/build/outputs/apk/debug/Lynket_v3.0.1_P16_WebHeadsBackup_Settings_Debug.apk
           archive: false
           if-no-files-found: error

@@ -353,6 +353,16 @@
                 android:value=".settings.SettingsGroupActivity" />
         </activity>
         <activity
+            android:name=".settings.webheads.WebHeadsBackupSettingsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_webheads_backup"
+            android:parentActivityName=".settings.SettingsGroupActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".settings.SettingsGroupActivity" />
+        </activity>
+        <activity
             android:name=".history.HistoryActivity"
             android:label="@string/title_history"
             android:theme="@style/AppTheme.NoActionBar" />

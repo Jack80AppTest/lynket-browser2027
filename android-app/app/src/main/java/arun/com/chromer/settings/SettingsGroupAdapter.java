@@ -57,6 +57,7 @@ class SettingsGroupAdapter extends RecyclerView.Adapter<SettingsGroupAdapter.Set
         settingsItems.add(context.getString(R.string.settings_browsing_mode));
         settingsItems.add(context.getString(R.string.settings_look_and_feel));
         settingsItems.add(context.getString(R.string.settings_browsing_options));
+        settingsItems.add(context.getString(R.string.settings_webheads_backup));
     }
 
     @Override
@@ -142,6 +143,13 @@ class SettingsGroupAdapter extends RecyclerView.Adapter<SettingsGroupAdapter.Set
                 case 2:
                     icon.setImageDrawable(new IconicsDrawable(icon.getContext())
                             .icon(CommunityMaterial.Icon.cmd_settings)
+                            .colorRes(R.color.colorAccent)
+                            .sizeDp(24));
+                    subtitle.setVisibility(View.GONE);
+                    break;
+                case 3:
+                    icon.setImageDrawable(new IconicsDrawable(icon.getContext())
+                            .icon(CommunityMaterial.Icon.cmd_file_document)
                             .colorRes(R.color.colorAccent)
                             .sizeDp(24));
                     subtitle.setVisibility(View.GONE);
