@@ -49,6 +49,12 @@ public class SavedBubblesCardModelTest {
         restore.setId(R.id.saved_bubbles_restore);
         restore.setEnabled(true);
         card.addView(restore);
+        TextView export = new TextView(context);
+        export.setId(R.id.saved_bubbles_export);
+        card.addView(export);
+        TextView importButton = new TextView(context);
+        importButton.setId(R.id.saved_bubbles_import);
+        card.addView(importButton);
         TextView count = new TextView(context);
         count.setId(R.id.saved_bubbles_count);
         card.addView(count);
@@ -70,6 +76,8 @@ public class SavedBubblesCardModelTest {
         assertNotNull(restore);
         assertTrue(hide.isEnabled());
         assertTrue(restore.isEnabled());
+        assertTrue(card.findViewById(R.id.saved_bubbles_export).isEnabled());
+        assertTrue(card.findViewById(R.id.saved_bubbles_import).isEnabled());
         assertTrue(counter.getText().toString().contains("2"));
 
         hide.performClick();
@@ -83,6 +91,8 @@ public class SavedBubblesCardModelTest {
         new SavedBubblesCardModel().bind(card);
         assertFalse(card.findViewById(R.id.saved_bubbles_hide).isEnabled());
         assertFalse(card.findViewById(R.id.saved_bubbles_restore).isEnabled());
+        assertFalse(card.findViewById(R.id.saved_bubbles_export).isEnabled());
+        assertTrue(card.findViewById(R.id.saved_bubbles_import).isEnabled());
         assertEquals(0, store.count());
     }
 }

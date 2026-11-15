@@ -98,4 +98,14 @@
     <string name="personalization">Personnalisation</string>
     <string name="default_clear_msg">Si le navigateur est déjà par défaut, prière de l\'effacer.</string>
     <string name="dynamic_toolbar_color">Couleur de la barre d\'outil dynamique</string>
+    <!-- Sauvegarde des WebHeads : URL non privées et indicateur AMP seulement. -->
+    <string name="webheads_backup_export">Sauvegarder</string>
+    <string name="webheads_backup_import">Importer</string>
+    <string name="webheads_backup_filename">lynket-webheads-backup.json</string>
+    <string name="webheads_backup_no_links">Aucun WebHead sauvegardé à exporter.</string>
+    <string name="webheads_backup_saved">%1$d sites enregistrés dans le fichier choisi.</string>
+    <string name="webheads_backup_imported">%1$d nouveaux sites importés; %2$d déjà sauvegardés.</string>
+    <string name="webheads_backup_invalid">Ce fichier ne contient aucun lien WebHeads valide.</string>
+    <string name="webheads_backup_failed">Impossible de lire ou d’enregistrer la sauvegarde.</string>
+    <string name="webheads_backup_legacy">Choisissez une application pour sauvegarder le texte des WebHeads.</string>
 </resources>

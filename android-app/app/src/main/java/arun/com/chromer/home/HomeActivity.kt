@@ -38,6 +38,7 @@ import arun.com.chromer.extenstions.gone
 import arun.com.chromer.extenstions.show
 import arun.com.chromer.extenstions.watch
 import arun.com.chromer.bubbles.webheads.BubbleSessionRestorer
+import arun.com.chromer.bubbles.webheads.BubbleBackupCoordinator
 import arun.com.chromer.home.bottomsheet.HomeBottomSheet
 import arun.com.chromer.home.epoxycontroller.HomeFeedController
 import arun.com.chromer.intro.ChromerIntroActivity
@@ -241,6 +242,10 @@ class HomeActivity : BaseActivity(), Snackable, UsesViewModel {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        if (BubbleBackupCoordinator.handleActivityResult(this, requestCode, resultCode, data)) {
+            homeFeedController.requestModelBuild()
+            return
+        }
         binding.materialSearchView.onActivityResult(requestCode, resultCode, data)
     }
 

@@ -15,6 +15,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import arun.com.chromer.R;
 import arun.com.chromer.bubbles.webheads.BubbleSessionRestorer;
 import arun.com.chromer.bubbles.webheads.BubbleSessionStore;
+import arun.com.chromer.bubbles.webheads.BubbleBackupCoordinator;
 import arun.com.chromer.shared.Constants;
 
 public final class SavedBubblesCardModel extends EpoxyModel<View> {
@@ -28,6 +29,8 @@ public final class SavedBubblesCardModel extends EpoxyModel<View> {
         final TextView countView = view.findViewById(R.id.saved_bubbles_count);
         final TextView restoreButton = view.findViewById(R.id.saved_bubbles_restore);
         final TextView hideButton = view.findViewById(R.id.saved_bubbles_hide);
+        final TextView exportButton = view.findViewById(R.id.saved_bubbles_export);
+        final TextView importButton = view.findViewById(R.id.saved_bubbles_import);
         final int count;
         try (BubbleSessionStore store = new BubbleSessionStore(view.getContext())) {
             count = store.count();
@@ -43,5 +46,11 @@ public final class SavedBubblesCardModel extends EpoxyModel<View> {
         hideButton.setOnClickListener(v -> LocalBroadcastManager
                 .getInstance(v.getContext())
                 .sendBroadcast(new Intent(Constants.ACTION_HIDE_WEBHEAD_OVERLAY)));
+        exportButton.setEnabled(count > 0);
+        exportButton.setAlpha(count > 0 ? 1f : 0.45f);
+        exportButton.setOnClickListener(BubbleBackupCoordinator::launchExport);
+        // Import must work even on a fresh installation with zero saved bubbles.
+        importButton.setEnabled(true);
+        importButton.setOnClickListener(BubbleBackupCoordinator::launchImport);
     }
 }
