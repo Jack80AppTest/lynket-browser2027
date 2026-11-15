@@ -38,3 +38,17 @@ User requested **Save backup** and **Import backup** buttons on Lynket's existin
 **Physical verification pending:** test Save backup and Import backup on the S23 Ultra, including fresh-install import and duplicate-free repeat import, plus restoration permissions on a second device. The UI and JSON backup formats are new; do not mark this branch stable solely on passing CI.
 
 No automatic release, PR, tag or stable merge.
+
+## Final approved UI — Settings instead of Home (15 November 2026)
+
+**This section supersedes the earlier Home-card button placement.** After reviewing a screenshot, the user expressly approved a fourth Settings category **WebHeads — Sauvegarde et importation**, below Browsing options. It opens a dedicated page with **Exporter les WebHeads** and **Importer les WebHeads**, each with an explanatory subtitle. The existing home Saved Bubbles card is restored to exactly **Masquer / Restaurer**; the premature backup buttons were removed.
+
+The JSON format, Android picker fallback (API 16–18 using sharing/GET_CONTENT), duplicate-free import and the BubbleSessionStore database remain unchanged. New activity is internal and non-exported; the original three Settings choices stay in their original order.
+
+**Latest GitHub Actions SUCCESS — 23/23 steps**, [run 43756049150](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/43756049150), exact compiled source commit `f7643c4d5848befa9d0ca0fab8991af5af22685e`. Includes regression test of fourth Settings entry, existing backup codec/storage, old Android guards, package version/signature.
+
+**New exact compiled APK:** artifact [14178546400](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/43756049150/artifacts/14178546400) — `Lynket_v3.0.1_P16_WebHeadsBackup_Settings_Debug.apk`, **8,708,230 bytes**, SHA-256 `59ad60ca213d6ed4272273ed4de5277023933d3fa8ade57bbd3a7ae707cbd2d3`. The GitHub artifact was downloaded, recognized by its root AndroidManifest.xml and classes*.dex, passed ZIP integrity checks, and copied into a new ChatGPT attachment using `python_user_visible.exec`: `/mnt/data/Lynket_3.0.1_P16_WebHeads_Settings_Importer_Exporter_LIVRAISON.apk`; exact size and SHA-256 verified. **User has not yet confirmed the mobile link works.**
+
+Physical tests still required: the two Settings commands; Save to a file **outside** the app, check actual JSON exists, then reinstall/import/duplicate-free second import. **Never uninstall before confirming the backup exists and is readable.**
+
+**Stable and main unchanged.** No release, tag or PR.
