@@ -29,4 +29,12 @@ User requested **Save backup** and **Import backup** buttons on Lynket's existin
 
 ## CI and delivery
 
-**Pending GitHub Actions confirmation.** Only share the exact compiled commit's APK, via `python_user_visible.exec` copied into a fresh user-facing path with verified SHA-256 and ZIP/APK structure, per the project APK delivery workflow. No automatic release, PR, tag or stable merge.
+**GitHub Actions: SUCCESS — 23/23 steps** ([run 43754309285](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/43754309285)). Exact compiled source commit: `bbad666606c457b7db3faeceacf027e9a386eecd`. All new JSON backup codec tests, the existing WebHeads storage/card tests, Websites Scroll tests, Android compatibility regression checks and APK signature/version controls passed.
+
+**Exact Debug APK:** [Lynket_v3.0.1_P16_WebHeadsBackup_Debug.apk](https://github.com/Jack80AppTest/lynket-browser2027/actions/runs/43754309285/artifacts/14177443868), GitHub Actions artifact `14177443868`, **8,701,323 bytes**, SHA-256 `e9b6eff1b4e6c7144f7b27684ca786b71b945388e33db51597db9e426003a35b`.
+
+**ChatGPT delivery workflow:** the connector named the downloaded raw APK `Lynket_P16_WebHeadsBackup_artefact.zip`, but its internal structure was verified as a valid APK, containing `AndroidManifest.xml` and `classes*.dex`. A **new user-visible copy** `/mnt/data/Lynket_3.0.1_P16_WebHeads_Sauvegarde_Import_LIVRAISON.apk` was created via `python_user_visible.exec`; its size, integrity and SHA-256 were verified against GitHub. Actual download usability in the ChatGPT mobile UI requires user confirmation.
+
+**Physical verification pending:** test Save backup and Import backup on the S23 Ultra, including fresh-install import and duplicate-free repeat import, plus restoration permissions on a second device. The UI and JSON backup formats are new; do not mark this branch stable solely on passing CI.
+
+No automatic release, PR, tag or stable merge.
